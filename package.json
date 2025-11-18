@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@utcp/code-mode": "^1.0.5",
+    "task-master-ai": "^0.31.2"
+  }
+}

@@ -1,0 +1,86 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: krayin-ingress
+  annotations:
+    # NGINX Ingress Controller
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # Cert Manager for automatic SSL
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # Rate limiting per tenant (optional)
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+
+    # Request size limits
+    nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+
+    # Timeouts
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+
+    # Buffer settings
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+
+    # Enable CORS if needed
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+
+spec:
+  tls:
+  - hosts:
+    - "*.yourcrm.com"
+    - "yourcrm.com"
+    secretName: krayin-tls-wildcard
+  rules:
+  # Wildcard for all tenant subdomains
+  - host: "*.yourcrm.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: krayin-web
+            port:
+              number: 80
+  # Root domain
+  - host: "yourcrm.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: krayin-web
+            port:
+              number: 80
+---
+# Optional: Separate ingress for custom tenant domains
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: krayin-custom-domains
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - "crm.example-client.com"
+    secretName: example-client-tls
+  rules:
+  - host: "crm.example-client.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: krayin-web
+            port:
+              number: 80

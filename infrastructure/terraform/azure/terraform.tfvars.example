@@ -1,0 +1,139 @@
+# HandyMate Azure - Terraform Variables Example
+# Copy this file to terraform.tfvars and update with your actual values
+
+# Global Configuration
+project_name   = "handymate"
+environment    = "production"  # Options: dev, staging, production
+azure_location = "eastus"
+
+# Application Modules (all 8 CRM apps)
+app_modules = [
+  "developer",
+  "dancer",
+  "painter",
+  "driver",
+  "influencer",
+  "hunter",
+  "seller",
+  "trader"
+]
+
+# Network Configuration
+vnet_address_space            = "10.0.0.0/16"
+container_apps_subnet_cidr    = "10.0.0.0/23"
+private_endpoints_subnet_cidr = "10.0.2.0/24"
+
+# Container Registry Configuration
+acr_sku = "Standard"  # Options: Basic, Standard, Premium (Premium for geo-replication)
+
+# MySQL Configuration
+db_sku_name   = "GP_Standard_D2ds_v4"  # Production: GP_Standard_D4ds_v4 or higher
+db_storage_gb = 100                     # GB
+db_username   = "handymate_admin"      # Change this
+db_password   = "CHANGE_THIS_PASSWORD" # Use a strong password
+
+# Redis Configuration
+redis_sku_name = "Standard"  # Options: Basic, Standard, Premium
+redis_family   = "C"          # C for Basic/Standard, P for Premium
+redis_capacity = 1            # 0-6 for C family, 1-5 for P family
+
+# Container Apps Configuration
+container_app_max_replicas = 10     # Maximum replicas per app
+container_app_cpu          = 0.5    # CPU cores per replica
+container_app_memory       = "1Gi"  # Memory per replica
+
+# Container Configuration
+container_image_tag = "latest"  # Use specific tags in production (e.g., "v1.0.0", git SHA)
+
+# n8n Configuration
+n8n_encryption_key = ""      # Auto-generated if empty, or provide your own 32+ character key
+n8n_cpu            = 1.0     # CPU cores for main n8n service
+n8n_memory         = "2Gi"   # Memory for main n8n service
+n8n_worker_cpu     = 0.5     # CPU cores per worker
+n8n_worker_memory  = "1Gi"   # Memory per worker
+
+# Common Tags
+common_tags = {
+  Project     = "HandyMate"
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+  Team        = "Platform"
+  CostCenter  = "Engineering"
+}
+
+# ===================================
+# Production Recommendations
+# ===================================
+#
+# MySQL Flexible Server:
+# - Use GP_Standard_D4ds_v4 or higher for production workloads
+# - Enable Zone-Redundant high availability
+# - Set backup retention to 30 days
+# - Configure automated backups
+# - Monitor query performance insights
+# - Use private endpoints for secure connectivity
+#
+# Azure Cache for Redis:
+# - Use Premium SKU for production (zone redundancy + persistence)
+# - P family offers data persistence and clustering
+# - Standard SKU provides basic replication
+# - Monitor cache hit ratio and adjust size as needed
+#
+# Container Apps:
+# - Set min replicas to 1+ for production services
+# - Configure health probes appropriately
+# - Use managed identities instead of passwords
+# - Enable Dapr for distributed app capabilities
+# - Configure secrets in Key Vault
+# - Use specific container image tags
+#
+# Container Registry:
+# - Use Premium SKU for geo-replication
+# - Enable vulnerability scanning
+# - Implement image retention policies
+# - Use Azure AD authentication
+# - Configure webhook notifications
+#
+# Networking:
+# - Use VNet integration for secure communication
+# - Configure Network Security Groups
+# - Use private endpoints for databases
+# - Enable Azure Firewall for advanced protection
+# - Configure Azure Front Door for global routing
+#
+# Security:
+# - Store all secrets in Azure Key Vault
+# - Use Managed Identities where possible
+# - Enable Azure Defender for security monitoring
+# - Configure Azure Policy for compliance
+# - Enable Azure Monitor for logging
+# - Rotate credentials regularly
+# - Use Azure AD for authentication
+#
+# Cost Optimization:
+# - Use Azure Reserved Instances for predictable workloads
+# - Set min replicas to 0 for dev/staging environments
+# - Configure autoscaling to scale down during off-peak
+# - Use Azure Cost Management for monitoring
+# - Right-size resources based on metrics
+# - Implement lifecycle policies for storage
+#
+# Monitoring:
+# - Enable Application Insights for all services
+# - Configure Log Analytics workspace
+# - Set up metric alerts for critical thresholds
+# - Create custom dashboards
+# - Enable diagnostic logging
+# - Configure action groups for notifications
+#
+# Deployment Steps:
+# 1. Create Azure service principal: `az ad sp create-for-rbac --name "HandyMate-Terraform"`
+# 2. Configure Terraform backend in Azure Storage
+# 3. Run `terraform init` to initialize
+# 4. Run `terraform plan` to review changes
+# 5. Run `terraform apply` to create infrastructure
+# 6. Build and push container images to ACR
+# 7. Update Container Apps with new image versions
+# 8. Run database migrations
+# 9. Configure custom domains in Azure DNS
+# 10. Enable SSL certificates

@@ -1,0 +1,7 @@
+{
+  "description": "Marie's dance studio workspace - optimized for performance",
+  "agentConfig": {
+    "enabled": false,
+    "reason": "Marie's capabilities come from CLAUDE.md configuration. Task agents disabled to reduce token usage."
+  }
+}

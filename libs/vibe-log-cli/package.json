@@ -1,0 +1,92 @@
+{
+  "name": "vibe-log-cli",
+  "version": "0.7.6",
+  "description": "Track your building journey with Vibelog",
+  "bin": {
+    "vibe-log": "./bin/vibe-log.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run type-check && tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build",
+    "test": "vitest",
+    "test:template": "vitest tests/report-template.test.ts",
+    "test:template:critical": "vitest tests/report-template-critical.test.ts",
+    "test:package": "bash scripts/test-npm-package.sh",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "security-check": "npm audit && npm outdated",
+    "security-fix": "npm audit fix",
+    "validate-deps": "npm ls --depth=0",
+    "check-all": "npm run lint && npm run type-check && npm run test && npm run security-check",
+    "verify": "npm run verify:build && npm run verify:checksums",
+    "verify:build": "test -f dist/index.js && test -f dist/index.js.map && echo '✓ Build artifacts present'",
+    "verify:checksums": "if [ -f dist/checksums.sha256 ]; then cd dist && sha256sum -c checksums.sha256 && echo '✓ Checksums verified'; else echo '⚠ No checksums file found'; fi",
+    "prebuild": "npm run clean",
+    "clean": "rimraf dist",
+    "postbuild": "npm run copy-templates && npm run generate-checksums",
+    "copy-templates": "node scripts/copy-templates.js",
+    "generate-checksums": "node scripts/generate-checksums.js"
+  },
+  "keywords": [
+    "cli",
+    "vibelog",
+    "productivity",
+    "developer-tools",
+    "code-tracking"
+  ],
+  "author": "Vibelog",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vibe-log/vibe-log-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vibe-log/vibe-log-cli/issues"
+  },
+  "homepage": "https://github.com/vibe-log/vibe-log-cli#readme",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.1.27",
+    "axios": "^1.6.0",
+    "boxen": "^5.1.2",
+    "chalk": "^4.1.2",
+    "clipboardy": "^2.3.0",
+    "commander": "^11.1.0",
+    "conf": "^10.2.0",
+    "dayjs": "^1.11.0",
+    "event-source-polyfill": "^1.0.31",
+    "fs-extra": "^11.3.1",
+    "inquirer": "^12.9.1",
+    "oh-my-logo": "^0.2.1",
+    "open": "^8.4.2",
+    "ora": "^5.4.1",
+    "update-notifier": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.0.0",
+    "@types/update-notifier": "^6.0.8",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "execa": "^9.6.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^3.2.4"
+  }
+}
