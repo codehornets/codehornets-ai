@@ -16,7 +16,7 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
-## Available Agents (11)
+## Available Agents (10)
 
 ### code-architecture-reviewer
 **Purpose:** Review code for architectural consistency and best practices
@@ -146,19 +146,6 @@ Agents are autonomous Claude instances that handle specific complex tasks. Unlik
 
 ---
 
-### marie-dance-evaluator (specialized/dance)
-**Purpose:** Create hip-hop dance student evaluations and progress notes
-
-**When to use:**
-- Creating formal student evaluations (APEXX Sport-Études format)
-- Writing quick progress notes after class
-- Batch processing evaluations for multiple students
-- Generating personalized dance feedback in French
-
-**Integration:** ✅ Copy as-is (requires French language context)
-
----
-
 ## How to Integrate an Agent
 
 ### Standard Integration (Most Agents)
@@ -230,7 +217,6 @@ That's it! Agents work immediately.
 | auth-route-tester | Medium | ⚠️ Auth setup | JWT cookies |
 | auth-route-debugger | Medium | ⚠️ Auth setup | JWT cookies |
 | auto-error-resolver | Low | ⚠️ Paths | No |
-| marie-dance-evaluator | Low | ✅ None | No |
 
 ---
 

@@ -1,0 +1,1076 @@
+{
+  "total_agents": 18,
+  "total_files": 277,
+  "total_issues": 3,
+  "domains": {
+    "04_fulfillment": {
+      "domain": "04_fulfillment",
+      "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment",
+      "readme_exists": true,
+      "init_exists": true,
+      "agents": {
+        "project_manager": {
+          "agent": "project_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 167,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 3341,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 1778,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "allocate_resources.py",
+                "create_plan.py",
+                "manage_risks.py",
+                "track_progress.py",
+                "update_stakeholders.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "resource_allocator.py",
+                "risk_analyzer.py",
+                "timeline_builder.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "project_planning.txt",
+                "status_reporting.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "account_manager": {
+          "agent": "account_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 141,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 1332,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 755,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "client_checkin.py",
+                "handle_escalation.py",
+                "identify_opportunities.py",
+                "manage_renewals.py",
+                "measure_satisfaction.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "escalation_manager.py",
+                "opportunity_identifier.py",
+                "satisfaction_tracker.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "escalation_response.txt",
+                "relationship_management.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "creative_producer": {
+          "agent": "creative_producer",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 144,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 1346,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 856,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "approve_assets.py",
+                "assign_creative.py",
+                "create_brief.py",
+                "manage_feedback.py",
+                "review_creative.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "brand_checker.py",
+                "brief_generator.py",
+                "feedback_collector.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "creative_brief_template.txt",
+                "feedback_management.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "quality_checker": {
+          "agent": "quality_checker",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 131,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 1268,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 745,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "approve_quality.py",
+                "create_checklist.py",
+                "document_issues.py",
+                "execute_tests.py",
+                "perform_review.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "checklist_generator.py",
+                "defect_tracker.py",
+                "test_runner.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "defect_reporting.txt",
+                "qa_checklist.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "client_reporter": {
+          "agent": "client_reporter",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 133,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 1250,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 859,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "compile_data.py",
+                "create_visualizations.py",
+                "deliver_report.py",
+                "generate_report.py",
+                "prepare_presentation.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "chart_generator.py",
+                "metrics_collector.py",
+                "report_builder.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "data_storytelling.txt",
+                "report_structure.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "delivery_coordinator": {
+          "agent": "delivery_coordinator",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 152,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 1539,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 1139,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "complete_handoff.py",
+                "create_documentation.py",
+                "deliver_assets.py",
+                "prepare_package.py",
+                "schedule_training.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "documentation_generator.py",
+                "package_assembler.py",
+                "training_scheduler.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "delivery_checklist.txt",
+                "training_guide.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        }
+      },
+      "total_files": 96,
+      "total_issues": 0
+    },
+    "05_feedback_loop": {
+      "domain": "05_feedback_loop",
+      "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop",
+      "readme_exists": true,
+      "init_exists": true,
+      "agents": {
+        "analytics_specialist": {
+          "agent": "analytics_specialist",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 123,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 8356,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 1665,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "analyze_performance.py",
+                "generate_report.py",
+                "identify_insights.py",
+                "monitor_trends.py",
+                "track_metrics.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "analytics_tracker.py",
+                "insight_detector.py",
+                "report_generator.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "analysis_prompt.txt",
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 16
+        },
+        "client_feedback_manager": {
+          "agent": "client_feedback_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 130,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2298,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 497,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "analyze_sentiment.py",
+                "categorize_feedback.py",
+                "collect_feedback.py",
+                "create_action_plans.py",
+                "track_improvements.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "categorization_engine.py",
+                "feedback_collector.py",
+                "sentiment_analyzer.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "process_optimizer": {
+          "agent": "process_optimizer",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 114,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2265,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 475,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "analyze_workflows.py",
+                "design_improvements.py",
+                "identify_bottlenecks.py",
+                "implement_changes.py",
+                "monitor_impact.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "bottleneck_detector.py",
+                "process_mapper.py",
+                "workflow_analyzer.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "market_intelligence_analyst": {
+          "agent": "market_intelligence_analyst",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 142,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2311,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 495,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "analyze_opportunities.py",
+                "generate_intelligence.py",
+                "monitor_competitors.py",
+                "research_market.py",
+                "track_trends.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "competitor_tracker.py",
+                "market_research_tool.py",
+                "trend_monitor.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "strategy_advisor": {
+          "agent": "strategy_advisor",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 111,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2220,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 456,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "advise_growth.py",
+                "align_objectives.py",
+                "create_roadmaps.py",
+                "develop_strategies.py",
+                "synthesize_insights.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "recommendation_engine.py",
+                "roadmap_creator.py",
+                "strategy_synthesizer.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "knowledge_manager": {
+          "agent": "knowledge_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 114,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2242,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 467,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "curate_resources.py",
+                "document_practices.py",
+                "facilitate_sharing.py",
+                "maintain_accessibility.py",
+                "organize_knowledge.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "documentation_tool.py",
+                "knowledge_organizer.py",
+                "search_indexer.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        }
+      },
+      "total_files": 91,
+      "total_issues": 0
+    },
+    "06_operations": {
+      "domain": "06_operations",
+      "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations",
+      "readme_exists": true,
+      "init_exists": true,
+      "agents": {
+        "finance_manager": {
+          "agent": "finance_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 108,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2225,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 450,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "generate_reports.py",
+                "handle_payments.py",
+                "manage_budgets.py",
+                "process_invoices.py",
+                "track_expenses.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "budget_tracker.py",
+                "financial_reporter.py",
+                "invoice_processor.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "legal_coordinator": {
+          "agent": "legal_coordinator",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 114,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2230,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 447,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "coordinate_counsel.py",
+                "draft_contracts.py",
+                "ensure_compliance.py",
+                "manage_ip.py",
+                "review_agreements.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "compliance_checker.py",
+                "contract_manager.py",
+                "ip_tracker.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "hr_specialist": {
+          "agent": "hr_specialist",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 102,
+              "stub_issues": [
+                "File too short (< 100 chars)"
+              ]
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2232,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 468,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "coordinate_recruitment.py",
+                "coordinate_training.py",
+                "handle_relations.py",
+                "manage_onboarding.py",
+                "manage_reviews.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "onboarding_manager.py",
+                "performance_tracker.py",
+                "recruitment_tracker.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "it_support": {
+          "agent": "it_support",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 93,
+              "stub_issues": [
+                "File too short (< 100 chars)"
+              ]
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2217,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 457,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "coordinate_maintenance.py",
+                "ensure_security.py",
+                "handle_licenses.py",
+                "manage_infrastructure.py",
+                "provide_support.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "infrastructure_monitor.py",
+                "security_scanner.py",
+                "ticket_system.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "office_manager": {
+          "agent": "office_manager",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 105,
+              "stub_issues": [
+                "File too short (< 100 chars)"
+              ]
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2237,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 461,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "coordinate_supplies.py",
+                "handle_administration.py",
+                "manage_facilities.py",
+                "manage_vendors.py",
+                "organize_events.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "facility_manager.py",
+                "supply_tracker.py",
+                "vendor_coordinator.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        },
+        "compliance_officer": {
+          "agent": "compliance_officer",
+          "exists": true,
+          "files": {
+            "__init__.py": {
+              "exists": true,
+              "size": 117,
+              "stub_issues": []
+            },
+            "agent.py": {
+              "exists": true,
+              "size": 2241,
+              "stub_issues": []
+            },
+            "config.yaml": {
+              "exists": true,
+              "size": 464,
+              "stub_issues": []
+            }
+          },
+          "dirs": {
+            "tasks": {
+              "exists": true,
+              "files": [
+                "conduct_audits.py",
+                "develop_policies.py",
+                "handle_reporting.py",
+                "manage_data_protection.py",
+                "monitor_compliance.py",
+                "__init__.py"
+              ]
+            },
+            "tools": {
+              "exists": true,
+              "files": [
+                "audit_manager.py",
+                "compliance_monitor.py",
+                "data_protection_tool.py",
+                "__init__.py"
+              ]
+            },
+            "prompts": {
+              "exists": true,
+              "files": [
+                "system_prompt.txt"
+              ]
+            },
+            "tests": {
+              "exists": true,
+              "files": [
+                "test_agent.py"
+              ]
+            }
+          },
+          "issues": [],
+          "file_count": 15
+        }
+      },
+      "total_files": 90,
+      "total_issues": 3
+    }
+  }
+}

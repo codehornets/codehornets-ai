@@ -1,0 +1,26 @@
+agent:
+  name: "Ads Manager"
+  version: "0.1.0"
+  description: "Creates and manages advertising campaigns"
+
+capabilities:
+  - campaign_creation
+  - ad_creative_development
+  - campaign_optimization
+  - performance_analysis
+  - budget_management
+
+parameters:
+  platforms:
+    - google_ads
+    - facebook_ads
+    - instagram_ads
+    - linkedin_ads
+  bidding_strategies:
+    - cpc
+    - cpm
+    - cpa
+
+integrations:
+  - content_creator
+  - brand_designer

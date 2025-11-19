@@ -1,0 +1,8 @@
+agent_name: "Performance Manager Agent"
+role: "performance_manager"
+domain: "leadership"
+model_config:
+  model: "gpt-4"
+  temperature: 0.2
+capabilities: [kpi_tracking, performance_reporting, improvement_planning]
+tools: [kpi_tracker, performance_analyzer, dashboard_builder]

@@ -1,0 +1,182 @@
+# HandyMate CRM - Kubernetes Deployment Manifest
+# This file contains deployment definitions for all 8 CRM modules
+#
+# Modules: developer, dancer, painter, driver, influencer, hunter, seller, trader
+#
+# Usage:
+#   kubectl apply -f deployment.yaml -n handymate
+#
+# Note: This is a base configuration. Use Kustomize overlays for environment-specific settings.
+
+---
+# Developer CRM Module
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handymate-developer
+  labels:
+    app: handymate
+    module: developer
+    component: web
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: handymate
+      module: developer
+      component: web
+  template:
+    metadata:
+      labels:
+        app: handymate
+        module: developer
+        component: web
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: developer
+        image: ghcr.io/your-org/handymate/developer:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: APP_ENV
+          value: "production"
+        - name: APP_MODULE
+          value: "developer"
+        - name: DB_DATABASE
+          value: "handymate_developer"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: handymate-developer-secrets
+              key: app-key
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: handymate-db-secrets
+              key: password
+        envFrom:
+        - configMapRef:
+            name: handymate-config
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        volumeMounts:
+        - name: storage
+          mountPath: /var/www/html/storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: handymate-storage
+
+---
+# Dancer CRM Module
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handymate-dancer
+  labels:
+    app: handymate
+    module: dancer
+    component: web
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: handymate
+      module: dancer
+      component: web
+  template:
+    metadata:
+      labels:
+        app: handymate
+        module: dancer
+        component: web
+    spec:
+      containers:
+      - name: dancer
+        image: ghcr.io/your-org/handymate/dancer:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+        env:
+        - name: APP_MODULE
+          value: "dancer"
+        - name: DB_DATABASE
+          value: "handymate_dancer"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: handymate-dancer-secrets
+              key: app-key
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: handymate-db-secrets
+              key: password
+        envFrom:
+        - configMapRef:
+            name: handymate-config
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+---
+# NOTE: For brevity, the remaining 6 modules (painter, driver, influencer, hunter, seller, trader)
+# follow the same pattern. Use the script below to generate all manifests.
+#
+# Generate all module deployments with:
+#   ./scripts/generate-k8s-manifests.sh

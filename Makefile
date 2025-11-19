@@ -1,17 +1,18 @@
 # Multi-Agent Orchestration System - Makefile
 # Convenient commands for managing orchestrator and workers
 
-.PHONY: help all pull auth-orchestrator auth-marie auth-anga auth-fabien auth-all start stop restart restart-orchestrator restart-workers logs status attach clean rebuild clean-workspace clean-workspace-test
+.PHONY: help all pull setup-auth-dirs fix-permissions auth-orchestrator auth-marie auth-anga auth-fabien auth-all start stop restart restart-orchestrator restart-workers logs status attach clean rebuild clean-workspace clean-workspace-test
 
 # Default target
 help:
 	@echo "Multi-Agent Orchestration System - Available Commands"
 	@echo ""
 	@echo "Quick Start:"
-	@echo "  make all            - Complete setup: pull + auth-all + start + instructions"
+	@echo "  make all            - Complete setup: pull + fix-permissions + auth-all + start + interactive-setup"
 	@echo ""
 	@echo "Setup (one-time):"
 	@echo "  make pull           - Pull Claude Code Docker image"
+	@echo "  make fix-permissions - Fix auth directory permissions (run with sudo if needed)"
 	@echo "  make auth-all       - Authenticate all 4 agents (orchestrator, marie, anga, fabien)"
 	@echo "  make setup-workers-interactive - Interactively set up workers (Marie, Anga, Fabien)"
 	@echo "  make auth-orchestrator - Authenticate orchestrator only"
@@ -67,39 +68,49 @@ all:
 	@echo ""
 	@echo "This will:"
 	@echo "  1. Pull Claude Code Docker image"
-	@echo "  2. Authenticate all 4 agents (orchestrator, marie, anga, fabien)"
-	@echo "  3. Start the multi-agent system"
-	@echo "  4. Show you how to connect"
+	@echo "  2. Fix any permission issues (may ask for sudo password)"
+	@echo "  3. Authenticate all 4 agents (orchestrator, marie, anga, fabien)"
+	@echo "  4. Start the multi-agent system"
+	@echo "  5. Interactive setup for each agent (theme selection)"
+	@echo "  6. Show you how to connect"
 	@echo ""
 	@echo "Press Enter to continue or Ctrl+C to cancel..."
 	@read dummy
 	@echo ""
 	@echo "════════════════════════════════════════════════════════════════"
-	@echo "   Step 1/4: Pulling Docker Image"
+	@echo "   Step 1/5: Pulling Docker Image"
 	@echo "════════════════════════════════════════════════════════════════"
 	@make pull
 	@echo ""
 	@echo "════════════════════════════════════════════════════════════════"
-	@echo "   Step 2/4: Authenticating Agents"
+	@echo "   Step 2/5: Fixing Permissions"
 	@echo "════════════════════════════════════════════════════════════════"
-	@echo ""
-	@echo "You will authenticate 4 agents. Each will open a browser."
-	@echo "Press Enter to start..."
-	@read dummy
-	@make auth-all
+	@make fix-permissions
 	@echo ""
 	@echo "════════════════════════════════════════════════════════════════"
-	@echo "   Step 3/4: Starting Multi-Agent System"
+	@echo "   Step 3/5: Starting Multi-Agent System"
 	@echo "════════════════════════════════════════════════════════════════"
 	@make start
 	@echo ""
 	@echo "════════════════════════════════════════════════════════════════"
-	@echo "   Step 4/4: Setup Complete!"
+	@echo "   Step 4/5: Interactive Agent Setup"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Now you'll complete the setup for each agent interactively."
+	@echo "This is a one-time setup (theme selection, etc.)"
+	@echo "Press Enter to start interactive setup..."
+	@read dummy
+	@make setup-workers-interactive
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "   Step 5/5: Setup Complete!"
 	@echo "════════════════════════════════════════════════════════════════"
 	@echo ""
 	@echo "✓ Docker image pulled"
+	@echo "✓ Permissions fixed"
 	@echo "✓ All agents authenticated"
 	@echo "✓ System started"
+	@echo "✓ Interactive setup completed"
 	@echo ""
 	@echo "════════════════════════════════════════════════════════════════"
 	@echo "   Next Steps"
@@ -130,8 +141,27 @@ pull:
 	@echo "Pulling Claude Code Docker image..."
 	docker pull docker/sandbox-templates:claude-code
 
+# Fix permissions on auth directories (run if you see EACCES errors)
+fix-permissions:
+	@echo "Fixing permissions on auth directories..."
+	@if [ -d "core/shared/auth-homes" ]; then \
+		echo "Changing ownership of core/shared/auth-homes to $(USER):$(USER)..."; \
+		sudo chown -R $(USER):$(USER) core/shared/auth-homes; \
+		echo "✓ Permissions fixed"; \
+	else \
+		echo "✓ No auth directories found (will be created automatically)"; \
+	fi
+
+# Setup auth directories with correct permissions
+setup-auth-dirs:
+	@mkdir -p core/shared/auth-homes/orchestrator
+	@mkdir -p core/shared/auth-homes/marie
+	@mkdir -p core/shared/auth-homes/anga
+	@mkdir -p core/shared/auth-homes/fabien
+	@echo "✓ Auth directories created"
+
 # Authentication commands
-auth-orchestrator:
+auth-orchestrator: setup-auth-dirs
 	@echo "Authenticating orchestrator..."
 	@echo "A browser will open. Log in to Claude and complete authentication."
 	docker run -it --rm \
@@ -139,7 +169,7 @@ auth-orchestrator:
 		docker/sandbox-templates:claude-code \
 		claude
 
-auth-marie:
+auth-marie: setup-auth-dirs
 	@echo "Authenticating Marie..."
 	@echo "A browser will open. Log in to Claude and complete authentication."
 	docker run -it --rm \
@@ -147,7 +177,7 @@ auth-marie:
 		docker/sandbox-templates:claude-code \
 		claude
 
-auth-anga:
+auth-anga: setup-auth-dirs
 	@echo "Authenticating Anga..."
 	@echo "A browser will open. Log in to Claude and complete authentication."
 	docker run -it --rm \
@@ -155,7 +185,7 @@ auth-anga:
 		docker/sandbox-templates:claude-code \
 		claude
 
-auth-fabien:
+auth-fabien: setup-auth-dirs
 	@echo "Authenticating Fabien..."
 	@echo "A browser will open. Log in to Claude and complete authentication."
 	docker run -it --rm \

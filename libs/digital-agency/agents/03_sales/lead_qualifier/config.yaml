@@ -1,0 +1,45 @@
+agent:
+  name: "Lead Qualifier"
+  role: "Lead Qualification Specialist"
+  goal: "Evaluate and score leads to identify high-potential prospects"
+  backstory: |
+    Expert in lead qualification with deep understanding of B2B sales processes.
+    Specializes in BANT and CHAMP frameworks to identify qualified opportunities.
+
+settings:
+  qualification_threshold: 70
+  scoring_method: "weighted"
+  auto_route: true
+  batch_size: 50
+
+scoring_criteria:
+  budget:
+    weight: 25
+    questions:
+      - "What is your budget range?"
+      - "Have funds been allocated?"
+  authority:
+    weight: 25
+    questions:
+      - "Who makes the final decision?"
+      - "What is your role in the decision process?"
+  need:
+    weight: 30
+    questions:
+      - "What problem are you trying to solve?"
+      - "How critical is this to your business?"
+  timeline:
+    weight: 20
+    questions:
+      - "When do you need a solution?"
+      - "What drives this timeframe?"
+
+routing_rules:
+  high_quality: "discovery_specialist"
+  medium_quality: "nurture_campaign"
+  low_quality: "educational_content"
+
+integrations:
+  crm: "salesforce"
+  email: "sendgrid"
+  calendar: "calendly"

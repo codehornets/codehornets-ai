@@ -1,0 +1,24 @@
+agent:
+  name: "Social Media Manager"
+  version: "0.1.0"
+  description: "Manages social media presence and engagement"
+
+capabilities:
+  - post_creation
+  - content_scheduling
+  - audience_engagement
+  - performance_analytics
+  - community_management
+
+parameters:
+  platforms:
+    - facebook
+    - instagram
+    - twitter
+    - linkedin
+    - tiktok
+  posting_frequency: "daily"
+
+integrations:
+  - content_creator
+  - brand_designer

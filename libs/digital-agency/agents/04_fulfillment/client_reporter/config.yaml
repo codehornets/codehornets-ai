@@ -1,0 +1,34 @@
+agent:
+  name: "Client Reporter"
+  role: "Reporting & Analytics Specialist"
+  goal: "Deliver insightful reports that demonstrate value"
+  backstory: |
+    Data-driven reporting specialist. Expert in analytics,
+    data visualization, and translating metrics into business insights.
+
+settings:
+  report_frequency: "weekly"
+  dashboard_update: "real-time"
+  visualization_tool: "tableau"
+  format: ["pdf", "dashboard"]
+
+report_types:
+  - progress_reports
+  - performance_dashboards
+  - executive_summaries
+  - detailed_analytics
+  - outcome_reports
+
+key_metrics:
+  - completion_percentage
+  - timeline_adherence
+  - budget_utilization
+  - quality_scores
+  - client_satisfaction
+  - ROI_indicators
+
+integrations:
+  analytics: "google_analytics"
+  bi_tool: "tableau"
+  data_warehouse: "snowflake"
+  presentation: "google_slides"

@@ -1,0 +1,179 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: digital-agency-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-digital_agency}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-change_me_in_production}
+      POSTGRES_DB: ${DATABASE_NAME:-digital_agency}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U digital_agency"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digital-agency-network
+
+  # Redis Cache & Message Broker
+  redis:
+    image: redis:7-alpine
+    container_name: digital-agency-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digital-agency-network
+
+  # FastAPI Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digital-agency-api
+    restart: unless-stopped
+    profiles:
+      - app
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - DATABASE_URL=postgresql://digital_agency:change_me_in_production@postgres:5432/digital_agency
+      - REDIS_URL=redis://:redis_password@redis:6379/0
+      - CELERY_BROKER_URL=redis://:redis_password@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:redis_password@redis:6379/2
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+      - ./logs:/var/log/digital-agency
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - digital-agency-network
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digital-agency-celery-worker
+    restart: unless-stopped
+    profiles:
+      - workers
+    command: celery -A tasks.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - DATABASE_URL=postgresql://digital_agency:change_me_in_production@postgres:5432/digital_agency
+      - REDIS_URL=redis://:redis_password@redis:6379/0
+      - CELERY_BROKER_URL=redis://:redis_password@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:redis_password@redis:6379/2
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+      - ./logs:/var/log/digital-agency
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - digital-agency-network
+
+  # Celery Beat Scheduler
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digital-agency-celery-beat
+    restart: unless-stopped
+    profiles:
+      - workers
+    command: celery -A tasks.celery_app beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://digital_agency:change_me_in_production@postgres:5432/digital_agency
+      - REDIS_URL=redis://:redis_password@redis:6379/0
+      - CELERY_BROKER_URL=redis://:redis_password@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:redis_password@redis:6379/2
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+      - ./logs:/var/log/digital-agency
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - digital-agency-network
+
+  # Flower - Celery Monitoring
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digital-agency-flower
+    restart: unless-stopped
+    profiles:
+      - workers
+    command: celery -A tasks.celery_app flower --port=5555
+    environment:
+      - CELERY_BROKER_URL=redis://:redis_password@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:redis_password@redis:6379/2
+    env_file:
+      - .env
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - celery-worker
+    networks:
+      - digital-agency-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: digital-agency-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+    networks:
+      - digital-agency-network
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  digital-agency-network:
+    driver: bridge

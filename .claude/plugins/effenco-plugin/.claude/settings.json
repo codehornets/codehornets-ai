@@ -1,0 +1,16 @@
+{
+  "extraKnownMarketplaces": {
+    "team-tools": {
+      "source": {
+        "source": "github",
+        "repo": "your-org/claude-plugins"
+      }
+    },
+    "project-specific": {
+      "source": {
+        "source": "git",
+        "url": "https://git.company.com/project-plugins.git"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+agent:
+  name: "SEO Specialist"
+  version: "0.1.0"
+  description: "Optimizes content and websites for search engines"
+
+capabilities:
+  - keyword_research
+  - content_optimization
+  - backlink_analysis
+  - website_auditing
+  - rank_tracking
+
+parameters:
+  seo_tools:
+    - keyword_planner
+    - rank_tracker
+    - backlink_analyzer
+  optimization_focus:
+    - on_page
+    - technical
+    - off_page
+
+integrations:
+  - content_creator

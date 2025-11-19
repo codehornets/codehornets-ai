@@ -1,0 +1,49 @@
+ANALYTICS ANALYSIS PROMPT
+
+Context: {context}
+Metric Type: {metric_type}
+Time Period: {time_period}
+Data Points: {data_points}
+
+ANALYSIS OBJECTIVES:
+1. Identify key trends and patterns in the data
+2. Detect any anomalies or unusual behavior
+3. Compare performance against targets/benchmarks
+4. Determine factors influencing performance
+5. Provide actionable recommendations
+
+ANALYSIS FRAMEWORK:
+1. Data Quality Check
+   - Verify data completeness
+   - Identify outliers
+   - Check for consistency
+
+2. Descriptive Analysis
+   - Calculate summary statistics
+   - Identify central tendencies
+   - Determine variance and distribution
+
+3. Trend Analysis
+   - Identify upward/downward trends
+   - Detect seasonality or patterns
+   - Project future trends
+
+4. Comparative Analysis
+   - Compare against previous periods
+   - Benchmark against industry standards
+   - Analyze segment performance
+
+5. Root Cause Analysis
+   - Identify contributing factors
+   - Analyze correlations
+   - Determine causation where possible
+
+OUTPUT REQUIREMENTS:
+- Executive summary of findings
+- Detailed analysis by metric
+- Visualizations (charts, graphs)
+- Key insights and observations
+- Specific recommendations
+- Expected impact of recommendations
+
+Please provide comprehensive analysis following this framework.

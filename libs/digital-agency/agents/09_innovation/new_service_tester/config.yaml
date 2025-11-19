@@ -1,0 +1,41 @@
+agent:
+  name: "New Service Tester"
+  version: "0.1.0"
+  description: "Tests and validates new service offerings through pilot programs and feedback collection"
+
+capabilities:
+  - pilot_program_design
+  - service_testing
+  - feedback_gathering
+  - readiness_validation
+  - pilot_results_analysis
+
+parameters:
+  test_methodology: "comprehensive"
+  pilot_duration: "30_days"
+  minimum_participants: 5
+  feedback_channels:
+    - surveys
+    - interviews
+    - usage_analytics
+    - direct_observation
+  success_threshold: 0.75
+
+integrations:
+  - service_designer
+  - market_experimenter
+  - pilot_program_manager
+  - client_success_manager
+
+outputs:
+  - pilot_program_designs
+  - test_results
+  - feedback_reports
+  - readiness_assessments
+  - launch_recommendations
+
+metrics:
+  - pilot_success_rate
+  - feedback_quality
+  - test_coverage
+  - time_to_validation

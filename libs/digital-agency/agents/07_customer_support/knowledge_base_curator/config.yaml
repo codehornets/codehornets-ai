@@ -1,0 +1,28 @@
+agent_name: Knowledge Base Curator Agent
+model: gpt-4
+temperature: 0.5
+max_tokens: 2000
+
+min_quality_score: 3.0
+min_readability_score: 60.0
+enable_auto_tagging: true
+enable_related_articles: true
+max_search_results: 10
+content_gap_threshold: 5
+outdated_threshold_days: 180
+
+capabilities:
+  - article_management
+  - search_optimization
+  - quality_analysis
+  - content_gap_detection
+  - version_control
+  - analytics
+
+supported_formats:
+  - markdown
+  - html
+  - plain_text
+
+languages:
+  - en

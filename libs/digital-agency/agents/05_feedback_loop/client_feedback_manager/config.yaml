@@ -1,0 +1,17 @@
+agent:
+  name: "Client Feedback Manager"
+  id: "client_feedback_manager"
+  domain: "feedback"
+  version: "1.0.0"
+
+  description: >
+    Manages client feedback collection, analysis, and action planning
+
+capabilities: ['collect_feedback', 'analyze_sentiment', 'categorize_feedback', 'create_action_plans', 'track_improvements']
+
+tools: ['feedback_collector', 'sentiment_analyzer', 'categorization_engine']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3
