@@ -5,11 +5,12 @@ name: 'codehornets-ai-activated'
 
 services:
   # Redis for pub/sub activation (optional, falls back to inotify)
+  # Note: No external port exposed - workers connect via internal docker network
   redis:
     image: redis:8.0-rc1-alpine
     container_name: codehornets-redis
-    ports:
-      - "6379:6379"
+    # Removed external port mapping to avoid conflicts with other projects
+    # Workers connect via internal network: redis://redis:6379
     networks:
       - claude-network
     restart: unless-stopped
@@ -67,7 +68,7 @@ services:
       - ../tools/pdf-generator:/tools/pdf-generator:ro
       - ../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
     environment:
-      - ACTIVATION_MODE=inotify  # inotify (fast) or redis (clustered)
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}  # inotify (fast) or redis (clustered)
       - REDIS_URL=redis://redis:6379
       - TASK_DIR=/tasks
       - RESULT_DIR=/results
@@ -108,7 +109,7 @@ services:
       - ./shared/workspaces/anga:/home/agent/workspace:rw
       - ../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
     environment:
-      - ACTIVATION_MODE=inotify
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
       - REDIS_URL=redis://redis:6379
       - TASK_DIR=/tasks
       - RESULT_DIR=/results
@@ -149,7 +150,7 @@ services:
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
       - ../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
     environment:
-      - ACTIVATION_MODE=inotify
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
       - REDIS_URL=redis://redis:6379
       - TASK_DIR=/tasks
       - RESULT_DIR=/results
@@ -168,6 +169,8 @@ services:
 networks:
   claude-network:
     driver: bridge
+    # Isolated network for codehornets-ai activation system
+    # Prevents conflicts with other Docker projects
 
 # Usage:
 #
