@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Agency AI Platform - Organization Mind Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            padding: 0 30px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .domain-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .domain-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .domain-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .agent-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .agent-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .agent-tasks {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .agent-tasks li {
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .agent-tasks li:before {
+            content: "→ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .mermaid-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .workflow-section {
+            margin-top: 30px;
+        }
+
+        .workflow-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .workflow-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏢 Digital Agency AI Platform</h1>
+            <p class="subtitle">Organization Mind Map & Structure</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Domains</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">72</div>
+                <div class="stat-label">AI Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">200+</div>
+                <div class="stat-label">Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Tools</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Overview</button>
+            <button class="tab" onclick="showTab('offer')">Offer</button>
+            <button class="tab" onclick="showTab('marketing')">Marketing</button>
+            <button class="tab" onclick="showTab('sales')">Sales</button>
+            <button class="tab" onclick="showTab('fulfillment')">Fulfillment</button>
+            <button class="tab" onclick="showTab('feedback')">Feedback Loop</button>
+            <button class="tab" onclick="showTab('bizdev')">Business Dev</button>
+            <button class="tab" onclick="showTab('operations')">Operations</button>
+            <button class="tab" onclick="showTab('support')">Support</button>
+            <button class="tab" onclick="showTab('leadership')">Leadership</button>
+            <button class="tab" onclick="showTab('innovation')">Innovation</button>
+            <button class="tab" onclick="showTab('enablement')">Enablement</button>
+            <button class="tab" onclick="showTab('workflows')">Workflows</button>
+        </div>
+
+        <div class="content">
+            <!-- Overview Tab -->
+            <div id="overview" class="domain-section active">
+                <div class="domain-header">
+                    <h2>🎯 Organization Overview</h2>
+                    <p>Complete structure of the Digital Agency AI Platform</p>
+                </div>
+
+                <div class="mermaid-container">
+                    <div class="mermaid">
+graph TB
+    root[Digital Agency AI Platform]
+
+    root --> offer[01_OFFER<br/>6 Agents]
+    root --> marketing[02_MARKETING<br/>6 Agents]
+    root --> sales[03_SALES<br/>6 Agents]
+    root --> fulfillment[04_FULFILLMENT<br/>6 Agents]
+    root --> feedback[05_FEEDBACK_LOOP<br/>6 Agents]
+    root --> bizdev[06_BUSINESS_DEV<br/>6 Agents]
+    root --> ops[06_OPERATIONS<br/>6 Agents]
+    root --> support[07_CUSTOMER_SUPPORT<br/>12 Agents]
+    root --> leadership[08_LEADERSHIP<br/>6 Agents]
+    root --> innovation[09_INNOVATION<br/>6 Agents]
+    root --> enablement[10_ENABLEMENT<br/>6 Agents]
+
+    classDef offer fill:#e1f5ff,stroke:#01579b
+    classDef marketing fill:#fff3e0,stroke:#e65100
+    classDef sales fill:#e8f5e9,stroke:#1b5e20
+    classDef fulfillment fill:#f3e5f5,stroke:#4a148c
+    classDef feedback fill:#fff9c4,stroke:#f57f17
+    classDef bizdev fill:#e0f2f1,stroke:#004d40
+    classDef ops fill:#fce4ec,stroke:#880e4f
+    classDef support fill:#e8eaf6,stroke:#1a237e
+    classDef leadership fill:#fff8e1,stroke:#ff6f00
+    classDef innovation fill:#e0f7fa,stroke:#006064
+    classDef enablement fill:#f1f8e9,stroke:#33691e
+
+    class offer offer
+    class marketing marketing
+    class sales sales
+    class fulfillment fulfillment
+    class feedback feedback
+    class bizdev bizdev
+    class ops ops
+    class support support
+    class leadership leadership
+    class innovation innovation
+    class enablement enablement
+                    </div>
+                </div>
+            </div>
+
+            <!-- Offer Domain -->
+            <div id="offer" class="domain-section">
+                <div class="domain-header">
+                    <h2>1️⃣ OFFER DOMAIN</h2>
+                    <p>Market Positioning & Service Proposals</p>
+                </div>
+                <div class="domain-grid">
+                    <div class="agent-card">
+                        <div class="agent-name">🔍 Market Researcher</div>
+                        <ul class="agent-tasks">
+                            <li>Analyze market trends</li>
+                            <li>Identify target audiences</li>
+                            <li>Research competitors</li>
+                            <li>Assess demand</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🎨 Service Designer</div>
+                        <ul class="agent-tasks">
+                            <li>Design service packages</li>
+                            <li>Create service tiers</li>
+                            <li>Define deliverables</li>
+                            <li>Map customer journey</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">💰 Pricing Strategist</div>
+                        <ul class="agent-tasks">
+                            <li>Analyze pricing models</li>
+                            <li>Calculate costs</li>
+                            <li>Optimize margins</li>
+                            <li>Competitive pricing</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">💎 Value Proposition Creator</div>
+                        <ul class="agent-tasks">
+                            <li>Craft value propositions</li>
+                            <li>Identify differentiators</li>
+                            <li>Create messaging</li>
+                            <li>Test propositions</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">📝 Proposal Writer</div>
+                        <ul class="agent-tasks">
+                            <li>Write proposals</li>
+                            <li>Create case studies</li>
+                            <li>Generate presentations</li>
+                            <li>Optimize content</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🎯 Competitor Analyst</div>
+                        <ul class="agent-tasks">
+                            <li>Profile competitors</li>
+                            <li>Compare offerings</li>
+                            <li>Identify gaps</li>
+                            <li>SWOT analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketing Domain -->
+            <div id="marketing" class="domain-section">
+                <div class="domain-header">
+                    <h2>2️⃣ MARKETING DOMAIN</h2>
+                    <p>Demand Generation & Brand Awareness</p>
+                </div>
+                <div class="domain-grid">
+                    <div class="agent-card">
+                        <div class="agent-name">✍️ Content Creator</div>
+                        <ul class="agent-tasks">
+                            <li>Write blog posts</li>
+                            <li>Create whitepapers</li>
+                            <li>Plan content calendar</li>
+                            <li>Optimize for SEO</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">📱 Social Media Manager</div>
+                        <ul class="agent-tasks">
+                            <li>Create social posts</li>
+                            <li>Schedule content</li>
+                            <li>Engage audience</li>
+                            <li>Track performance</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🔍 SEO Specialist</div>
+                        <ul class="agent-tasks">
+                            <li>Keyword research</li>
+                            <li>On-page optimization</li>
+                            <li>Website audits</li>
+                            <li>Content optimization</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">📧 Email Marketer</div>
+                        <ul class="agent-tasks">
+                            <li>Design campaigns</li>
+                            <li>Segment audiences</li>
+                            <li>A/B test</li>
+                            <li>Track conversions</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">📢 Ads Manager</div>
+                        <ul class="agent-tasks">
+                            <li>Create ad campaigns</li>
+                            <li>Manage budgets</li>
+                            <li>Optimize targeting</li>
+                            <li>Track ROI</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🎨 Brand Designer</div>
+                        <ul class="agent-tasks">
+                            <li>Design brand assets</li>
+                            <li>Create style guides</li>
+                            <li>Maintain consistency</li>
+                            <li>Design materials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Domain -->
+            <div id="sales" class="domain-section">
+                <div class="domain-header">
+                    <h2>3️⃣ SALES DOMAIN</h2>
+                    <p>Lead Conversion & Deal Closing</p>
+                </div>
+                <div class="domain-grid">
+                    <div class="agent-card">
+                        <div class="agent-name">🎯 Lead Qualifier</div>
+                        <ul class="agent-tasks">
+                            <li>Evaluate leads (BANT/CHAMP)</li>
+                            <li>Score criteria</li>
+                            <li>Route qualified leads</li>
+                            <li>Batch process</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🔎 Discovery Specialist</div>
+                        <ul class="agent-tasks">
+                            <li>Conduct discovery calls</li>
+                            <li>Analyze client needs</li>
+                            <li>Document findings</li>
+                            <li>Prepare handoff</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🎬 Demo Presenter</div>
+                        <ul class="agent-tasks">
+                            <li>Prepare demos</li>
+                            <li>Customize scenarios</li>
+                            <li>Handle Q&A</li>
+                            <li>Follow up</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🛡️ Objection Handler</div>
+                        <ul class="agent-tasks">
+                            <li>Identify objections</li>
+                            <li>Categorize concerns</li>
+                            <li>Prepare responses</li>
+                            <li>Track resolutions</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">🤝 Negotiator</div>
+                        <ul class="agent-tasks">
+                            <li>Analyze positions</li>
+                            <li>Propose terms</li>
+                            <li>Find compromises</li>
+                            <li>Finalize deals</li>
+                        </ul>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-name">✅ Deal Closer</div>
+                        <ul class="agent-tasks">
+                            <li>Prepare contracts</li>
+                            <li>Execute signatures</li>
+                            <li>Process payments</li>
+                            <li>Setup onboarding</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add similar sections for other domains... -->
+
+            <!-- Workflows Tab -->
+            <div id="workflows" class="domain-section">
+                <div class="domain-header">
+                    <h2>🔄 KEY WORKFLOWS</h2>
+                    <p>End-to-end process flows across domains</p>
+                </div>
+
+                <div class="workflow-section">
+                    <div class="workflow-card">
+                        <div class="workflow-title">Lead to Client Journey</div>
+                        <div class="mermaid">
+graph LR
+    A[Marketing<br/>Creates Lead] --> B[Lead Qualifier<br/>Scores]
+    B --> C[Discovery Specialist<br/>Assesses]
+    C --> D[Demo Presenter<br/>Shows Value]
+    D --> E[Objection Handler<br/>Addresses]
+    E --> F[Negotiator<br/>Finalizes]
+    F --> G[Deal Closer<br/>Signs]
+    G --> H[Project Manager<br/>Delivers]
+                        </div>
+                    </div>
+
+                    <div class="workflow-card">
+                        <div class="workflow-title">Service Creation Flow</div>
+                        <div class="mermaid">
+graph LR
+    A[Market Researcher<br/>Identifies Need] --> B[Service Designer<br/>Creates Package]
+    B --> C[Pricing Strategist<br/>Sets Price]
+    C --> D[Value Proposition<br/>Positions]
+    D --> E[Proposal Writer<br/>Documents]
+    E --> F[Marketing<br/>Promotes]
+                        </div>
+                    </div>
+
+                    <div class="workflow-card">
+                        <div class="workflow-title">Continuous Improvement Loop</div>
+                        <div class="mermaid">
+graph LR
+    A[Client Feedback<br/>Collects] --> B[Analytics<br/>Analyzes]
+    B --> C[Process Optimizer<br/>Improves]
+    C --> D[Strategy Advisor<br/>Recommends]
+    D --> E[Leadership<br/>Approves]
+    E --> F[Operations<br/>Implements]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add other domain sections similarly -->
+
+        </div>
+
+        <footer>
+            <p><strong>Digital Agency AI Platform</strong> - Organization Structure v1.0.0</p>
+            <p>72 AI Agents across 11 Domains | Last Updated: 2025-11-15</p>
+        </footer>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        function showTab(tabName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.domain-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

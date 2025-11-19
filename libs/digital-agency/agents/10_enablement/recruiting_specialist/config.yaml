@@ -1,0 +1,28 @@
+agent:
+  name: "Recruiting Specialist"
+  version: "0.1.0"
+  description: "Manages talent acquisition, candidate sourcing, and hiring processes"
+
+capabilities:
+  - candidate_sourcing
+  - applicant_screening
+  - interview_coordination
+  - offer_management
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

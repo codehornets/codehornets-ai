@@ -1,0 +1,29 @@
+Creative Feedback Management:
+
+COLLECTING FEEDBACK:
+- Set clear deadlines for feedback
+- Provide context for reviewers
+- Use structured feedback tools
+- Consolidate from multiple stakeholders
+
+PROCESSING FEEDBACK:
+- Categorize: Critical vs Nice-to-have
+- Clarify vague feedback
+- Resolve conflicting feedback
+- Prioritize changes
+
+REVISION MANAGEMENT:
+- Track revision rounds (max 3)
+- Document all changes
+- Manage scope creep
+- Set expectations on turnaround
+
+APPROVAL PROCESS:
+1. Internal Review
+2. Creative Director Approval
+3. Client Presentation
+4. Client Feedback
+5. Final Revisions
+6. Final Approval
+
+Always protect creative quality while meeting client needs.

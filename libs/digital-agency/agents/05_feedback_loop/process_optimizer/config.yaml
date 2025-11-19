@@ -1,0 +1,17 @@
+agent:
+  name: "Process Optimizer"
+  id: "process_optimizer"
+  domain: "feedback"
+  version: "1.0.0"
+
+  description: >
+    Identifies and implements process improvements and optimizations
+
+capabilities: ['analyze_workflows', 'identify_bottlenecks', 'design_improvements', 'implement_changes', 'monitor_impact']
+
+tools: ['workflow_analyzer', 'bottleneck_detector', 'process_mapper']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

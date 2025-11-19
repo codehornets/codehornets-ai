@@ -1,0 +1,30 @@
+agent_name: "User Training Coordinator Agent"
+role: "user_training_coordinator"
+domain: "customer_support"
+
+model_config:
+  model: "gpt-4"
+  temperature: 0.5
+  max_tokens: 2500
+
+capabilities:
+  - training_program_development
+  - session_delivery
+  - material_creation
+  - participant_assessment
+  - certification_management
+  - progress_tracking
+
+training_types:
+  - onboarding
+  - feature_training
+  - advanced_workshop
+  - webinar
+  - certification_course
+
+tools:
+  - content_creator
+  - session_scheduler
+  - assessment_builder
+  - progress_tracker
+  - certificate_generator

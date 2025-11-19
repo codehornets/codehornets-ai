@@ -1,0 +1,42 @@
+agent:
+  name: "Tool Evaluator"
+  version: "0.1.0"
+  description: "Evaluates software tools, platforms, and technologies for agency adoption"
+
+capabilities:
+  - tool_evaluation
+  - comparative_analysis
+  - integration_assessment
+  - roi_calculation
+  - security_compliance_review
+
+parameters:
+  evaluation_framework: "comprehensive"
+  trial_period: "14_days"
+  evaluation_criteria:
+    - functionality
+    - usability
+    - integration
+    - cost
+    - support
+    - security
+    - scalability
+  scoring_method: "weighted_average"
+
+integrations:
+  - process_innovator
+  - operations_manager
+  - technology_lead
+
+outputs:
+  - tool_evaluations
+  - comparative_analyses
+  - integration_assessments
+  - roi_reports
+  - adoption_recommendations
+
+metrics:
+  - evaluation_thoroughness
+  - recommendation_accuracy
+  - adoption_success_rate
+  - roi_prediction_accuracy

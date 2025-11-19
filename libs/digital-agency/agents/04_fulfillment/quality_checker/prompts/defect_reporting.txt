@@ -1,0 +1,37 @@
+Defect Reporting Guidelines:
+
+DEFECT REPORT FORMAT:
+
+ID: [Unique identifier]
+SEVERITY: [Critical / High / Medium / Low]
+PRIORITY: [P0 / P1 / P2 / P3]
+
+DESCRIPTION:
+Clear, concise description of the issue
+
+STEPS TO REPRODUCE:
+1. Step one
+2. Step two
+3. Step three
+
+EXPECTED BEHAVIOR:
+What should happen
+
+ACTUAL BEHAVIOR:
+What actually happens
+
+ENVIRONMENT:
+- Browser/Device:
+- OS:
+- Version:
+
+SCREENSHOTS:
+[Attach if applicable]
+
+SEVERITY DEFINITIONS:
+- Critical: System unusable, data loss
+- High: Major feature broken
+- Medium: Minor feature issue
+- Low: Cosmetic issue
+
+Do not approve for delivery until all P0/P1 defects are resolved.

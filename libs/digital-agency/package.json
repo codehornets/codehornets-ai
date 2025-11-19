@@ -1,0 +1,67 @@
+{
+  "name": "digital-agency-platform",
+  "version": "1.0.0",
+  "description": "AI-powered digital agency platform with multi-agent orchestration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "frontend": "cd frontend && npm run dev",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "start": "npm run start:frontend",
+    "start:frontend": "cd frontend && npm start",
+    "test": "npm run test:frontend",
+    "test:frontend": "cd frontend && npm test",
+    "lint": "npm run lint:frontend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "migrate": "alembic upgrade head",
+    "migrate:rollback": "alembic downgrade -1",
+    "migrate:create": "alembic revision --autogenerate -m",
+    "celery:worker": "celery -A tasks.celery_app worker --loglevel=info",
+    "celery:beat": "celery -A tasks.celery_app beat --loglevel=info",
+    "celery:flower": "celery -A tasks.celery_app flower --port=5555"
+  },
+  "keywords": [
+    "ai",
+    "digital-agency",
+    "multi-agent",
+    "automation",
+    "claude",
+    "marketing",
+    "sales"
+  ],
+  "author": "Ornomedia AI",
+  "license": "PROPRIETARY",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ornomedia-ai/digital-agency"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "task-master-ai": "^0.31.2",
+    "winston": "^3.11.0"
+  }
+}

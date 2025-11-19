@@ -1,0 +1,28 @@
+agent:
+  name: "Brand Designer"
+  version: "0.1.0"
+  description: "Creates visual brand assets and maintains brand consistency"
+
+capabilities:
+  - brand_identity_creation
+  - logo_design
+  - marketing_asset_creation
+  - brand_guidelines_development
+  - consistency_checking
+
+parameters:
+  asset_types:
+    - logos
+    - social_media_graphics
+    - infographics
+    - presentations
+    - marketing_collateral
+  design_tools:
+    - figma
+    - adobe_creative_suite
+    - canva
+
+integrations:
+  - social_media_manager
+  - content_creator
+  - ads_manager

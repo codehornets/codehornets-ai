@@ -1,0 +1,216 @@
+# ============================================================================
+# systemd Service Unit for n8n Workflow Automation (PainterFlow)
+# ============================================================================
+# This systemd service ensures n8n runs as a background service on Linux
+# servers with automatic startup, restart on failure, and proper logging.
+#
+# Installation:
+#   1. Copy this file to /etc/systemd/system/n8n-painterflow.service
+#   2. Update paths and user/group as needed
+#   3. Reload systemd: sudo systemctl daemon-reload
+#   4. Enable service: sudo systemctl enable n8n-painterflow
+#   5. Start service: sudo systemctl start n8n-painterflow
+#   6. Check status: sudo systemctl status n8n-painterflow
+#
+# Management:
+#   Start:   sudo systemctl start n8n-painterflow
+#   Stop:    sudo systemctl stop n8n-painterflow
+#   Restart: sudo systemctl restart n8n-painterflow
+#   Status:  sudo systemctl status n8n-painterflow
+#   Logs:    sudo journalctl -u n8n-painterflow -f
+# ============================================================================
+
+[Unit]
+Description=n8n Workflow Automation for PainterFlow CRM
+Documentation=https://docs.n8n.io
+After=network-online.target docker.service mysql.service redis.service
+Wants=network-online.target
+Requires=docker.service
+
+# ============================================================================
+# Service Configuration
+# ============================================================================
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/painterflow-crm
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+# Load environment from file
+EnvironmentFile=/var/www/painterflow-crm/.env.workflow
+
+# Core environment variables (override if needed)
+Environment="NODE_ENV=production"
+Environment="N8N_PORT=5678"
+Environment="N8N_PROTOCOL=https"
+
+# ============================================================================
+# Execution Commands
+# ============================================================================
+# Start n8n using Docker Compose
+ExecStart=/usr/bin/docker-compose -f /var/www/painterflow-crm/docker-compose.workflow.yml up n8n
+
+# Stop n8n gracefully
+ExecStop=/usr/bin/docker-compose -f /var/www/painterflow-crm/docker-compose.workflow.yml stop n8n
+
+# Reload configuration
+ExecReload=/usr/bin/docker-compose -f /var/www/painterflow-crm/docker-compose.workflow.yml restart n8n
+
+# ============================================================================
+# Restart and Recovery Policies
+# ============================================================================
+# Restart policy: always restart on failure
+Restart=always
+
+# Delay between restart attempts
+RestartSec=10s
+
+# Maximum restart attempts in 10 minutes window
+StartLimitBurst=5
+StartLimitIntervalSec=600
+
+# ============================================================================
+# Security Hardening
+# ============================================================================
+# Process isolation
+PrivateTmp=true
+NoNewPrivileges=true
+
+# Filesystem protection
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/painterflow-crm/storage /var/www/painterflow-crm/infrastructure/docker
+
+# Network protection
+# PrivateNetwork=false  # Must be false for Docker networking
+
+# Capability restrictions
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+# System call filtering (commented out for Docker compatibility)
+# SystemCallFilter=@system-service
+# SystemCallErrorNumber=EPERM
+
+# ============================================================================
+# Resource Limits
+# ============================================================================
+# Memory limit (adjust based on workload)
+MemoryLimit=2G
+MemoryMax=4G
+
+# CPU quota (50% of one CPU core)
+CPUQuota=50%
+
+# Task limit
+TasksMax=512
+
+# File descriptor limit
+LimitNOFILE=65536
+
+# Core dump size (0 = disabled)
+LimitCORE=0
+
+# ============================================================================
+# Logging
+# ============================================================================
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=n8n-painterflow
+
+# Log level
+# debug, info, notice, warning, err, crit, alert, emerg
+SyslogLevel=info
+
+# ============================================================================
+# Process Management
+# ============================================================================
+# Graceful shutdown timeout
+TimeoutStopSec=30s
+
+# Kill mode: control-group (kill all processes in cgroup)
+KillMode=control-group
+
+# Send SIGTERM for graceful shutdown
+KillSignal=SIGTERM
+
+# Final kill signal if process doesn't stop
+FinalKillSignal=SIGKILL
+
+# ============================================================================
+# Enable Service on Boot
+# ============================================================================
+[Install]
+WantedBy=multi-user.target
+
+# ============================================================================
+# Alternative Configuration (Direct n8n without Docker)
+# ============================================================================
+# If running n8n directly (not in Docker), use this configuration instead:
+#
+# [Service]
+# Type=simple
+# User=n8n
+# Group=n8n
+# WorkingDirectory=/opt/n8n
+# ExecStart=/usr/bin/node /opt/n8n/packages/cli/bin/n8n
+# Restart=always
+# RestartSec=10s
+# Environment="NODE_ENV=production"
+# Environment="N8N_PORT=5678"
+# Environment="N8N_PROTOCOL=https"
+# Environment="DB_TYPE=mysqldb"
+# Environment="DB_MYSQLDB_HOST=localhost"
+# Environment="DB_MYSQLDB_PORT=3306"
+# Environment="DB_MYSQLDB_DATABASE=n8n"
+# Environment="DB_MYSQLDB_USER=n8n_user"
+# Environment="DB_MYSQLDB_PASSWORD=secure_password"
+# ============================================================================
+
+# ============================================================================
+# Post-Installation Steps
+# ============================================================================
+# 1. Create dedicated user (if not using www-data):
+#    sudo useradd -r -s /bin/false n8n
+#
+# 2. Set proper ownership:
+#    sudo chown -R www-data:www-data /var/www/painterflow-crm
+#
+# 3. Enable lingering (allows service to run without user login):
+#    sudo loginctl enable-linger www-data
+#
+# 4. Configure logrotate for n8n logs:
+#    sudo cp /var/www/painterflow-crm/infrastructure/systemd/n8n-logrotate /etc/logrotate.d/n8n-painterflow
+#
+# 5. Test the service:
+#    sudo systemctl start n8n-painterflow
+#    sudo systemctl status n8n-painterflow
+#    sudo journalctl -u n8n-painterflow -f
+#
+# 6. Verify n8n is running:
+#    curl http://localhost:5678/healthz
+#
+# 7. Enable on boot:
+#    sudo systemctl enable n8n-painterflow
+# ============================================================================
+
+# ============================================================================
+# Monitoring and Alerts
+# ============================================================================
+# Monitor service health:
+#   systemctl is-active n8n-painterflow
+#   systemctl is-enabled n8n-painterflow
+#   systemctl is-failed n8n-painterflow
+#
+# View service logs:
+#   journalctl -u n8n-painterflow --since today
+#   journalctl -u n8n-painterflow -f
+#   journalctl -u n8n-painterflow -p err
+#
+# Service metrics:
+#   systemctl show n8n-painterflow
+#   systemd-cgtop
+# ============================================================================

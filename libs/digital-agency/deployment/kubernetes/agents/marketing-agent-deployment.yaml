@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketing-agent
+  labels:
+    app: marketing-agent
+    domain: marketing
+    component: agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: marketing-agent
+  template:
+    metadata:
+      labels:
+        app: marketing-agent
+        domain: marketing
+        component: agent
+    spec:
+      containers:
+      - name: marketing-agent
+        image: digital-agency/agent:latest
+        imagePullPolicy: Always
+        env:
+        - name: AGENT_NAME
+          value: "campaign_creator"
+        - name: DOMAIN
+          value: "marketing"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: REDIS_URL
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: OPENAI_API_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import sys; sys.exit(0)"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import sys; sys.exit(0)"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      restartPolicy: Always
