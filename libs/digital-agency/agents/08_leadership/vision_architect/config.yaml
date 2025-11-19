@@ -1,0 +1,8 @@
+agent_name: "Vision Architect Agent"
+role: "vision_architect"
+domain: "leadership"
+model_config:
+  model: "gpt-4"
+  temperature: 0.7
+capabilities: [vision_development, innovation_strategy, future_planning]
+tools: [vision_framework, innovation_scanner, trend_analyzer]

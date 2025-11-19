@@ -1,0 +1,1334 @@
+# Agent Registry for Digital Agency AI Platform
+# Defines all AI agents, their capabilities, and configurations
+
+agents:
+  # Lead Generation Domain Agents
+  lead_researcher:
+    id: "agent_001"
+    name: "Lead Researcher"
+    domain: lead_generation
+    type: researcher
+    description: "Researches and identifies potential leads based on ICP criteria"
+    capabilities:
+      - company_research
+      - industry_analysis
+      - firmographic_data_collection
+      - technographic_profiling
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 2048
+    system_prompt_template: lead_researcher
+    tools:
+      - web_search
+      - linkedin_api
+      - apollo_api
+      - clearbit_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  contact_finder:
+    id: "agent_002"
+    name: "Contact Finder"
+    domain: lead_generation
+    type: extractor
+    description: "Finds and validates contact information for prospects"
+    capabilities:
+      - email_discovery
+      - phone_discovery
+      - contact_validation
+      - social_profile_matching
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.2
+    max_tokens: 1024
+    system_prompt_template: contact_finder
+    tools:
+      - apollo_api
+      - hunter_io
+      - clearbit_api
+    max_concurrent_tasks: 10
+    timeout_seconds: 120
+
+  lead_qualifier:
+    id: "agent_003"
+    name: "Lead Qualifier"
+    domain: lead_generation
+    type: analyzer
+    description: "Scores and qualifies leads based on criteria"
+    capabilities:
+      - lead_scoring
+      - fit_assessment
+      - intent_detection
+      - prioritization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: lead_qualifier
+    tools:
+      - hubspot_api
+      - custom_scoring_model
+    max_concurrent_tasks: 8
+    timeout_seconds: 90
+
+  # Email Marketing Domain Agents
+  email_writer:
+    id: "agent_004"
+    name: "Email Writer"
+    domain: email_marketing
+    type: writer
+    description: "Creates personalized email content for campaigns"
+    capabilities:
+      - email_copywriting
+      - personalization
+      - subject_line_generation
+      - cta_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.7
+    max_tokens: 2048
+    system_prompt_template: email_writer
+    tools:
+      - hubspot_api
+      - template_engine
+    max_concurrent_tasks: 6
+    timeout_seconds: 120
+
+  campaign_manager:
+    id: "agent_005"
+    name: "Campaign Manager"
+    domain: email_marketing
+    type: orchestrator
+    description: "Manages email campaigns from setup to execution"
+    capabilities:
+      - campaign_setup
+      - audience_segmentation
+      - send_time_optimization
+      - ab_test_management
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 3072
+    system_prompt_template: campaign_manager
+    tools:
+      - sendgrid_api
+      - hubspot_api
+      - analytics_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  deliverability_monitor:
+    id: "agent_006"
+    name: "Deliverability Monitor"
+    domain: email_marketing
+    type: monitor
+    description: "Monitors and optimizes email deliverability"
+    capabilities:
+      - bounce_analysis
+      - spam_score_checking
+      - sender_reputation_monitoring
+      - list_hygiene
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 1024
+    system_prompt_template: deliverability_monitor
+    tools:
+      - sendgrid_api
+      - postmark_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 180
+
+  # Content Marketing Domain Agents
+  content_writer:
+    id: "agent_007"
+    name: "Content Writer"
+    domain: content_marketing
+    type: writer
+    description: "Creates long-form content across multiple formats"
+    capabilities:
+      - blog_writing
+      - whitepaper_creation
+      - case_study_writing
+      - ebook_content
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.7
+    max_tokens: 8192
+    system_prompt_template: content_writer
+    tools:
+      - web_search
+      - wordpress_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 600
+
+  editor:
+    id: "agent_008"
+    name: "Content Editor"
+    domain: content_marketing
+    type: reviewer
+    description: "Reviews and edits content for quality and consistency"
+    capabilities:
+      - content_editing
+      - tone_consistency
+      - fact_checking
+      - style_guide_enforcement
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 4096
+    system_prompt_template: content_editor
+    tools:
+      - grammarly_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 300
+
+  seo_optimizer:
+    id: "agent_009"
+    name: "SEO Optimizer"
+    domain: content_marketing
+    type: optimizer
+    description: "Optimizes content for search engines"
+    capabilities:
+      - keyword_optimization
+      - meta_tag_generation
+      - content_structure_optimization
+      - internal_linking
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: seo_optimizer
+    tools:
+      - semrush_api
+      - ahrefs_api
+    max_concurrent_tasks: 6
+    timeout_seconds: 240
+
+  content_strategist:
+    id: "agent_010"
+    name: "Content Strategist"
+    domain: content_marketing
+    type: planner
+    description: "Plans content strategy and editorial calendars"
+    capabilities:
+      - content_planning
+      - topic_research
+      - editorial_calendar
+      - content_gap_analysis
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 4096
+    system_prompt_template: content_strategist
+    tools:
+      - web_search
+      - semrush_api
+      - analytics_api
+    max_concurrent_tasks: 2
+    timeout_seconds: 360
+
+  # Social Media Domain Agents
+  social_poster:
+    id: "agent_011"
+    name: "Social Media Poster"
+    domain: social_media
+    type: publisher
+    description: "Creates and schedules social media posts"
+    capabilities:
+      - post_creation
+      - content_adaptation
+      - scheduling
+      - hashtag_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.7
+    max_tokens: 1024
+    system_prompt_template: social_poster
+    tools:
+      - buffer_api
+      - facebook_api
+      - twitter_api
+      - linkedin_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  engagement_manager:
+    id: "agent_012"
+    name: "Engagement Manager"
+    domain: social_media
+    type: responder
+    description: "Monitors and responds to social media engagement"
+    capabilities:
+      - comment_monitoring
+      - response_generation
+      - mention_tracking
+      - dm_management
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 512
+    system_prompt_template: engagement_manager
+    tools:
+      - facebook_api
+      - twitter_api
+      - linkedin_api
+    max_concurrent_tasks: 10
+    timeout_seconds: 60
+
+  social_analyst:
+    id: "agent_013"
+    name: "Social Media Analyst"
+    domain: social_media
+    type: analyzer
+    description: "Analyzes social media performance and trends"
+    capabilities:
+      - performance_analysis
+      - audience_insights
+      - trend_detection
+      - competitor_monitoring
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: social_analyst
+    tools:
+      - facebook_api
+      - twitter_api
+      - linkedin_api
+      - analytics_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  # Paid Advertising Domain Agents
+  ad_creator:
+    id: "agent_014"
+    name: "Ad Creator"
+    domain: paid_advertising
+    type: creator
+    description: "Creates ad copy and campaigns"
+    capabilities:
+      - ad_copywriting
+      - headline_generation
+      - creative_brief_development
+      - landing_page_copy
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.7
+    max_tokens: 2048
+    system_prompt_template: ad_creator
+    tools:
+      - google_ads_api
+      - facebook_ads_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  bid_optimizer:
+    id: "agent_015"
+    name: "Bid Optimizer"
+    domain: paid_advertising
+    type: optimizer
+    description: "Optimizes bids and budgets for ad campaigns"
+    capabilities:
+      - bid_adjustment
+      - budget_allocation
+      - performance_optimization
+      - cost_reduction
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 2048
+    system_prompt_template: bid_optimizer
+    tools:
+      - google_ads_api
+      - facebook_ads_api
+    max_concurrent_tasks: 6
+    timeout_seconds: 240
+
+  performance_analyst:
+    id: "agent_016"
+    name: "Ad Performance Analyst"
+    domain: paid_advertising
+    type: analyzer
+    description: "Analyzes ad campaign performance"
+    capabilities:
+      - campaign_analysis
+      - roi_calculation
+      - attribution_modeling
+      - reporting
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: performance_analyst
+    tools:
+      - google_ads_api
+      - facebook_ads_api
+      - analytics_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  # SEO Domain Agents
+  keyword_researcher:
+    id: "agent_017"
+    name: "Keyword Researcher"
+    domain: seo
+    type: researcher
+    description: "Researches and identifies keyword opportunities"
+    capabilities:
+      - keyword_research
+      - search_volume_analysis
+      - competition_analysis
+      - keyword_clustering
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: keyword_researcher
+    tools:
+      - semrush_api
+      - ahrefs_api
+      - google_keyword_planner
+    max_concurrent_tasks: 5
+    timeout_seconds: 240
+
+  on_page_optimizer:
+    id: "agent_018"
+    name: "On-Page Optimizer"
+    domain: seo
+    type: optimizer
+    description: "Optimizes on-page SEO elements"
+    capabilities:
+      - meta_optimization
+      - header_optimization
+      - content_optimization
+      - schema_markup
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: on_page_optimizer
+    tools:
+      - wordpress_api
+      - screaming_frog
+    max_concurrent_tasks: 6
+    timeout_seconds: 180
+
+  link_builder:
+    id: "agent_019"
+    name: "Link Builder"
+    domain: seo
+    type: builder
+    description: "Identifies and executes link building opportunities"
+    capabilities:
+      - backlink_research
+      - outreach_email_writing
+      - guest_post_ideation
+      - broken_link_finding
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 2048
+    system_prompt_template: link_builder
+    tools:
+      - ahrefs_api
+      - hunter_io
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  seo_analyst:
+    id: "agent_020"
+    name: "SEO Analyst"
+    domain: seo
+    type: analyzer
+    description: "Analyzes SEO performance and provides insights"
+    capabilities:
+      - rank_tracking
+      - traffic_analysis
+      - technical_seo_audit
+      - competitor_analysis
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: seo_analyst
+    tools:
+      - google_search_console
+      - google_analytics
+      - semrush_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 360
+
+  technical_seo_specialist:
+    id: "agent_021"
+    name: "Technical SEO Specialist"
+    domain: seo
+    type: specialist
+    description: "Handles technical SEO implementation and fixes"
+    capabilities:
+      - site_speed_optimization
+      - mobile_optimization
+      - structured_data_implementation
+      - crawl_error_fixing
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 2048
+    system_prompt_template: technical_seo_specialist
+    tools:
+      - google_search_console
+      - screaming_frog
+      - google_pagespeed
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  local_seo_specialist:
+    id: "agent_022"
+    name: "Local SEO Specialist"
+    domain: seo
+    type: specialist
+    description: "Optimizes for local search and Google My Business"
+    capabilities:
+      - gmb_optimization
+      - local_citation_building
+      - review_management
+      - local_content_creation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 1536
+    system_prompt_template: local_seo_specialist
+    tools:
+      - google_my_business_api
+      - moz_local_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 240
+
+  # CRM Management Domain Agents
+  crm_enricher:
+    id: "agent_023"
+    name: "CRM Data Enricher"
+    domain: crm_management
+    type: enricher
+    description: "Enriches CRM records with additional data"
+    capabilities:
+      - contact_enrichment
+      - company_data_enrichment
+      - missing_field_completion
+      - data_standardization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.2
+    max_tokens: 1024
+    system_prompt_template: crm_enricher
+    tools:
+      - clearbit_api
+      - hubspot_api
+      - salesforce_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  pipeline_manager:
+    id: "agent_024"
+    name: "Pipeline Manager"
+    domain: crm_management
+    type: manager
+    description: "Manages sales pipeline and deal progression"
+    capabilities:
+      - deal_stage_management
+      - pipeline_forecasting
+      - win_loss_analysis
+      - bottleneck_identification
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: pipeline_manager
+    tools:
+      - hubspot_api
+      - salesforce_api
+      - analytics_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  automation_builder:
+    id: "agent_025"
+    name: "CRM Automation Builder"
+    domain: crm_management
+    type: builder
+    description: "Creates and manages CRM workflows and automation"
+    capabilities:
+      - workflow_creation
+      - trigger_setup
+      - automation_testing
+      - process_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 3072
+    system_prompt_template: automation_builder
+    tools:
+      - hubspot_api
+      - salesforce_api
+      - zapier_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 300
+
+  segmentation_specialist:
+    id: "agent_026"
+    name: "Segmentation Specialist"
+    domain: crm_management
+    type: specialist
+    description: "Creates and manages customer segments"
+    capabilities:
+      - audience_segmentation
+      - behavioral_analysis
+      - persona_development
+      - targeting_criteria_creation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: segmentation_specialist
+    tools:
+      - hubspot_api
+      - analytics_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 240
+
+  lead_nurture_specialist:
+    id: "agent_027"
+    name: "Lead Nurture Specialist"
+    domain: crm_management
+    type: specialist
+    description: "Designs and manages lead nurturing campaigns"
+    capabilities:
+      - nurture_campaign_design
+      - drip_sequence_creation
+      - lead_scoring_rules
+      - conversion_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 2048
+    system_prompt_template: lead_nurture_specialist
+    tools:
+      - hubspot_api
+      - sendgrid_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  crm_data_analyst:
+    id: "agent_028"
+    name: "CRM Data Analyst"
+    domain: crm_management
+    type: analyzer
+    description: "Analyzes CRM data for insights and trends"
+    capabilities:
+      - customer_lifecycle_analysis
+      - churn_prediction
+      - upsell_opportunity_identification
+      - data_quality_monitoring
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: crm_data_analyst
+    tools:
+      - hubspot_api
+      - salesforce_api
+      - analytics_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 360
+
+  # Project Management Domain Agents
+  project_planner:
+    id: "agent_029"
+    name: "Project Planner"
+    domain: project_management
+    type: planner
+    description: "Plans and structures project workflows"
+    capabilities:
+      - project_scoping
+      - timeline_creation
+      - milestone_definition
+      - dependency_mapping
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 3072
+    system_prompt_template: project_planner
+    tools:
+      - asana_api
+      - jira_api
+      - monday_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 300
+
+  task_manager:
+    id: "agent_030"
+    name: "Task Manager"
+    domain: project_management
+    type: manager
+    description: "Creates and manages individual tasks"
+    capabilities:
+      - task_creation
+      - task_assignment
+      - priority_setting
+      - deadline_management
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 1536
+    system_prompt_template: task_manager
+    tools:
+      - asana_api
+      - jira_api
+      - trello_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  resource_coordinator:
+    id: "agent_031"
+    name: "Resource Coordinator"
+    domain: project_management
+    type: coordinator
+    description: "Coordinates resource allocation across projects"
+    capabilities:
+      - resource_allocation
+      - capacity_planning
+      - workload_balancing
+      - availability_tracking
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: resource_coordinator
+    tools:
+      - asana_api
+      - jira_api
+      - harvest_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 180
+
+  status_reporter:
+    id: "agent_032"
+    name: "Status Reporter"
+    domain: project_management
+    type: reporter
+    description: "Generates project status reports and updates"
+    capabilities:
+      - progress_reporting
+      - status_summary_generation
+      - stakeholder_communication
+      - risk_identification
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 2048
+    system_prompt_template: status_reporter
+    tools:
+      - asana_api
+      - jira_api
+      - slack_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 240
+
+  sprint_coordinator:
+    id: "agent_033"
+    name: "Sprint Coordinator"
+    domain: project_management
+    type: coordinator
+    description: "Manages agile sprints and ceremonies"
+    capabilities:
+      - sprint_planning
+      - backlog_grooming
+      - velocity_tracking
+      - retrospective_facilitation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 2048
+    system_prompt_template: sprint_coordinator
+    tools:
+      - jira_api
+      - asana_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 300
+
+  risk_manager:
+    id: "agent_034"
+    name: "Risk Manager"
+    domain: project_management
+    type: manager
+    description: "Identifies and manages project risks"
+    capabilities:
+      - risk_identification
+      - impact_assessment
+      - mitigation_planning
+      - issue_tracking
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: risk_manager
+    tools:
+      - jira_api
+      - asana_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 240
+
+  # Analytics Domain Agents
+  data_collector:
+    id: "agent_035"
+    name: "Data Collector"
+    domain: analytics
+    type: collector
+    description: "Collects and aggregates data from multiple sources"
+    capabilities:
+      - multi_source_data_collection
+      - data_integration
+      - etl_processing
+      - data_validation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.2
+    max_tokens: 1536
+    system_prompt_template: data_collector
+    tools:
+      - google_analytics_api
+      - segment_api
+      - mixpanel_api
+    max_concurrent_tasks: 6
+    timeout_seconds: 300
+
+  analyst:
+    id: "agent_036"
+    name: "Data Analyst"
+    domain: analytics
+    type: analyzer
+    description: "Analyzes data and identifies patterns"
+    capabilities:
+      - trend_analysis
+      - pattern_recognition
+      - statistical_analysis
+      - correlation_detection
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: data_analyst
+    tools:
+      - analytics_api
+      - python_analysis_tools
+    max_concurrent_tasks: 4
+    timeout_seconds: 360
+
+  report_generator:
+    id: "agent_037"
+    name: "Report Generator"
+    domain: analytics
+    type: generator
+    description: "Creates automated reports and dashboards"
+    capabilities:
+      - report_creation
+      - dashboard_design
+      - visualization_generation
+      - automated_reporting
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: report_generator
+    tools:
+      - tableau_api
+      - looker_api
+      - google_data_studio
+    max_concurrent_tasks: 5
+    timeout_seconds: 300
+
+  insight_engine:
+    id: "agent_038"
+    name: "Insight Engine"
+    domain: analytics
+    type: analyzer
+    description: "Generates actionable insights from data"
+    capabilities:
+      - insight_generation
+      - recommendation_creation
+      - anomaly_detection
+      - opportunity_identification
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 3072
+    system_prompt_template: insight_engine
+    tools:
+      - analytics_api
+      - machine_learning_models
+    max_concurrent_tasks: 3
+    timeout_seconds: 400
+
+  predictive_analyst:
+    id: "agent_039"
+    name: "Predictive Analyst"
+    domain: analytics
+    type: analyzer
+    description: "Performs predictive analytics and forecasting"
+    capabilities:
+      - forecasting
+      - predictive_modeling
+      - trend_projection
+      - scenario_analysis
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 3072
+    system_prompt_template: predictive_analyst
+    tools:
+      - analytics_api
+      - python_ml_tools
+    max_concurrent_tasks: 3
+    timeout_seconds: 400
+
+  attribution_analyst:
+    id: "agent_040"
+    name: "Attribution Analyst"
+    domain: analytics
+    type: analyzer
+    description: "Analyzes marketing attribution and customer journey"
+    capabilities:
+      - attribution_modeling
+      - customer_journey_mapping
+      - touchpoint_analysis
+      - conversion_path_analysis
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 2048
+    system_prompt_template: attribution_analyst
+    tools:
+      - google_analytics_api
+      - segment_api
+      - attribution_models
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  # Quality Assurance Domain Agents
+  content_reviewer:
+    id: "agent_041"
+    name: "Content Reviewer"
+    domain: quality_assurance
+    type: reviewer
+    description: "Reviews content for quality and accuracy"
+    capabilities:
+      - content_review
+      - quality_assessment
+      - error_detection
+      - improvement_suggestions
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 3072
+    system_prompt_template: content_reviewer
+    tools:
+      - grammarly_api
+      - copyscape_api
+    max_concurrent_tasks: 6
+    timeout_seconds: 240
+
+  compliance_checker:
+    id: "agent_042"
+    name: "Compliance Checker"
+    domain: quality_assurance
+    type: checker
+    description: "Ensures brand and legal compliance"
+    capabilities:
+      - brand_guideline_compliance
+      - legal_compliance_checking
+      - policy_enforcement
+      - regulatory_verification
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.2
+    max_tokens: 2048
+    system_prompt_template: compliance_checker
+    tools:
+      - compliance_database
+      - brand_guidelines_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  performance_validator:
+    id: "agent_043"
+    name: "Performance Validator"
+    domain: quality_assurance
+    type: validator
+    description: "Validates campaign and content performance"
+    capabilities:
+      - performance_validation
+      - benchmark_comparison
+      - quality_scoring
+      - effectiveness_assessment
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 2048
+    system_prompt_template: performance_validator
+    tools:
+      - analytics_api
+      - benchmark_data
+    max_concurrent_tasks: 5
+    timeout_seconds: 240
+
+  tone_analyzer:
+    id: "agent_044"
+    name: "Tone Analyzer"
+    domain: quality_assurance
+    type: analyzer
+    description: "Analyzes and validates content tone and voice"
+    capabilities:
+      - tone_analysis
+      - voice_consistency_checking
+      - sentiment_analysis
+      - brand_voice_alignment
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 1536
+    system_prompt_template: tone_analyzer
+    tools:
+      - tone_analysis_api
+      - sentiment_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  fact_checker:
+    id: "agent_045"
+    name: "Fact Checker"
+    domain: quality_assurance
+    type: checker
+    description: "Verifies factual accuracy of content"
+    capabilities:
+      - fact_verification
+      - source_validation
+      - claim_checking
+      - citation_verification
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.2
+    max_tokens: 2048
+    system_prompt_template: fact_checker
+    tools:
+      - web_search
+      - fact_check_databases
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  accessibility_checker:
+    id: "agent_046"
+    name: "Accessibility Checker"
+    domain: quality_assurance
+    type: checker
+    description: "Ensures content accessibility compliance"
+    capabilities:
+      - wcag_compliance_checking
+      - alt_text_validation
+      - readability_assessment
+      - accessibility_recommendations
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 1536
+    system_prompt_template: accessibility_checker
+    tools:
+      - accessibility_api
+      - wcag_validator
+    max_concurrent_tasks: 6
+    timeout_seconds: 180
+
+  # Additional Lead Generation Agents
+  prospect_scorer:
+    id: "agent_047"
+    name: "Prospect Scorer"
+    domain: lead_generation
+    type: scorer
+    description: "Scores prospects using predictive models"
+    capabilities:
+      - predictive_lead_scoring
+      - propensity_modeling
+      - fit_scoring
+      - behavior_scoring
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 1536
+    system_prompt_template: prospect_scorer
+    tools:
+      - hubspot_api
+      - ml_scoring_models
+    max_concurrent_tasks: 10
+    timeout_seconds: 90
+
+  icp_analyzer:
+    id: "agent_048"
+    name: "ICP Analyzer"
+    domain: lead_generation
+    type: analyzer
+    description: "Analyzes and refines ideal customer profiles"
+    capabilities:
+      - icp_analysis
+      - customer_profiling
+      - market_segmentation
+      - target_refinement
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: icp_analyzer
+    tools:
+      - analytics_api
+      - clearbit_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 300
+
+  intent_detector:
+    id: "agent_049"
+    name: "Intent Detector"
+    domain: lead_generation
+    type: detector
+    description: "Detects buying intent signals"
+    capabilities:
+      - intent_signal_detection
+      - behavioral_analysis
+      - engagement_tracking
+      - readiness_assessment
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 1536
+    system_prompt_template: intent_detector
+    tools:
+      - intent_data_api
+      - analytics_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  # Additional Email Marketing Agents
+  email_personalizer:
+    id: "agent_050"
+    name: "Email Personalizer"
+    domain: email_marketing
+    type: personalizer
+    description: "Personalizes email content at scale"
+    capabilities:
+      - dynamic_content_personalization
+      - merge_tag_optimization
+      - behavioral_personalization
+      - contextual_customization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 1536
+    system_prompt_template: email_personalizer
+    tools:
+      - sendgrid_api
+      - hubspot_api
+    max_concurrent_tasks: 10
+    timeout_seconds: 90
+
+  ab_test_manager:
+    id: "agent_051"
+    name: "A/B Test Manager"
+    domain: email_marketing
+    type: manager
+    description: "Manages email A/B testing campaigns"
+    capabilities:
+      - test_design
+      - variant_creation
+      - statistical_analysis
+      - winner_selection
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: ab_test_manager
+    tools:
+      - sendgrid_api
+      - analytics_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 240
+
+  send_time_optimizer:
+    id: "agent_052"
+    name: "Send Time Optimizer"
+    domain: email_marketing
+    type: optimizer
+    description: "Optimizes email send times for engagement"
+    capabilities:
+      - send_time_prediction
+      - engagement_analysis
+      - timezone_optimization
+      - cadence_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.3
+    max_tokens: 1536
+    system_prompt_template: send_time_optimizer
+    tools:
+      - sendgrid_api
+      - analytics_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  # Additional Content Marketing Agents
+  video_scripter:
+    id: "agent_053"
+    name: "Video Scripter"
+    domain: content_marketing
+    type: writer
+    description: "Creates video scripts and storyboards"
+    capabilities:
+      - video_script_writing
+      - storyboard_creation
+      - hook_development
+      - cta_scripting
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.7
+    max_tokens: 3072
+    system_prompt_template: video_scripter
+    tools:
+      - youtube_api
+      - vimeo_api
+    max_concurrent_tasks: 3
+    timeout_seconds: 360
+
+  infographic_writer:
+    id: "agent_054"
+    name: "Infographic Writer"
+    domain: content_marketing
+    type: writer
+    description: "Creates infographic copy and data narratives"
+    capabilities:
+      - data_storytelling
+      - infographic_copy
+      - visual_hierarchy_planning
+      - statistic_sourcing
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 1536
+    system_prompt_template: infographic_writer
+    tools:
+      - canva_api
+      - data_sources
+    max_concurrent_tasks: 4
+    timeout_seconds: 240
+
+  # Additional Social Media Agents
+  influencer_identifier:
+    id: "agent_055"
+    name: "Influencer Identifier"
+    domain: social_media
+    type: researcher
+    description: "Identifies and evaluates influencer opportunities"
+    capabilities:
+      - influencer_discovery
+      - audience_analysis
+      - engagement_rate_calculation
+      - partnership_recommendation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 2048
+    system_prompt_template: influencer_identifier
+    tools:
+      - social_listening_api
+      - influencer_databases
+    max_concurrent_tasks: 4
+    timeout_seconds: 300
+
+  hashtag_researcher:
+    id: "agent_056"
+    name: "Hashtag Researcher"
+    domain: social_media
+    type: researcher
+    description: "Researches and recommends hashtags"
+    capabilities:
+      - hashtag_research
+      - trending_hashtag_identification
+      - hashtag_performance_analysis
+      - custom_hashtag_creation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 1024
+    system_prompt_template: hashtag_researcher
+    tools:
+      - twitter_api
+      - instagram_api
+      - hashtag_tracking_tools
+    max_concurrent_tasks: 6
+    timeout_seconds: 180
+
+  community_manager:
+    id: "agent_057"
+    name: "Community Manager"
+    domain: social_media
+    type: manager
+    description: "Manages online community interactions"
+    capabilities:
+      - community_engagement
+      - conversation_moderation
+      - member_support
+      - relationship_building
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.6
+    max_tokens: 1024
+    system_prompt_template: community_manager
+    tools:
+      - facebook_api
+      - discord_api
+      - slack_api
+    max_concurrent_tasks: 8
+    timeout_seconds: 120
+
+  # Additional Paid Advertising Agents
+  audience_builder:
+    id: "agent_058"
+    name: "Audience Builder"
+    domain: paid_advertising
+    type: builder
+    description: "Creates and manages ad audiences"
+    capabilities:
+      - audience_segmentation
+      - lookalike_audience_creation
+      - retargeting_audience_setup
+      - interest_targeting
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 1536
+    system_prompt_template: audience_builder
+    tools:
+      - facebook_ads_api
+      - google_ads_api
+    max_concurrent_tasks: 5
+    timeout_seconds: 180
+
+  landing_page_optimizer:
+    id: "agent_059"
+    name: "Landing Page Optimizer"
+    domain: paid_advertising
+    type: optimizer
+    description: "Optimizes landing pages for ad conversions"
+    capabilities:
+      - conversion_rate_optimization
+      - page_speed_optimization
+      - cta_optimization
+      - form_optimization
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.5
+    max_tokens: 2048
+    system_prompt_template: landing_page_optimizer
+    tools:
+      - google_analytics_api
+      - unbounce_api
+    max_concurrent_tasks: 4
+    timeout_seconds: 240
+
+  ad_creative_tester:
+    id: "agent_060"
+    name: "Ad Creative Tester"
+    domain: paid_advertising
+    type: tester
+    description: "Tests and optimizes ad creatives"
+    capabilities:
+      - creative_testing
+      - image_performance_analysis
+      - headline_testing
+      - creative_rotation
+    model: claude-sonnet-4-5-20250929
+    temperature: 0.4
+    max_tokens: 1536
+    system_prompt_template: ad_creative_tester
+    tools:
+      - facebook_ads_api
+      - google_ads_api
+    max_concurrent_tasks: 6
+    timeout_seconds: 200
+
+# Agent Teams (pre-defined groups for common workflows)
+teams:
+  content_production:
+    agents:
+      - content_writer
+      - editor
+      - seo_optimizer
+    coordinator: content_strategist
+
+  lead_acquisition:
+    agents:
+      - lead_researcher
+      - contact_finder
+      - lead_qualifier
+    coordinator: lead_qualifier
+
+  social_campaign:
+    agents:
+      - social_poster
+      - engagement_manager
+      - social_analyst
+    coordinator: social_analyst
+
+  paid_campaign:
+    agents:
+      - ad_creator
+      - bid_optimizer
+      - performance_analyst
+    coordinator: performance_analyst

@@ -1,0 +1,30 @@
+Escalation Response Framework:
+
+IMMEDIATE RESPONSE (within 2 hours):
+"Thank you for bringing this to my attention. I understand the urgency and I'm personally overseeing the resolution. Let me provide you with an immediate action plan..."
+
+ASSESS THE SITUATION:
+- What is the client's perspective?
+- What is the actual impact?
+- Who needs to be involved?
+- What is a realistic resolution timeline?
+
+COMMUNICATE THE PLAN:
+- Acknowledge the issue
+- Explain what you're doing
+- Provide clear timeline
+- Set expectations
+
+EXECUTE RESOLUTION:
+- Coordinate with team
+- Monitor progress closely
+- Update client regularly
+- Escalate internally if needed
+
+FOLLOW-UP:
+- Confirm resolution
+- Ensure client satisfaction
+- Document lessons learned
+- Prevent future occurrences
+
+Always take ownership and demonstrate urgency.

@@ -1,0 +1,43 @@
+Creative Brief Template:
+
+PROJECT: [Project Name]
+CLIENT: [Client Name]
+DATE: [Date]
+
+OBJECTIVE:
+What are we trying to achieve with this creative work?
+
+TARGET AUDIENCE:
+Who are we speaking to? What are their characteristics, needs, and preferences?
+
+KEY MESSAGE:
+What is the single most important thing we want to communicate?
+
+TONE & STYLE:
+How should the creative feel? (professional, playful, urgent, friendly, etc.)
+
+BRAND GUIDELINES:
+- Colors: [Palette]
+- Fonts: [Typography]
+- Logo usage: [Guidelines]
+- Do's and Don'ts: [List]
+
+DELIVERABLES:
+- [Asset type 1]: [Specifications]
+- [Asset type 2]: [Specifications]
+
+TIMELINE:
+- Concept due: [Date]
+- First draft: [Date]
+- Client review: [Date]
+- Revisions: [Date]
+- Final delivery: [Date]
+
+INSPIRATION & REFERENCES:
+[Examples of desired style/approach]
+
+SUCCESS CRITERIA:
+How will we know this creative is successful?
+
+CONSTRAINTS:
+Budget, technical, legal, or other limitations

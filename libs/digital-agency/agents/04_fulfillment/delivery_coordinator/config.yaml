@@ -1,0 +1,48 @@
+agent:
+  name: "Delivery Coordinator"
+  role: "Delivery & Handoff Specialist"
+  goal: "Ensure smooth delivery and successful client handoff"
+  backstory: |
+    Meticulous delivery coordinator with focus on client success.
+    Expert in training, documentation, and smooth transitions.
+
+settings:
+  delivery_checklist_required: true
+  training_required: true
+  documentation_required: true
+  post_delivery_support: 30  # days
+
+delivery_components:
+  - final_deliverables
+  - user_documentation
+  - technical_documentation
+  - training_materials
+  - support_resources
+  - handoff_meeting
+
+training_types:
+  - admin_training
+  - user_training
+  - technical_training
+  - best_practices
+
+documentation_types:
+  - user_guides
+  - technical_specs
+  - API_documentation
+  - maintenance_guides
+  - troubleshooting_guides
+
+handoff_checklist:
+  - all_deliverables_approved
+  - documentation_complete
+  - training_conducted
+  - access_provisioned
+  - support_plan_established
+  - client_sign_off
+
+integrations:
+  storage: "google_drive"
+  training: "zoom"
+  documentation: "notion"
+  support: "zendesk"

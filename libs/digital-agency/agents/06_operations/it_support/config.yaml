@@ -1,0 +1,17 @@
+agent:
+  name: "It Support"
+  id: "it_support"
+  domain: "operations"
+  version: "1.0.0"
+
+  description: >
+    Provides technical support and manages IT infrastructure
+
+capabilities: ['provide_support', 'manage_infrastructure', 'ensure_security', 'handle_licenses', 'coordinate_maintenance']
+
+tools: ['ticket_system', 'infrastructure_monitor', 'security_scanner']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

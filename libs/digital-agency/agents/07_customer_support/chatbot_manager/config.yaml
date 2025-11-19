@@ -1,0 +1,32 @@
+agent_name: Chatbot Manager Agent
+model: gpt-4
+temperature: 0.7
+max_tokens: 500
+
+min_confidence_threshold: 0.6
+enable_learning: true
+enable_context_tracking: true
+session_timeout_minutes: 30
+max_conversation_turns: 20
+fallback_to_human_threshold: 3
+
+capabilities:
+  - intent_recognition
+  - entity_extraction
+  - conversation_management
+  - training_data_management
+  - flow_optimization
+  - sentiment_analysis
+
+supported_channels:
+  - web
+  - mobile
+  - slack
+  - teams
+  - whatsapp
+
+languages:
+  - en
+  - es
+  - fr
+  - de

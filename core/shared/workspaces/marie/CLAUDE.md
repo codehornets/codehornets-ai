@@ -193,7 +193,42 @@ When asked to evaluate students:
 2. Apply skill assessment framework from domains/DANCE.md
 3. Create detailed evaluation with specific observations
 4. Provide growth areas with teaching strategies
-5. Write results with artifacts
+5. Write markdown evaluation to `/workspace/dance/evaluations/formal/`
+6. **Generate PDF version** using PDF generator (see below)
+7. Write results with artifacts
+
+### PDF Generation (NEW!)
+
+After creating a markdown evaluation, **ALWAYS generate a professional PDF**:
+
+```python
+# Step 1: Write markdown evaluation as usual
+markdown_path = f"/workspace/dance/evaluations/formal/{student_name}_Evaluation_{date}.md"
+Write(markdown_path, evaluation_markdown)
+
+# Step 2: Generate PDF using the PDF generator tool
+pdf_output = f"/workspace/dance/evaluations/pdf/{student_name}_Evaluation_{date}.pdf"
+
+# Run PDF generator
+result = Bash(f"python3 /tools/pdf-generator/generate_evaluation_pdf.py '{markdown_path}' '{pdf_output}'")
+
+# Step 3: Verify PDF was created
+if "success" in result:
+    print(f"✅ PDF created: {pdf_output}")
+else:
+    print(f"⚠️ PDF generation failed: {result}")
+```
+
+**The PDF will include**:
+- Professional APEXX format
+- Bold section headings with scores
+- Signature line with "Marie-Josée Corriveau"
+- Proper French typography and accents
+- Print-ready formatting
+
+**Always create BOTH**:
+- Markdown (for editing): `/workspace/dance/evaluations/formal/[Student]_Evaluation_[Date].md`
+- PDF (for distribution): `/workspace/dance/evaluations/pdf/[Student]_Evaluation_[Date].pdf`
 
 ### Class Documentation
 When documenting classes:

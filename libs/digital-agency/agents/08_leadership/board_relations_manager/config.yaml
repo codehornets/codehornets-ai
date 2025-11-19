@@ -1,0 +1,8 @@
+agent_name: "Board Relations Manager Agent"
+role: "board_relations_manager"
+domain: "leadership"
+model_config:
+  model: "gpt-4"
+  temperature: 0.3
+capabilities: [board_reporting, stakeholder_management, meeting_coordination]
+tools: [report_builder, stakeholder_tracker]

@@ -1,0 +1,28 @@
+agent:
+  name: "Process Innovator"
+  version: "0.1.0"
+  description: "Identifies process bottlenecks and develops innovative workflow improvements"
+
+capabilities:
+  - bottleneck_identification
+  - process_improvement
+  - change_management
+  - impact_measurement
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

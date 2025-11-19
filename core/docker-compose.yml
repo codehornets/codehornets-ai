@@ -1,4 +1,4 @@
-name: 'claude-sandbox'
+name: 'codehornets-ai'
 
 services:
   # Orchestrator - Claude CLI instance that coordinates workers
@@ -30,16 +30,20 @@ services:
     container_name: marie
     command: >
       bash -c "
-      /prompts/combine-prompts.sh /prompts/agents/Marie.md /prompts/domains/DANCE.md /home/agent/workspace/CLAUDE.md &&
+      pip install --quiet --break-system-packages reportlab &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/marie.md /home/agent/.claude/output-styles/marie.md &&
+      echo '{\"outputStyle\": \"marie\"}' > /home/agent/.claude/settings.local.json &&
       claude
       "
     volumes:
-      - ./prompts:/prompts:ro
+      - ./output-styles:/output-styles:ro
       - ./shared/auth-homes/marie:/home/agent/.claude:rw
       - ./shared/tasks/marie:/tasks:ro
       - ./shared/results/marie:/results:rw
       - ../workspaces/dance:/workspace/dance:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ../tools/pdf-generator:/tools/pdf-generator:ro
     networks:
       - claude-network
     stdin_open: true
@@ -52,11 +56,13 @@ services:
     container_name: anga
     command: >
       bash -c "
-      /prompts/combine-prompts.sh /prompts/agents/Anga.md /prompts/domains/CODING.md /home/agent/workspace/CLAUDE.md &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/anga.md /home/agent/.claude/output-styles/anga.md &&
+      echo '{\"outputStyle\": \"anga\"}' > /home/agent/.claude/settings.local.json &&
       claude
       "
     volumes:
-      - ./prompts:/prompts:ro
+      - ./output-styles:/output-styles:ro
       - ./shared/auth-homes/anga:/home/agent/.claude:rw
       - ./shared/tasks/anga:/tasks:ro
       - ./shared/results/anga:/results:rw
@@ -74,11 +80,13 @@ services:
     container_name: fabien
     command: >
       bash -c "
-      /prompts/combine-prompts.sh /prompts/agents/Fabien.md /prompts/domains/MARKETING.md /home/agent/workspace/CLAUDE.md &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/fabien.md /home/agent/.claude/output-styles/fabien.md &&
+      echo '{\"outputStyle\": \"fabien\"}' > /home/agent/.claude/settings.local.json &&
       claude
       "
     volumes:
-      - ./prompts:/prompts:ro
+      - ./output-styles:/output-styles:ro
       - ./shared/auth-homes/fabien:/home/agent/.claude:rw
       - ./shared/tasks/fabien:/tasks:ro
       - ./shared/results/fabien:/results:rw

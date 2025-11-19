@@ -1,0 +1,28 @@
+agent:
+  name: "Onboarding Coordinator"
+  version: "0.1.0"
+  description: "Designs and executes comprehensive onboarding programs"
+
+capabilities:
+  - onboarding_design
+  - activity_scheduling
+  - mentor_assignment
+  - progress_tracking
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

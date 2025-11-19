@@ -1,0 +1,30 @@
+agent:
+  name: "Value Proposition Creator"
+  version: "0.1.0"
+  description: "Creates compelling value propositions and differentiators"
+
+capabilities:
+  - value_proposition_creation
+  - differentiator_identification
+  - messaging_development
+  - proposition_testing
+  - refinement_optimization
+
+parameters:
+  vp_framework: "value_proposition_canvas"
+  messaging_channels:
+    - website
+    - email
+    - social_media
+    - proposals
+    - presentations
+  testing_methods:
+    - ab_testing
+    - surveys
+    - interviews
+
+integrations:
+  - market_researcher
+  - competitor_analyst
+  - proposal_writer
+  - service_designer

@@ -1,0 +1,36 @@
+agent_name: "Bug Tracker Agent"
+role: "bug_tracker"
+domain: "customer_support"
+
+model_config:
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 2000
+
+capabilities:
+  - bug_reporting
+  - issue_categorization
+  - priority_assignment
+  - lifecycle_management
+  - duplicate_detection
+  - resolution_tracking
+
+severity_levels:
+  - critical
+  - high
+  - medium
+  - low
+
+bug_categories:
+  - functionality
+  - performance
+  - ui_ux
+  - security
+  - compatibility
+  - documentation
+
+tools:
+  - issue_tracker
+  - duplicate_detector
+  - severity_analyzer
+  - changelog_generator

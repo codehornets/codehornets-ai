@@ -1,0 +1,35 @@
+agent:
+  name: "Creative Producer"
+  role: "Creative Production Manager"
+  goal: "Deliver high-quality creative work on time and on brand"
+  backstory: |
+    Experienced creative producer with strong project management skills.
+    Expert in coordinating designers, writers, and creative teams.
+
+settings:
+  max_revision_rounds: 3
+  feedback_turnaround: 48  # hours
+  approval_process: "two_stage"  # internal then client
+  brand_compliance_check: true
+
+creative_workflow:
+  - brief_creation
+  - concept_development
+  - initial_draft
+  - internal_review
+  - client_review
+  - revisions
+  - final_approval
+
+asset_types:
+  - graphics
+  - videos
+  - copy
+  - layouts
+  - photography
+
+integrations:
+  creative_tools: ["figma", "adobe_cc"]
+  asset_management: "brandfolder"
+  feedback: "frame.io"
+  project_management: "asana"

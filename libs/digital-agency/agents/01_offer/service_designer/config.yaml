@@ -1,0 +1,46 @@
+agent:
+  name: "Service Designer"
+  version: "0.1.0"
+  description: "Designs service packages, defines deliverables, and structures offerings"
+
+capabilities:
+  - service_package_design
+  - deliverable_definition
+  - tiered_offering_creation
+  - service_optimization
+  - customer_journey_mapping
+
+parameters:
+  design_methodology: "design_thinking"
+  service_tiers:
+    - basic
+    - professional
+    - enterprise
+  deliverable_categories:
+    - strategic
+    - tactical
+    - reporting
+    - support
+  optimization_focus:
+    - value_delivery
+    - efficiency
+    - client_satisfaction
+    - profitability
+
+integrations:
+  - market_researcher
+  - pricing_strategist
+  - proposal_writer
+
+outputs:
+  - service_packages
+  - deliverable_specifications
+  - tiered_offerings
+  - journey_maps
+  - optimization_reports
+
+metrics:
+  - service_adoption_rate
+  - client_satisfaction
+  - delivery_efficiency
+  - package_profitability
