@@ -248,13 +248,15 @@ services:
   monitor:
     image: node:18-slim
     container_name: codehornets-svc-monitor
+    working_dir: /app
     command: >
       bash -c "
       echo '🔍 Installing monitor dependencies...' &&
-      cd /tools && npm install --quiet --no-audit --no-fund 2>/dev/null &&
+      cp /tools/package.json /app/ &&
+      npm install &&
       echo '📦 Installing docker-cli...' &&
-      apt-get update -qq >/dev/null 2>&1 &&
-      apt-get install -y -qq docker.io curl >/dev/null 2>&1 &&
+      apt-get update -qq &&
+      apt-get install -y -qq docker.io curl &&
       echo '✓ Dependencies installed' &&
       echo '📡 Checking for Ollama on host...' &&
       if curl -s --max-time 2 http://host.docker.internal:11434/api/tags >/dev/null 2>&1 || \
