@@ -1,0 +1,382 @@
+# OpenTelemetry Collector Configuration
+# Receives, processes, and exports telemetry data (traces, metrics, logs)
+
+receivers:
+  # =============================================================================
+  # OTLP Receiver - Primary ingestion point
+  # =============================================================================
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        max_recv_msg_size_mib: 64
+        max_concurrent_streams: 100
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://*"
+            - "https://*"
+
+  # =============================================================================
+  # Prometheus Receiver - Scrape Prometheus metrics
+  # =============================================================================
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['localhost:8888']
+
+  # =============================================================================
+  # File Log Receiver - Collect logs from files
+  # =============================================================================
+  filelog:
+    include: ["/var/log/agents/*.log"]
+    start_at: beginning
+    operators:
+      - type: json_parser
+        timestamp:
+          parse_from: attributes.timestamp
+          layout: '%Y-%m-%dT%H:%M:%S.%fZ'
+      - type: move
+        from: attributes.severity
+        to: body.severity
+      - type: add
+        field: resource.service.name
+        value: agent-orchestrator
+
+  # =============================================================================
+  # Host Metrics Receiver - System metrics
+  # =============================================================================
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      load:
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      network:
+      paging:
+      processes:
+
+  # =============================================================================
+  # Jaeger Receiver - Backwards compatibility
+  # =============================================================================
+  jaeger:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:14250
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+      thrift_compact:
+        endpoint: 0.0.0.0:6831
+      thrift_binary:
+        endpoint: 0.0.0.0:6832
+
+processors:
+  # =============================================================================
+  # Batch Processor - Batch telemetry before export
+  # =============================================================================
+  batch:
+    send_batch_size: 1024
+    send_batch_max_size: 2048
+    timeout: 200ms
+
+  # =============================================================================
+  # Memory Limiter - Prevent OOM
+  # =============================================================================
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # =============================================================================
+  # Resource Detection - Add resource attributes
+  # =============================================================================
+  resource:
+    attributes:
+      - key: environment
+        value: production
+        action: upsert
+      - key: cluster
+        value: main
+        action: upsert
+      - key: deployment.type
+        value: docker-compose
+        action: upsert
+
+  # =============================================================================
+  # Attributes Processor - Manipulate attributes
+  # =============================================================================
+  attributes:
+    actions:
+      - key: worker.name
+        from_attribute: worker_name
+        action: upsert
+      - key: task.id
+        from_attribute: task_id
+        action: upsert
+      - key: correlation.id
+        from_attribute: correlation_id
+        action: upsert
+      - pattern: password
+        action: delete
+      - pattern: secret
+        action: delete
+
+  # =============================================================================
+  # Span Processor - Process spans
+  # =============================================================================
+  span:
+    name:
+      to_attributes:
+        rules:
+          - ^(?P<operation>[^.]+)\.(?P<action>.+)$
+
+  # =============================================================================
+  # Tail Sampling - Smart sampling based on criteria
+  # =============================================================================
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 100000
+    expected_new_traces_per_sec: 1000
+    policies:
+      # Always sample errors
+      - name: errors-policy
+        type: status_code
+        status_code: {status_codes: [ERROR]}
+      # Sample slow traces
+      - name: latency-policy
+        type: latency
+        latency: {threshold_ms: 5000}
+      # Probabilistic sampling for everything else
+      - name: probabilistic-policy
+        type: probabilistic
+        probabilistic: {sampling_percentage: 10}
+
+  # =============================================================================
+  # Filter Processor - Filter out unwanted data
+  # =============================================================================
+  filter/metrics:
+    metrics:
+      exclude:
+        match_type: regexp
+        metric_names:
+          - go_.*
+          - process_.*
+
+  # =============================================================================
+  # Transform Processor - Transform telemetry data
+  # =============================================================================
+  transform:
+    trace_statements:
+      - context: span
+        statements:
+          - set(attributes["task.duration_ms"], duration / 1000000)
+          - set(attributes["span.type"], kind)
+
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["normalized_value"], value / 1000) where unit == "ms"
+
+exporters:
+  # =============================================================================
+  # Jaeger Exporter - Send traces to Jaeger
+  # =============================================================================
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
+  # =============================================================================
+  # Prometheus Exporter - Expose metrics for Prometheus
+  # =============================================================================
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    namespace: otel
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # =============================================================================
+  # Loki Exporter - Send logs to Loki
+  # =============================================================================
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+    labels:
+      attributes:
+        service.name: service_name
+        worker.name: worker_name
+        severity: severity
+
+  # =============================================================================
+  # OTLP Exporter - Forward to another collector
+  # =============================================================================
+  otlp/remote:
+    endpoint: remote-collector:4317
+    tls:
+      insecure: true
+    sending_queue:
+      enabled: true
+      num_consumers: 10
+      queue_size: 5000
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+
+  # =============================================================================
+  # File Exporter - Export to files (for debugging)
+  # =============================================================================
+  file/traces:
+    path: /var/log/otel/traces.json
+    rotation:
+      max_megabytes: 100
+      max_days: 7
+      max_backups: 3
+
+  file/metrics:
+    path: /var/log/otel/metrics.json
+    rotation:
+      max_megabytes: 100
+      max_days: 7
+      max_backups: 3
+
+  # =============================================================================
+  # Logging Exporter - Log telemetry (for debugging)
+  # =============================================================================
+  logging:
+    loglevel: info
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  # =============================================================================
+  # Health Check
+  # =============================================================================
+  health_check:
+    endpoint: 0.0.0.0:13133
+    path: /health
+    check_collector_pipeline:
+      enabled: true
+      interval: 5s
+      exporter_failure_threshold: 5
+
+  # =============================================================================
+  # Performance Profiler
+  # =============================================================================
+  pprof:
+    endpoint: 0.0.0.0:1777
+
+  # =============================================================================
+  # zPages - Debug pages
+  # =============================================================================
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+  # =============================================================================
+  # Memory Ballast - Improve GC performance
+  # =============================================================================
+  memory_ballast:
+    size_mib: 256
+
+connectors:
+  # =============================================================================
+  # Span Metrics Connector - Generate metrics from spans
+  # =============================================================================
+  spanmetrics:
+    histogram:
+      explicit:
+        buckets: [1ms, 2ms, 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, 10s]
+    dimensions:
+      - name: worker.name
+      - name: task.type
+      - name: status.code
+    metrics_flush_interval: 10s
+
+service:
+  # Extensions to enable
+  extensions:
+    - health_check
+    - pprof
+    - zpages
+    - memory_ballast
+
+  # Pipeline configurations
+  pipelines:
+    # =============================================================================
+    # Traces Pipeline
+    # =============================================================================
+    traces:
+      receivers: [otlp, jaeger]
+      processors:
+        - memory_limiter
+        - batch
+        - resource
+        - attributes
+        - span
+        - tail_sampling
+        - transform
+      exporters:
+        - jaeger
+        - spanmetrics
+        - logging
+        # - otlp/remote
+        # - file/traces
+
+    # =============================================================================
+    # Metrics Pipeline
+    # =============================================================================
+    metrics:
+      receivers: [otlp, prometheus, hostmetrics, spanmetrics]
+      processors:
+        - memory_limiter
+        - batch
+        - resource
+        - attributes
+        - filter/metrics
+        - transform
+      exporters:
+        - prometheus
+        - logging
+        # - otlp/remote
+        # - file/metrics
+
+    # =============================================================================
+    # Logs Pipeline
+    # =============================================================================
+    logs:
+      receivers: [otlp, filelog]
+      processors:
+        - memory_limiter
+        - batch
+        - resource
+        - attributes
+      exporters:
+        - loki
+        - logging
+        # - otlp/remote
+
+  # Telemetry configuration for the collector itself
+  telemetry:
+    logs:
+      level: info
+      initial_fields:
+        service.name: otel-collector
+
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

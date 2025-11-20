@@ -1,0 +1,78 @@
+{
+  "description": "Orchestrator hooks: send tasks to workers via triggers",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py session_start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py user_prompt_submit",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "ToolExecutionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py tool_start",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "ToolExecutionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py tool_end",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "AssistantResponse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py assistant_response",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/tools/create_worker_task.py anga 'Stop Event Task' 'Task triggered by stop event'",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+

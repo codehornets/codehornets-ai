@@ -1,0 +1,176 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marie
+  namespace: codehornets-ai
+  labels:
+    app: codehornets-ai
+    component: worker
+    worker: marie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codehornets-ai
+      worker: marie
+  template:
+    metadata:
+      labels:
+        app: codehornets-ai
+        component: worker
+        worker: marie
+    spec:
+      serviceAccountName: codehornets-ai
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+
+      initContainers:
+        - name: init-directories
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /shared/triggers/marie /shared/pipes /shared/watcher-logs /shared/heartbeats
+              chmod 755 /shared/triggers/marie /shared/pipes
+          volumeMounts:
+            - name: shared-triggers
+              mountPath: /shared/triggers
+            - name: shared-pipes
+              mountPath: /shared/pipes
+            - name: watcher-logs
+              mountPath: /shared/watcher-logs
+            - name: heartbeats
+              mountPath: /shared/heartbeats
+
+      containers:
+        - name: marie
+          image: docker/sandbox-templates:claude-code
+          imagePullPolicy: IfNotPresent
+          command: ["/tools/entrypoint.sh"]
+          args: ["marie"]
+
+          env:
+            - name: WORKER_NAME
+              value: "marie"
+            - name: HOOKS_MODE
+              value: "1"
+            - name: ACTIVATION_MODE
+              value: "inotify"
+            - name: REDIS_URL
+              value: "redis://redis-service:6379"
+            - name: TASK_DIR
+              value: "/tasks"
+            - name: RESULT_DIR
+              value: "/results"
+            - name: TRIGGER_DIR
+              value: "/shared/triggers"
+            - name: PIPE_DIR
+              value: "/shared/pipes"
+            - name: HEARTBEAT_DIR
+              value: "/shared/heartbeats"
+            - name: HEARTBEAT_INTERVAL
+              value: "10"
+
+          volumeMounts:
+            - name: auth
+              mountPath: /home/agent/.claude
+            - name: tasks
+              mountPath: /tasks
+              readOnly: true
+            - name: results
+              mountPath: /results
+            - name: workspace
+              mountPath: /workspace/dance
+            - name: output-styles
+              mountPath: /output-styles
+              readOnly: true
+            - name: hooks-config
+              mountPath: /hooks-config
+              readOnly: true
+            - name: tools
+              mountPath: /tools
+              readOnly: true
+            - name: entrypoint
+              mountPath: /tools/entrypoint.sh
+              subPath: entrypoint.sh
+              readOnly: true
+            - name: shared-triggers
+              mountPath: /shared/triggers
+            - name: shared-pipes
+              mountPath: /shared/pipes
+            - name: watcher-logs
+              mountPath: /var/log
+            - name: heartbeats
+              mountPath: /shared/heartbeats
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+
+          livenessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /shared/heartbeats/marie-watcher.json
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /shared/heartbeats/marie-watcher.json
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+      volumes:
+        - name: auth
+          persistentVolumeClaim:
+            claimName: marie-auth-pvc
+        - name: tasks
+          persistentVolumeClaim:
+            claimName: marie-tasks-pvc
+        - name: results
+          persistentVolumeClaim:
+            claimName: marie-results-pvc
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: workspace-dance-pvc
+        - name: output-styles
+          configMap:
+            name: output-styles
+        - name: hooks-config
+          configMap:
+            name: hooks-config
+        - name: tools
+          configMap:
+            name: tools-scripts
+            defaultMode: 0755
+        - name: entrypoint
+          configMap:
+            name: entrypoint-script
+            defaultMode: 0755
+        - name: shared-triggers
+          emptyDir: {}
+        - name: shared-pipes
+          emptyDir: {}
+        - name: watcher-logs
+          emptyDir: {}
+        - name: heartbeats
+          emptyDir: {}
+
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60

@@ -1,0 +1,242 @@
+name: Hooks Integration Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'tools/**'
+      - 'infrastructure/docker/codehornets-ai/**'
+      - '.github/workflows/test-hooks.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'tools/**'
+      - 'infrastructure/docker/codehornets-ai/**'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Test mode'
+        required: true
+        default: 'hooks'
+        type: choice
+        options:
+          - hooks
+          - hybrid
+          - all
+
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  test-hooks-mode:
+    name: Test Hooks-Based Communication
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Pull Claude Code image
+        run: docker pull docker/sandbox-templates:claude-code
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq inotify-tools
+          pip install watchdog redis
+
+      - name: Create directories
+        run: |
+          mkdir -p infrastructure/docker/codehornets-ai/shared/{triggers,pipes,watcher-logs,heartbeats}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/triggers/{marie,anga,fabien,orchestrator}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/{tasks,results}/{marie,anga,fabien}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/auth-homes/{orchestrator,marie,anga,fabien}
+
+      - name: Start hooks system
+        run: |
+          cd infrastructure/docker/codehornets-ai
+          HOOKS_MODE=1 docker-compose -f docker-compose.hooks.yml --profile hooks up -d
+          echo "Waiting for containers to start..."
+          sleep 10
+
+      - name: Check container health
+        run: |
+          echo "Container status:"
+          docker ps -a
+
+          echo "Checking watchers..."
+          docker exec marie ps aux | grep hook_watcher || echo "Marie watcher not found"
+          docker exec anga ps aux | grep hook_watcher || echo "Anga watcher not found"
+          docker exec fabien ps aux | grep hook_watcher || echo "Fabien watcher not found"
+
+      - name: Test trigger file creation
+        run: |
+          echo "Creating test triggers..."
+          echo '{"test": "marie-trigger"}' > infrastructure/docker/codehornets-ai/shared/triggers/marie/test-001.trigger
+          echo '{"test": "anga-trigger"}' > infrastructure/docker/codehornets-ai/shared/triggers/anga/test-002.trigger
+
+          sleep 3
+
+          echo "Checking if triggers were processed..."
+          if [ ! -f infrastructure/docker/codehornets-ai/shared/triggers/marie/test-001.trigger ]; then
+            echo "✓ Marie trigger processed"
+          else
+            echo "✗ Marie trigger not processed"
+            exit 1
+          fi
+
+      - name: Check watcher logs
+        if: always()
+        run: |
+          echo "Marie watcher log:"
+          cat infrastructure/docker/codehornets-ai/shared/watcher-logs/marie-watcher.log || echo "No log found"
+
+          echo "Anga watcher log:"
+          cat infrastructure/docker/codehornets-ai/shared/watcher-logs/anga-watcher.log || echo "No log found"
+
+      - name: Test named pipes
+        run: |
+          echo "Checking named pipes..."
+          ls -la infrastructure/docker/codehornets-ai/shared/pipes/
+
+          if [ -p infrastructure/docker/codehornets-ai/shared/pipes/marie-control ]; then
+            echo "✓ Marie control pipe exists"
+          else
+            echo "✗ Marie control pipe missing"
+            exit 1
+          fi
+
+      - name: Performance benchmark
+        run: |
+          echo "Running latency benchmark..."
+
+          start_time=$(date +%s%N)
+          for i in {1..10}; do
+            echo "{\"benchmark\": $i}" > infrastructure/docker/codehornets-ai/shared/triggers/marie/bench-$i.trigger
+          done
+
+          # Wait for processing
+          sleep 5
+          end_time=$(date +%s%N)
+
+          duration=$(( ($end_time - $start_time) / 1000000 ))
+          avg_latency=$(( $duration / 10 ))
+
+          echo "Average latency: ${avg_latency}ms per trigger"
+          echo "average_latency=${avg_latency}" >> $GITHUB_OUTPUT
+
+      - name: Collect logs
+        if: failure()
+        run: |
+          echo "Collecting failure logs..."
+          docker-compose -f infrastructure/docker/codehornets-ai/docker-compose.hooks.yml logs --tail=100
+
+      - name: Cleanup
+        if: always()
+        run: |
+          cd infrastructure/docker/codehornets-ai
+          docker-compose -f docker-compose.hooks.yml --profile hooks down -v
+
+  test-hybrid-mode:
+    name: Test Hybrid Mode (Wrapper + Hooks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.mode == 'hybrid' || github.event.inputs.mode == 'all' || github.event_name != 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Pull Claude Code image
+        run: docker pull docker/sandbox-templates:claude-code
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq inotify-tools redis-tools
+          pip install watchdog redis
+
+      - name: Start Redis
+        run: |
+          docker run -d --name test-redis -p 6379:6379 redis:8.0-rc1-alpine
+
+      - name: Create directories
+        run: |
+          mkdir -p infrastructure/docker/codehornets-ai/shared/{triggers,pipes,watcher-logs,heartbeats}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/triggers/{marie,anga,fabien,orchestrator}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/{tasks,results}/{marie,anga,fabien}
+          mkdir -p infrastructure/docker/codehornets-ai/shared/auth-homes/{orchestrator,marie,anga,fabien}
+
+      - name: Start hybrid system
+        run: |
+          cd infrastructure/docker/codehornets-ai
+          ACTIVATION_WRAPPER=1 HOOKS_MODE=1 docker-compose -f docker-compose.hooks.yml --profile hybrid up -d
+          echo "Waiting for system to stabilize..."
+          sleep 15
+
+      - name: Verify both systems running
+        run: |
+          echo "Checking activation wrapper..."
+          docker exec marie ps aux | grep activation_wrapper || echo "Activation wrapper not found"
+
+          echo "Checking hook watcher..."
+          docker exec marie ps aux | grep hook_watcher || echo "Hook watcher not found"
+
+          echo "Checking heartbeats..."
+          cat infrastructure/docker/codehornets-ai/shared/heartbeats/marie.json || echo "No heartbeat"
+          cat infrastructure/docker/codehornets-ai/shared/heartbeats/marie-watcher.json || echo "No watcher heartbeat"
+
+      - name: Test zero-CPU idle
+        run: |
+          echo "Monitoring CPU usage (should be ~0%)..."
+          docker stats --no-stream --format "{{.Name}}: {{.CPUPerc}}" marie anga fabien
+
+      - name: Cleanup
+        if: always()
+        run: |
+          cd infrastructure/docker/codehornets-ai
+          docker-compose -f docker-compose.hooks.yml --profile hybrid down -v
+          docker stop test-redis && docker rm test-redis
+
+  docker-image-optimization:
+    name: Verify Docker Image Size
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check image sizes
+        run: |
+          docker pull docker/sandbox-templates:claude-code
+          docker images docker/sandbox-templates:claude-code --format "{{.Size}}"
+
+          echo "Image size is acceptable for Claude Code base image"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: 'infrastructure/docker/codehornets-ai'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'

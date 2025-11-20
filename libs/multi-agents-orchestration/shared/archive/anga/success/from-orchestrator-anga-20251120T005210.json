@@ -1,0 +1,12 @@
+{
+  "task_id": "from-orchestrator-anga-20251120T005210",
+  "from": "orchestrator",
+  "worker": "anga",
+  "prompt": "You are the worker agent '{worker}'. This task was triggered by the orchestrator Stop hook. For test purposes, just respond with a short message describing that you received the task and processed it successfully.",
+  "meta": {
+    "source": "hooks-test",
+    "timestamp": "20251120T005210"
+  },
+  "archived_at": "2025-11-20T00:59:45.712492",
+  "archive_status": "success"
+}

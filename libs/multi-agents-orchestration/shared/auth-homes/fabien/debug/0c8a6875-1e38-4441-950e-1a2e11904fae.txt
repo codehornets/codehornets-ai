@@ -1,0 +1,144 @@
+[DEBUG] Telemetry flushed successfully
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599172643
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39608 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599172643 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599172662
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39608 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599172662 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599172844
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39888 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599172844 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599173081
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40012 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599173081 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599173103
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40050 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599173103 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599173380
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40073 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599173380 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Notification with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599177839
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40144 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599177839 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599179857
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40185 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599179857 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599179891
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40216 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599179891 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599179919
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40236 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599179919 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SessionStart with query: startup
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599180185
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40236 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599180185 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599180203
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40272 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599180203 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599180215
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40739 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599180215 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdaterWrapper: Installation type: npm-global, using native: false
+[DEBUG] performStartupChecks called, ENABLE_PLUGINS=true
+[DEBUG] Trust not accepted for current directory - skipping plugin installations
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599185906
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40844 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599185906 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763599186158
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40844 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763599186158 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdater: Detected installation type: npm-global
+[DEBUG] AutoUpdater: Using global update method
+[ERROR] Kd1: Kd1: Failed to install new version of claude:  npm ERR! code EACCES
+npm ERR! syscall rename
+npm ERR! path /usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code
+npm ERR! dest /usr/local/share/npm-global/lib/node_modules/@anthropic-ai/.claude-code-Uz2TqWpZ
+npm ERR! errno -13
+npm ERR! Error: EACCES: permission denied, rename '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code' -> '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/.claude-code-Uz2TqWpZ'
+npm ERR!     at async Object.rename (node:internal/fs/promises:782:10)
+npm ERR!     at async moveFile (/usr/share/nodejs/@npmcli/fs/lib/move-file.js:30:5)
+npm ERR!     at async Promise.allSettled (index 0)
+npm ERR!     at async [reifyPackages] (/usr/share/nodejs/@npmcli/arborist/lib/arborist/reify.js:234:11)
+npm ERR!     at async Arborist.reify (/usr/share/nodejs/@npmcli/arborist/lib/arborist/reify.js:158:5)
+npm ERR!     at async Install.exec (/usr/share/nodejs/npm/lib/commands/install.js:146:5)
+npm ERR!     at async module.exports (/usr/share/nodejs/npm/lib/cli.js:133:5)
+npm ERR!  Error: EACCES: permission denied, rename '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code' -> '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/.claude-code-Uz2TqWpZ'
+npm ERR!     at async Object.rename (node:internal/fs/promises:782:10)
+npm ERR!     at async moveFile (/usr/share/nodejs/@npmcli/fs/lib/move-file.js:30:5)
+npm ERR!     at async Promise.allSettled (index 0)
+npm ERR!     at async [reifyPackages] (/usr/share/nodejs/@npmcli/arborist/lib/arborist/reify.js:234:11)
+npm ERR!     at async Arborist.reify (/usr/share/nodejs/@npmcli/arborist/lib/arborist/reify.js:158:5)
+npm ERR!     at async Install.exec (/usr/share/nodejs/npm/lib/commands/install.js:146:5)
+npm ERR!     at async module.exports (/usr/share/nodejs/npm/lib/cli.js:133:5) {
+npm ERR!   errno: -13,
+npm ERR!   code: 'EACCES',
+npm ERR!   syscall: 'rename',
+npm ERR!   path: '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code',
+npm ERR!   dest: '/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/.claude-code-Uz2TqWpZ'
+npm ERR! }
+npm ERR! 
+npm ERR! The operation was rejected by your operating system.
+npm ERR! It is likely you do not have the permissions to access this file as the current user
+npm ERR! 
+npm ERR! If you believe this might be a permissions issue, please double-check the
+npm ERR! permissions of the file and its containing directories, or try running
+npm ERR! the command again as root/Administrator.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/agent/.npm/_logs/2025-11-20T00_39_51_423Z-debug-0.log
+    at mF1 (file:///usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/cli.js:1771:389)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async file:///usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/cli.js:2644:21348

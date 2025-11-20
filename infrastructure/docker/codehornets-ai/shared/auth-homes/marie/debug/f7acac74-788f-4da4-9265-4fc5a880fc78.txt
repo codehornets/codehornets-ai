@@ -1,0 +1,45 @@
+[DEBUG] Watching for changes in setting files /home/agent/.claude/settings.json, /home/agent/workspace/.claude/settings.local.json...
+[DEBUG] Applying permission update: Adding 6 allow rule(s) to destination 'localSettings': ["Bash(if command -v inotifywait)","Bash(/dev/null)","Bash(then echo \"inotify available\")","Bash(else echo \"inotify not available - using polling\")","Bash(fi)","Read(//tasks/**)"]
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] >>>>> getSkillsIfEnabled() CALLED <<<<<
+[DEBUG] ENABLE_SKILLS value: false, type: boolean
+[DEBUG] ENABLE_SKILLS check failed, returning empty
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763486088469-qjl8vm.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/f7acac74-788f-4da4-9265-4fc5a880fc78-agent-f7acac74-788f-4da4-9265-4fc5a880fc78.json.tmp.1.1763486088494
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/f7acac74-788f-4da4-9265-4fc5a880fc78-agent-f7acac74-788f-4da4-9265-4fc5a880fc78.json.tmp.1.1763486088494 to /home/agent/.claude/todos/f7acac74-788f-4da4-9265-4fc5a880fc78-agent-f7acac74-788f-4da4-9265-4fc5a880fc78.json
+[DEBUG] File /home/agent/.claude/todos/f7acac74-788f-4da4-9265-4fc5a880fc78-agent-f7acac74-788f-4da4-9265-4fc5a880fc78.json written atomically
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Shell snapshot created successfully (1740 bytes)
+[DEBUG] Summarizing all 2 messages (~5753 tokens)
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486089660
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486089660 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486089705
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486089705 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486090879
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486090879 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763486088469-qjl8vm.sh

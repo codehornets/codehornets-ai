@@ -1,0 +1,51 @@
+{
+  "hooks": [
+    {
+      "name": "orchestrator-task-distribution",
+      "description": "Track when orchestrator distributes tasks",
+      "event": "PreToolUse",
+      "condition": {
+        "type": "tool_name",
+        "value": "Write"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/task-distributed.trigger",
+        "payload": {
+          "worker": "orchestrator",
+          "event": "task_distributed",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "orchestrator-result-aggregation",
+      "description": "Track when orchestrator aggregates results",
+      "event": "PreToolUse",
+      "condition": {
+        "type": "tool_name",
+        "value": "Read"
+      },
+      "action": {
+        "type": "log",
+        "path": "/var/log/orchestrator-result-reads.log",
+        "format": "${timestamp} [Read] ${file_path}"
+      }
+    },
+    {
+      "name": "orchestrator-error-handler",
+      "description": "Handle errors from workers",
+      "event": "OnError",
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/orchestrator-error.trigger",
+        "payload": {
+          "worker": "orchestrator",
+          "event": "error",
+          "error_message": "${error}",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ]
+}

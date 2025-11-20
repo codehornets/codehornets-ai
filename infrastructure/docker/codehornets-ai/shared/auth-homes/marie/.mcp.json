@@ -1,0 +1,52 @@
+{
+  "mcpServers": {
+    "task-master-ai": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "task-master-ai"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      },
+      "description": "Task management and project planning assistant"
+    },
+
+    "audio-inspector": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-audio-inspector"],
+      "env": {
+        "AUDIO_STORAGE_PATH": "/workspace/dance/music",
+        "ANALYSIS_CACHE_PATH": "/workspace/dance/music-analysis"
+      },
+      "description": "Audio analysis for BPM, structure, and music planning for choreography"
+    },
+
+    "google-workspace": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@taylorwilsdon/google-workspace-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}",
+        "GOOGLE_REDIRECT_URI": "http://localhost:3000/oauth2callback",
+        "GOOGLE_CALENDAR_ID": "${DANCE_STUDIO_CALENDAR_ID}",
+        "GOOGLE_DRIVE_FOLDER": "Dance Studio Files"
+      },
+      "description": "Google Calendar, Drive, Docs, Sheets for scheduling and document generation"
+    },
+
+    "student-database": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@jparkerweb/mcp-sqlite"],
+      "env": {
+        "SQLITE_DB_PATH": "/workspace/dance/students.db",
+        "READONLY": "false",
+        "MAX_QUERY_RESULTS": "1000"
+      },
+      "description": "SQLite database for student records, evaluations, and attendance tracking"
+    }
+  }
+}

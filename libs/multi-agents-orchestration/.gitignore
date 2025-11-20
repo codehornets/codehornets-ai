@@ -1,0 +1,41 @@
+# Runtime artifacts
+shared/heartbeats/*.json
+shared/watcher-logs/*.log
+shared/tasks/**/*.json
+shared/results/**/*.json
+shared/triggers/**/*.trigger
+shared/pipes/*
+
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep directory structure
+!shared/heartbeats/.gitkeep
+!shared/watcher-logs/.gitkeep
+!shared/tasks/**/.gitkeep
+!shared/results/**/.gitkeep
+!shared/triggers/**/.gitkeep
+!shared/pipes/.gitkeep

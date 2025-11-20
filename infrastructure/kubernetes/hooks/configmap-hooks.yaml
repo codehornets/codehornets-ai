@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hooks-config
+  namespace: codehornets-ai
+  labels:
+    app: codehornets-ai
+    component: hooks
+data:
+  marie-hooks.json: |
+    {
+      "hooks": [
+        {
+          "name": "marie-task-notification",
+          "description": "Notify when Marie receives a new task",
+          "event": "UserPromptSubmit",
+          "condition": {
+            "type": "pattern",
+            "pattern": "task|assignment|evaluate|review"
+          },
+          "action": {
+            "type": "trigger",
+            "path": "/shared/triggers/marie/prompt-submitted.trigger",
+            "payload": {
+              "worker": "marie",
+              "event": "prompt_submit",
+              "timestamp": "${timestamp}"
+            }
+          }
+        },
+        {
+          "name": "marie-tool-use-logger",
+          "description": "Log all tool usage",
+          "event": "PreToolUse",
+          "action": {
+            "type": "log",
+            "path": "/var/log/marie-tool-use.log"
+          }
+        }
+      ]
+    }
+
+  anga-hooks.json: |
+    {
+      "hooks": [
+        {
+          "name": "anga-task-notification",
+          "description": "Notify when Anga receives coding tasks",
+          "event": "UserPromptSubmit",
+          "condition": {
+            "type": "pattern",
+            "pattern": "code|review|refactor|debug"
+          },
+          "action": {
+            "type": "trigger",
+            "path": "/shared/triggers/anga/prompt-submitted.trigger"
+          }
+        }
+      ]
+    }
+
+  fabien-hooks.json: |
+    {
+      "hooks": [
+        {
+          "name": "fabien-task-notification",
+          "description": "Notify when Fabien receives marketing tasks",
+          "event": "UserPromptSubmit",
+          "condition": {
+            "type": "pattern",
+            "pattern": "campaign|marketing|social"
+          },
+          "action": {
+            "type": "trigger",
+            "path": "/shared/triggers/fabien/prompt-submitted.trigger"
+          }
+        }
+      ]
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: entrypoint-script
+  namespace: codehornets-ai
+  labels:
+    app: codehornets-ai
+    component: scripts
+data:
+  entrypoint.sh: |
+    #!/bin/bash
+    # Multi-Mode Container Entrypoint for Kubernetes
+    set -e
+
+    WORKER_NAME=${1:-${WORKER_NAME:-"worker"}}
+
+    echo "Starting ${WORKER_NAME} in ${HOOKS_MODE:-polling} mode..."
+
+    # Install dependencies
+    if [ -n "${HOOKS_MODE}" ]; then
+        pip install --quiet --break-system-packages watchdog redis reportlab
+    fi
+
+    # Setup output style
+    mkdir -p /home/agent/.claude/output-styles
+    if [ -f "/output-styles/${WORKER_NAME}.md" ]; then
+        cp "/output-styles/${WORKER_NAME}.md" "/home/agent/.claude/output-styles/"
+        echo "{\"outputStyle\": \"${WORKER_NAME}\"}" > /home/agent/.claude/settings.local.json
+    fi
+
+    # Setup hooks
+    if [ -n "${HOOKS_MODE}" ]; then
+        mkdir -p /home/agent/.claude/hooks
+        cp "/hooks-config/${WORKER_NAME}-hooks.json" /home/agent/.claude/hooks/hooks.json
+        mkdir -p "${TRIGGER_DIR}/${WORKER_NAME}" "${PIPE_DIR}"
+        mkfifo "${PIPE_DIR}/${WORKER_NAME}-control" 2>/dev/null || true
+        mkfifo "${PIPE_DIR}/${WORKER_NAME}-status" 2>/dev/null || true
+
+        # Start watcher
+        python3 /tools/hook_watcher.py "${WORKER_NAME}" > "/var/log/${WORKER_NAME}-watcher.log" 2>&1 &
+    fi
+
+    # Start Claude
+    if [ -n "${ACTIVATION_WRAPPER}" ]; then
+        python3 /tools/activation_wrapper.py "${WORKER_NAME}" --mode "${ACTIVATION_MODE:-inotify}"
+    else
+        claude
+    fi
