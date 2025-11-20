@@ -10,3 +10,8 @@
 {"display":"Process task file: /tasks/e2e-test-20251119183233.json. Read it, assess requirements, pick tools, and execute it.","pastedContents":{},"timestamp":1763595249105,"project":"/home/agent/workspace"}
 {"display":"New task created: from-orchestrator-anga-20251120T004948. Check /tasks/anga/ for details.","pastedContents":{},"timestamp":1763599828067,"project":"/home/agent/workspace"}
 {"display":"New task created: from-orchestrator-anga-20251120T005210. Check /tasks/anga/ for details.","pastedContents":{},"timestamp":1763599953476,"project":"/home/agent/workspace"}
+{"display":"Please use the list_available_agents MCP tool to show me all available agents in the system.","pastedContents":{},"timestamp":1763637265343,"project":"/home/agent/workspace"}
+{"display":"Test message from host - can you hear me?","pastedContents":{},"timestamp":1763640313931,"project":"/home/agent/workspace"}
+{"display":"echo TEST_MESSAGE_RECEIVED\n","pastedContents":{},"timestamp":1763640422464,"project":"/home/agent/workspace"}
+{"display":"SIMPLE TEST","pastedContents":{},"timestamp":1763640500185,"project":"/home/agent/workspace"}
+{"display":"DELIVERY_TEST_TEST_1763640577","pastedContents":{},"timestamp":1763640584494,"project":"/home/agent/workspace"}

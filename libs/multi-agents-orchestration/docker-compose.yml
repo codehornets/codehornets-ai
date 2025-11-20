@@ -23,7 +23,8 @@ services:
     container_name: codehornets-orchestrator
     entrypoint: ["/tools/orchestrator_entrypoint.sh"]
     group_add:
-      - "1001"  # Docker group on host
+      - "0"     # Root group for Docker socket access
+      - "1001"  # Docker group on host (if different)
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -66,6 +67,7 @@ services:
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["marie"]
     group_add:
+      - "0"     # Root group for Docker socket access
       - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
@@ -80,7 +82,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
@@ -119,6 +121,7 @@ services:
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["anga"]
     group_add:
+      - "0"     # Root group for Docker socket access
       - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
@@ -135,7 +138,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/anga:/home/agent/workspace:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
@@ -174,6 +177,7 @@ services:
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["fabien"]
     group_add:
+      - "0"     # Root group for Docker socket access
       - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
@@ -188,7 +192,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}

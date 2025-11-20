@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker ps:*)",
+      "Bash(test:*)",
+      "Bash(test -f:*)",
+      "Bash(cat:*)",
+      "Bash(make:*)",
+      "Bash(chmod:*)",
+      "Bash(docker exec:*)",
+      "Bash(winpty docker exec -it codehornets-orchestrator ls -la //home//agent//.claude//)",
+      "Bash(docker logs:*)",
+      "Bash(docker restart:*)",
+      "Bash(bash tools/send_message.sh:*)",
+      "Bash(bash tools/wake_worker.sh:*)",
+      "Bash(command -v expect:*)",
+      "Bash(winpty docker exec -it codehornets-svc-automation ls -la /)",
+      "Bash(bash tools/test_orchestrator_message.sh:*)",
+      "Bash(bash:*)",
+      "Bash(docker-compose:*)",
+      "Bash(timeout 5 bash:*)",
+      "Bash(docker inspect:*)",
+      "Bash(winpty docker exec:*)",
+      "Bash(__NEW_LINE__ echo '=== Final Verification ===')",
+      "Bash(__NEW_LINE__ echo \"=== FINAL VERIFICATION ===\")",
+      "Bash(__NEW_LINE__)",
+      "Bash(timeout 3 docker attach:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "task-master-ai"
+  ]
+}

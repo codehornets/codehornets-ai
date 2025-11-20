@@ -1,13 +1,13 @@
 #!/bin/bash
-# Wake a worker by sending a prompt to the PERSISTENT Claude agent
+# Wake an agent (orchestrator or worker) by sending a prompt to the PERSISTENT Claude instance
 # Supports multiple activation modes for different environments
 
 set -e
 
 # Parse arguments
-WORKER_NAME=""
+AGENT_NAME=""
 MESSAGE="Check for pending tasks and start monitoring"
-MODE="auto"  # auto, noninteractive, tmux, expect, manual
+MODE="auto"  # auto, expect, manual
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -25,36 +25,35 @@ while [[ $# -gt 0 ]]; do
             ;;
         -h|--help)
             cat <<EOF
-Usage: $0 <worker_name> [options] [message]
+Usage: $0 <agent_name> [options] [message]
 
 Arguments:
-  worker_name              marie, anga, or fabien
+  agent_name               orchestrator, marie, anga, or fabien
 
 Options:
-  --mode=MODE              Activation mode (auto, noninteractive, tmux, expect, manual)
+  --mode=MODE              Activation mode (auto, expect, manual)
   --timeout=SECONDS        Timeout for expect operations (default: 10)
   -h, --help              Show this help message
 
 Modes:
-  auto                    Try all methods in order (default)
-  noninteractive          Use Claude CLI -p flag (non-interactive)
-  tmux                    Use tmux send-keys (TUI-aware)
+  auto                    Try expect, then show manual instructions (default)
   expect                  Use expect automation only
   manual                  Manual activation instructions only
 
 Examples:
+  $0 orchestrator
   $0 marie
   $0 anga "Start task monitoring"
-  $0 fabien --mode=noninteractive "Process tasks"
-  $0 marie --mode=tmux --timeout=5
+  $0 fabien --mode=expect "Process tasks"
+  $0 orchestrator --timeout=5
 
-This script wakes the PERSISTENT worker agent by trying methods in order.
+This script wakes the PERSISTENT agent by sending a message to the running Claude instance.
 EOF
             exit 0
             ;;
         *)
-            if [ -z "$WORKER_NAME" ]; then
-                WORKER_NAME="$1"
+            if [ -z "$AGENT_NAME" ]; then
+                AGENT_NAME="$1"
             else
                 MESSAGE="$1"
             fi
@@ -63,131 +62,89 @@ EOF
     esac
 done
 
-if [ -z "$WORKER_NAME" ]; then
-    echo "Error: Worker name required"
+if [ -z "$AGENT_NAME" ]; then
+    echo "Error: Agent name required"
     echo "Run: $0 --help"
     exit 1
 fi
 
-CONTAINER_NAME="codehornets-worker-${WORKER_NAME}"
+# Map agent name to container name
+case "$AGENT_NAME" in
+    orchestrator)
+        CONTAINER_NAME="codehornets-orchestrator"
+        ;;
+    marie|anga|fabien)
+        CONTAINER_NAME="codehornets-worker-${AGENT_NAME}"
+        ;;
+    *)
+        echo "Error: Unknown agent '$AGENT_NAME'"
+        echo "Valid agents: orchestrator, marie, anga, fabien"
+        exit 1
+        ;;
+esac
 
-# Check if worker container is running
+# Check if agent container is running
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
     echo "Error: Container ${CONTAINER_NAME} is not running"
-    echo "Start it with: make start-${WORKER_NAME}"
+    echo "Start it with: docker-compose up -d ${AGENT_NAME}"
     exit 1
 fi
 
 echo "════════════════════════════════════════════════════════════"
-echo "  Waking Worker: ${WORKER_NAME}"
+echo "  Waking Agent: ${AGENT_NAME}"
 echo "  Mode: ${MODE}"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
-# Function: Non-interactive mode (Claude CLI -p flag)
-try_noninteractive() {
-    echo "Method: Claude CLI Non-Interactive (-p flag)"
-    echo "Message: ${MESSAGE}"
-    echo ""
-
-    docker exec ${CONTAINER_NAME} bash -c "
-cd /home/agent/workspace
-echo '${MESSAGE}' | claude -p --output-format json --dangerously-skip-permissions 2>&1
-" && {
-        echo ""
-        echo "✓ Command executed in non-interactive mode"
-        echo ""
-        echo "Check results: ls shared/results/${WORKER_NAME}/"
-        return 0
-    }
-
-    echo "Warning: Non-interactive mode failed"
-    return 1
-}
-
-# Function: tmux mode (TUI-aware)
-try_tmux() {
-    if ! docker ps --format '{{.Names}}' | grep -q "^codehornets-svc-automation$"; then
-        echo "Warning: Automation container not running (required for tmux mode)"
-        return 1
-    fi
-
-    echo "Method: tmux send-keys (TUI-aware)"
-    echo "Message: ${MESSAGE}"
-    echo ""
-
-    docker exec codehornets-svc-automation sh -c "
-        # Check if tmux session exists for this worker
-        if ! tmux has-session -t ${WORKER_NAME} 2>/dev/null; then
-            echo 'Creating tmux session...'
-            tmux new-session -d -s ${WORKER_NAME} \"docker attach ${CONTAINER_NAME}\"
-            sleep 2
-        fi
-
-        echo 'Sending message via tmux send-keys...'
-        tmux send-keys -t ${WORKER_NAME}: \"${MESSAGE}\" Enter
-        sleep 1
-
-        # Detach from container (Ctrl+P Ctrl+Q)
-        tmux send-keys -t ${WORKER_NAME}: C-p C-q
-
-        echo '✓ Message sent via tmux'
-    " && {
-        echo ""
-        echo "Check worker logs: make logs-${WORKER_NAME}"
-        return 0
-    }
-
-    echo "Warning: tmux mode failed"
-    return 1
-}
-
-# Function: expect automation
+# Function: expect automation (primary method)
 try_expect() {
     local TIMEOUT_VAL="${TIMEOUT:-10}"
 
-    # Try automation container first
-    if docker ps --format '{{.Names}}' | grep -q "^codehornets-svc-automation$"; then
-        echo "Method: Automation container with 'expect'"
-        echo "Message: ${MESSAGE}"
-        echo ""
-
-        # Use the send_to_worker.sh script inside automation container
-        if docker exec codehornets-svc-automation /tools/helpers/monitoring/send_to_worker.sh "${WORKER_NAME}" "${MESSAGE}"; then
-            echo ""
-            echo "Check worker logs: make logs-${WORKER_NAME}"
-            return 0
-        fi
-
-        echo "Warning: Automation container method failed"
+    # Check if automation container is running
+    if ! docker ps --format '{{.Names}}' | grep -q "^codehornets-svc-automation$"; then
+        echo "Warning: Automation container not running"
+        return 1
     fi
 
-    # Try using expect on host (if installed)
-    if command -v expect >/dev/null 2>&1; then
-        echo "Method: Using 'expect' to automate interaction"
-        echo "Message: ${MESSAGE}"
-        echo ""
+    echo "Method: Automation container with 'expect'"
+    echo "Message: ${MESSAGE}"
+    echo ""
 
-        expect <<EOF >/dev/null 2>&1 || true
+    # Use expect in automation container to send message
+    docker exec codehornets-svc-automation sh -c "
+expect <<'EXPECT_EOF'
 set timeout ${TIMEOUT_VAL}
 log_user 0
 
+# Attach to agent container
 spawn docker attach ${CONTAINER_NAME}
-sleep 0.5
-send "${MESSAGE}\r"
-sleep 2
-send "\x10\x11"
-sleep 0.5
-expect eof
-EOF
+sleep 1
 
+# Send the message
+send \"${MESSAGE}\"
+sleep 0.5
+
+# Press Enter
+send \"\\r\"
+sleep 3
+
+# Detach properly (Ctrl+P Ctrl+Q)
+send \"\\x10\\x11\"
+sleep 0.5
+
+expect eof
+EXPECT_EOF
+" 2>&1 | grep -v "spawn\|EXPECT_EOF" || true
+
+    if [ $? -eq 0 ]; then
+        echo ""
         echo "✓ Message sent via expect"
         echo ""
-        echo "Check worker logs: make logs-${WORKER_NAME}"
+        echo "Check logs: docker logs ${CONTAINER_NAME} --tail 50"
         return 0
     fi
 
-    echo "Warning: expect not available"
+    echo "Warning: expect automation failed"
     return 1
 }
 
@@ -196,7 +153,7 @@ show_manual_instructions() {
     echo "Note: Automation not available - manual activation required"
     echo ""
 
-    TRIGGER_DIR="shared/triggers/${WORKER_NAME}"
+    TRIGGER_DIR="shared/triggers/${AGENT_NAME}"
     mkdir -p "$TRIGGER_DIR"
 
     NOTIFICATION_FILE="${TRIGGER_DIR}/MANUAL_WAKE_$(date +%Y%m%d_%H%M%S).txt"
@@ -207,9 +164,9 @@ WAKE UP - MANUAL ACTIVATION REQUIRED
 ════════════════════════════════════════════════════════════
 
 Time: $(date -Iseconds)
-Worker: ${WORKER_NAME}
+Agent: ${AGENT_NAME}
 
-MESSAGE FROM ORCHESTRATOR:
+MESSAGE:
 ${MESSAGE}
 
 ACTION REQUIRED:
@@ -220,7 +177,7 @@ You are currently idle at the Claude CLI prompt. To activate:
 3. Begin monitoring /tasks directory for work
 4. Process any pending tasks
 
-PENDING TASKS: $(ls shared/tasks/${WORKER_NAME}/*.json 2>/dev/null | wc -l)
+PENDING TASKS: $(ls shared/tasks/${AGENT_NAME}/*.json 2>/dev/null | wc -l)
 
 ════════════════════════════════════════════════════════════
 EOFNOTIF
@@ -228,18 +185,20 @@ EOFNOTIF
     echo "✓ Created notification: $(basename $NOTIFICATION_FILE)"
     echo ""
 
-    # Show pending tasks
-    TASK_COUNT=$(ls shared/tasks/${WORKER_NAME}/*.json 2>/dev/null | wc -l || echo 0)
+    # Show pending tasks (skip for orchestrator)
+    if [ "$AGENT_NAME" != "orchestrator" ]; then
+        TASK_COUNT=$(ls shared/tasks/${AGENT_NAME}/*.json 2>/dev/null | wc -l || echo 0)
 
-    if [ "$TASK_COUNT" -gt 0 ]; then
-        echo "⚠ Worker has $TASK_COUNT pending task(s)"
-        echo ""
+        if [ "$TASK_COUNT" -gt 0 ]; then
+            echo "⚠ Agent has $TASK_COUNT pending task(s)"
+            echo ""
+        fi
     fi
 
     echo "Manual activation required:"
     echo "─────────────────────────────────────────────────────────────"
-    echo "  1. Attach to worker:"
-    echo "       make attach-${WORKER_NAME}"
+    echo "  1. Attach to agent:"
+    echo "       docker attach ${CONTAINER_NAME}"
     echo ""
     echo "  2. Send message:"
     echo "       ${MESSAGE}"
@@ -250,30 +209,14 @@ EOFNOTIF
     echo "       Press: Ctrl+P then Ctrl+Q"
     echo "─────────────────────────────────────────────────────────────"
     echo ""
-    echo "To enable automation (choose one):"
-    echo ""
-    echo "  Option 1: Start automation container (recommended)"
-    echo "    docker-compose up -d automation"
-    echo "    make wake-${WORKER_NAME}"
-    echo ""
-    echo "  Option 2: Install 'expect' on host"
-    echo "    sudo apt-get install expect      # Debian/Ubuntu"
-    echo "    brew install expect               # macOS"
+    echo "To enable automation:"
+    echo "  docker-compose up -d automation"
+    echo "  $0 ${AGENT_NAME}"
     echo ""
 }
 
 # Main: Execute based on mode
 case "$MODE" in
-    noninteractive)
-        try_noninteractive && exit 0
-        echo "Error: Non-interactive mode failed"
-        exit 1
-        ;;
-    tmux)
-        try_tmux && exit 0
-        echo "Error: tmux mode failed"
-        exit 1
-        ;;
     expect)
         try_expect && exit 0
         echo "Error: expect mode failed"
@@ -284,12 +227,10 @@ case "$MODE" in
         exit 0
         ;;
     auto|*)
-        # Try all methods in order
+        # Try expect, if it fails show manual instructions
         try_expect && exit 0
-        try_tmux && exit 0
-        try_noninteractive && exit 0
 
-        # All automated methods failed - show manual instructions
+        # Automation failed - show manual instructions
         show_manual_instructions
         exit 0
         ;;

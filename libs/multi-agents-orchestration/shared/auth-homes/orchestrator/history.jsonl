@@ -1,0 +1,21 @@
+{"display":"\u0010\u0001what can you do ?","pastedContents":{},"timestamp":1763601815787,"project":"/home/agent/workspace"}
+{"display":"create a task for the agent marie?","pastedContents":{},"timestamp":1763601867610,"project":"/home/agent/workspace"}
+{"display":"send a message to marie","pastedContents":{},"timestamp":1763601945225,"project":"/home/agent/workspace"}
+{"display":"send_message_to_agent(\n      target_agent=\"anga\",\n      message=\"Test message - please acknowledge\",\n      from_agent=\"orchestrator\"\n  )","pastedContents":{},"timestamp":1763606683306,"project":"/home/agent/workspace"}
+{"display":"list_available_agents()","pastedContents":{},"timestamp":1763607265404,"project":"/home/agent/workspace"}
+{"display":"list_available_agents()","pastedContents":{},"timestamp":1763607765645,"project":"/home/agent/workspace"}
+{"display":"\n  # Send a message to Anga\n  bash tools/wake_worker.sh anga \"Test message from orchestrator\"","pastedContents":{},"timestamp":1763607886379,"project":"/home/agent/workspace"}
+{"display":"its working","pastedContents":{},"timestamp":1763608724225,"project":"/home/agent/workspace"}
+{"display":"you need to use the make attach-dev","pastedContents":{},"timestamp":1763608804423,"project":"/home/agent/workspace"}
+{"display":"What are your capabilities?","pastedContents":{},"timestamp":1763635960343,"project":"/home/agent/workspace"}
+{"display":"What are your main capabilities?","pastedContents":{},"timestamp":1763636000251,"project":"/home/agent/workspace"}
+{"display":"List all available agents","pastedContents":{},"timestamp":1763636304191,"project":"/home/agent/workspace"}
+{"display":"Hello! Testing the new unified messaging system. Can you confirm you received this?","pastedContents":{},"timestamp":1763636754875,"project":"/home/agent/workspace"}
+{"display":"Check for pending tasks and start monitoring","pastedContents":{},"timestamp":1763636850885,"project":"/home/agent/workspace"}
+{"display":"what can you dCheck for pending tasks and start monitoringo ","pastedContents":{},"timestamp":1763637430089,"project":"/home/agent/workspace"}
+{"display":"send a message to anga","pastedContents":{},"timestamp":1763638208651,"project":"/home/agent/workspace"}
+{"display":"sned a message to anga","pastedContents":{},"timestamp":1763638724573,"project":"/home/agent/workspace"}
+{"display":"tell him that you're its boss","pastedContents":{},"timestamp":1763638758528,"project":"/home/agent/workspace"}
+{"display":"send a good morning message to anga","pastedContents":{},"timestamp":1763640081203,"project":"/home/agent/workspace"}
+{"display":"send a hello message to anga","pastedContents":{},"timestamp":1763640204584,"project":"/home/agent/workspace"}
+{"display":"send a message again to anga","pastedContents":{},"timestamp":1763640551631,"project":"/home/agent/workspace"}
