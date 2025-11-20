@@ -60,7 +60,7 @@ if [ "$CONTAINERS_RUNNING" = true ]; then
 
     # Test Marie
     echo -e "  ${CYAN}Testing Marie...${NC}"
-    if docker exec codehornets-worker-marie sh -c "docker ps 2>&1" | grep -q "Cannot connect"; then
+    if docker exec codehornets-worker-marie sh -c "docker ps 2>&1" | grep -qE "Cannot connect|failed to connect|no such file"; then
         echo -e "    ${GREEN}✓ Marie cannot access Docker daemon${NC}"
     else
         echo -e "    ${RED}✗ Marie can access Docker daemon - SECURITY RISK!${NC}"
@@ -69,7 +69,7 @@ if [ "$CONTAINERS_RUNNING" = true ]; then
 
     # Test Anga
     echo -e "  ${CYAN}Testing Anga...${NC}"
-    if docker exec codehornets-worker-anga sh -c "docker ps 2>&1" | grep -q "Cannot connect"; then
+    if docker exec codehornets-worker-anga sh -c "docker ps 2>&1" | grep -qE "Cannot connect|failed to connect|no such file"; then
         echo -e "    ${GREEN}✓ Anga cannot access Docker daemon${NC}"
     else
         echo -e "    ${RED}✗ Anga can access Docker daemon - SECURITY RISK!${NC}"
@@ -78,7 +78,7 @@ if [ "$CONTAINERS_RUNNING" = true ]; then
 
     # Test Fabien
     echo -e "  ${CYAN}Testing Fabien...${NC}"
-    if docker exec codehornets-worker-fabien sh -c "docker ps 2>&1" | grep -q "Cannot connect"; then
+    if docker exec codehornets-worker-fabien sh -c "docker ps 2>&1" | grep -qE "Cannot connect|failed to connect|no such file"; then
         echo -e "    ${GREEN}✓ Fabien cannot access Docker daemon${NC}"
     else
         echo -e "    ${RED}✗ Fabien can access Docker daemon - SECURITY RISK!${NC}"
@@ -87,7 +87,7 @@ if [ "$CONTAINERS_RUNNING" = true ]; then
 
     # Test Orchestrator
     echo -e "  ${CYAN}Testing Orchestrator...${NC}"
-    if docker exec codehornets-orchestrator sh -c "docker ps 2>&1" | grep -q "Cannot connect"; then
+    if docker exec codehornets-orchestrator sh -c "docker ps 2>&1" | grep -qE "Cannot connect|failed to connect|no such file"; then
         echo -e "    ${GREEN}✓ Orchestrator cannot access Docker daemon${NC}"
     else
         echo -e "    ${RED}✗ Orchestrator can access Docker daemon - SECURITY RISK!${NC}"
@@ -105,7 +105,7 @@ if [ "$CONTAINERS_RUNNING" = true ]; then
 
     echo -e "  ${CYAN}Attempting escape from Marie...${NC}"
     if docker exec codehornets-worker-marie sh -c \
-        "docker run --rm alpine echo 'escaped' 2>&1" | grep -q "Cannot connect"; then
+        "docker run --rm alpine echo 'escaped' 2>&1" | grep -qE "Cannot connect|failed to connect|no such file"; then
         echo -e "    ${GREEN}✓ Container escape blocked${NC}"
     else
         echo -e "    ${RED}✗ Container escape POSSIBLE - CRITICAL VULNERABILITY!${NC}"

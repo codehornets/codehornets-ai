@@ -25,7 +25,8 @@
       "Bash(__NEW_LINE__ echo \"=== FINAL VERIFICATION ===\")",
       "Bash(__NEW_LINE__)",
       "Bash(timeout 3 docker attach:*)",
-      "Bash(docker network:*)"
+      "Bash(docker network:*)",
+      "Bash(./verify-security.sh:*)"
     ],
     "deny": [],
     "ask": []

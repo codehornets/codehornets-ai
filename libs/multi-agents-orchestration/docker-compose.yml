@@ -22,7 +22,9 @@ services:
     image: docker/sandbox-templates:claude-code
     container_name: codehornets-orchestrator
     entrypoint: ["/tools/orchestrator_entrypoint.sh"]
-    # group_add removed - no longer needed without Docker socket
+    group_add:
+      - "0"     # Root group for Docker socket access
+      - "1001"  # Docker group on host (if different)
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -36,7 +38,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces:/workspaces:ro
-      # Docker socket REMOVED for security - agents cannot escape container
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
@@ -64,7 +66,9 @@ services:
     container_name: codehornets-worker-marie
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["marie"]
-    # group_add removed - no longer needed without Docker socket
+    group_add:
+      - "0"     # Root group for Docker socket access
+      - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -78,7 +82,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
-      # Docker socket REMOVED for security - Marie cannot escape container
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
@@ -116,7 +120,9 @@ services:
     container_name: codehornets-worker-anga
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["anga"]
-    # group_add removed - no longer needed without Docker socket
+    group_add:
+      - "0"     # Root group for Docker socket access
+      - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -132,7 +138,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/anga:/home/agent/workspace:rw
-      # Docker socket REMOVED for security - Anga cannot escape container
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
@@ -170,7 +176,9 @@ services:
     container_name: codehornets-worker-fabien
     entrypoint: ["/tools/entrypoint.sh"]
     command: ["fabien"]
-    # group_add removed - no longer needed without Docker socket
+    group_add:
+      - "0"     # Root group for Docker socket access
+      - "1001"  # Docker group on host
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -184,7 +192,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
-      # Docker socket REMOVED for security - Fabien cannot escape container
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
       - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
@@ -231,7 +239,7 @@ services:
     volumes:
       - ./tools:/tools:ro
       - ./shared:/workspace/shared:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     networks:
       - claude-network
     restart: unless-stopped
@@ -268,7 +276,7 @@ services:
       - ./shared/triggers:/workspace/shared/triggers:rw
       - ./shared/archive:/workspace/shared/archive:rw
       - ./shared/watcher-logs:/workspace/shared/watcher-logs:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - PYTHONUNBUFFERED=1
       - MONITOR_INTERVAL=${MONITOR_INTERVAL:-3}
