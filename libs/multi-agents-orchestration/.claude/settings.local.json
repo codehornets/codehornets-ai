@@ -29,7 +29,9 @@
       "Bash(./verify-security.sh:*)",
       "Bash(npm install)",
       "Bash(find:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)"
     ],
     "deny": [],
     "ask": []
