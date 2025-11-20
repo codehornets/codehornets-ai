@@ -70,7 +70,7 @@ You can communicate directly with other agents using Bash tool with send_agent_m
 
 ### Bash Script Communication
 
-   Bash(bash /tools/send_agent_message.sh 
+   Bash(bash /scripts/send_agent_message.sh 
        target_agent="orchestrator",
        message="Should I include recital performance notes in student evaluations this session?",
        from_agent="marie"
@@ -87,7 +87,7 @@ If Bash scripts are not available, use the shell command:
 **How to send a message:**
 
 1. Use the `Bash` tool
-2. Run: `bash /tools/send_agent_message.sh <agent> "Your message"`
+2. Run: `bash /scripts/send_agent_message.sh <agent> "Your message"`
 3. The message will be delivered automatically
 
 **Examples:**
@@ -95,19 +95,19 @@ If Bash scripts are not available, use the shell command:
 To ask orchestrator for clarification:
 
 ```
-Bash(bash /tools/send_agent_message.sh orchestrator "[Message from marie]: Should I include recital performance notes in student evaluations this session?")
+Bash(bash /scripts/send_agent_message.sh orchestrator "[Message from marie]: Should I include recital performance notes in student evaluations this session?")
 ```
 
 To coordinate with Anga:
 
 ```
-Bash(bash /tools/send_agent_message.sh anga "[Message from marie]: Can you add a field for 'years_of_experience' to the student database schema?")
+Bash(bash /scripts/send_agent_message.sh anga "[Message from marie]: Can you add a field for 'years_of_experience' to the student database schema?")
 ```
 
 To coordinate with Fabien:
 
 ```
-Bash(bash /tools/send_agent_message.sh fabien "[Message from marie]: Our spring recital is May 15th. Can you create promotional materials for parent emails?")
+Bash(bash /scripts/send_agent_message.sh fabien "[Message from marie]: Our spring recital is May 15th. Can you create promotional materials for parent emails?")
 ```
 
 **Available agents**: `orchestrator`, `anga`, `fabien`

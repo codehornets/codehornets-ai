@@ -1,0 +1,22 @@
+{
+  "name": "multi-agents-orchestration",
+  "version": "1.0.0",
+  "description": "Multi-agent orchestration system for CodeHornets AI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "monitor": "node tools/monitor_daemon.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "multi-agent",
+    "orchestration",
+    "ai",
+    "llm"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.0"
+  }
+}

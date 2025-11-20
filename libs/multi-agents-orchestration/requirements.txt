@@ -1,2 +1,0 @@
-# Python dependencies for CodeHornets AI tools
-watchdog==4.0.0

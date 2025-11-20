@@ -1,0 +1,29 @@
+{
+  "name": "codehornets-tools",
+  "version": "1.0.0",
+  "description": "Node.js tools for CodeHornets AI multi-agent orchestration",
+  "type": "module",
+  "scripts": {
+    "monitor": "node monitor_daemon.js",
+    "sandbox-service": "node sandbox_service.js",
+    "hook-watcher": "node helpers/monitoring/hook_watcher.js",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "axios": "^1.6.2",
+    "dockerode": "^4.0.0",
+    "fs-extra": "^11.2.0",
+    "winston": "^3.11.0",
+    "date-fns": "^3.0.0",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "CodeHornets AI Team",
+  "license": "MIT"
+}

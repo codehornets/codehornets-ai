@@ -95,41 +95,41 @@ stop-automation: ## Stop automation helper container
 	@echo "$(GREEN)✓ Automation helper stopped$(NC)"
 
 check-notifications: ## Check for pending worker notifications
-	@./tools/helpers/monitoring/show_notifications.sh
+	@./scripts/helpers/monitoring/show_notifications.sh
 
 wake-orchestrator: ## Wake orchestrator (send activation prompt)
-	@./tools/wake_worker.sh orchestrator
+	@./scripts/wake_worker.sh orchestrator
 
 wake-marie: ## Wake Marie worker (send activation prompt)
-	@./tools/wake_worker.sh marie
+	@./scripts/wake_worker.sh marie
 
 wake-anga: ## Wake Anga worker (send activation prompt)
-	@./tools/wake_worker.sh anga
+	@./scripts/wake_worker.sh anga
 
 wake-fabien: ## Wake Fabien worker (send activation prompt)
-	@./tools/wake_worker.sh fabien
+	@./scripts/wake_worker.sh fabien
 
 wake-all: ## Wake all agents (orchestrator + workers)
 	@echo "$(CYAN)Waking all agents...$(NC)"
 	@echo ""
-	@./tools/wake_worker.sh orchestrator
+	@./scripts/wake_worker.sh orchestrator
 	@echo ""
-	@./tools/wake_worker.sh marie
+	@./scripts/wake_worker.sh marie
 	@echo ""
-	@./tools/wake_worker.sh anga
+	@./scripts/wake_worker.sh anga
 	@echo ""
-	@./tools/wake_worker.sh fabien
+	@./scripts/wake_worker.sh fabien
 	@echo ""
 	@echo "$(GREEN)✓ All agents activated$(NC)"
 
 wake-workers: ## Wake all workers only (marie, anga, fabien)
 	@echo "$(CYAN)Waking all workers...$(NC)"
 	@echo ""
-	@./tools/wake_worker.sh marie
+	@./scripts/wake_worker.sh marie
 	@echo ""
-	@./tools/wake_worker.sh anga
+	@./scripts/wake_worker.sh anga
 	@echo ""
-	@./tools/wake_worker.sh fabien
+	@./scripts/wake_worker.sh fabien
 	@echo ""
 	@echo "$(GREEN)✓ All workers activated$(NC)"
 
@@ -209,7 +209,7 @@ task-marie: ## Create a task for Marie (usage: make task-marie TITLE="Task title
 		echo "Usage: make task-marie TITLE=\"Update UI\" DESC=\"Fix dashboard layout\""; \
 		exit 1; \
 	fi
-	@docker exec codehornets-orchestrator python3 /tools/create_worker_task.py marie "$(TITLE)" "$(DESC)"
+	@docker exec codehornets-orchestrator node /tools/tasks/create_worker_task.js marie "$(TITLE)" "$(DESC)"
 	@echo "$(GREEN)✓ Task created for Marie$(NC)"
 
 task-anga: ## Create a task for Anga (usage: make task-anga TITLE="Task title" DESC="Description")
@@ -218,7 +218,7 @@ task-anga: ## Create a task for Anga (usage: make task-anga TITLE="Task title" D
 		echo "Usage: make task-anga TITLE=\"Fix API\" DESC=\"Update authentication\""; \
 		exit 1; \
 	fi
-	@docker exec codehornets-orchestrator python3 /tools/create_worker_task.py anga "$(TITLE)" "$(DESC)"
+	@docker exec codehornets-orchestrator node /tools/tasks/create_worker_task.js anga "$(TITLE)" "$(DESC)"
 	@echo "$(GREEN)✓ Task created for Anga$(NC)"
 
 task-fabien: ## Create a task for Fabien (usage: make task-fabien TITLE="Task title" DESC="Description")
@@ -227,7 +227,7 @@ task-fabien: ## Create a task for Fabien (usage: make task-fabien TITLE="Task ti
 		echo "Usage: make task-fabien TITLE=\"Deploy\" DESC=\"Setup CI/CD pipeline\""; \
 		exit 1; \
 	fi
-	@docker exec codehornets-orchestrator python3 /tools/create_worker_task.py fabien "$(TITLE)" "$(DESC)"
+	@docker exec codehornets-orchestrator node /tools/tasks/create_worker_task.js fabien "$(TITLE)" "$(DESC)"
 	@echo "$(GREEN)✓ Task created for Fabien$(NC)"
 
 list-tasks: ## List all pending tasks
@@ -344,7 +344,7 @@ complete-theme: ## Complete theme selection for all agents (after restart)
 	@echo "After restarting containers, agents need theme selection."
 	@echo "This command will guide you through the process."
 	@echo ""
-	@./tools/helpers/setup/auto-theme-select.sh
+	@./scripts/helpers/setup/auto-theme-select.sh
 
 config: ## Show current configuration
 	@echo "$(CYAN)Configuration:$(NC)"
@@ -422,7 +422,7 @@ shell-fabien: ## Open shell in Fabien container
 
 test-hook: ## Test the Stop hook (creates task for Anga)
 	@echo "$(CYAN)Testing Stop hook...$(NC)"
-	@docker exec codehornets-orchestrator python3 /tools/create_worker_task.py anga
+	@docker exec codehornets-orchestrator node /tools/tasks/create_worker_task.js anga
 	@echo "$(GREEN)✓ Hook executed$(NC)"
 	@echo ""
 	@echo "$(CYAN)Check trigger and task files:$(NC)"
@@ -496,7 +496,7 @@ view-archive: ## View archive statistics
 
 create-test-task: ## Create a test task for Anga
 	@echo "$(CYAN)Creating test task for Anga...$(NC)"
-	@docker exec codehornets-orchestrator python3 /tools/create_worker_task.py anga
+	@docker exec codehornets-orchestrator node /tools/tasks/create_worker_task.js anga
 	@echo "$(GREEN)✓ Test task created$(NC)"
 	@echo "$(YELLOW)Run 'make wake-anga' to activate the worker$(NC)"
 
@@ -507,7 +507,7 @@ create-task-anga: ## Create a custom task for Anga (use: make create-task-anga P
 		exit 1; \
 	fi
 	@echo "$(CYAN)Creating task for Anga...$(NC)"
-	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"anga\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/tools/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
+	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"anga\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/scripts/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
 	@echo "$(GREEN)✓ Task created and worker notified$(NC)"
 
 create-task-marie: ## Create a custom task for Marie (use: make create-task-marie PROMPT="your task")
@@ -517,7 +517,7 @@ create-task-marie: ## Create a custom task for Marie (use: make create-task-mari
 		exit 1; \
 	fi
 	@echo "$(CYAN)Creating task for Marie...$(NC)"
-	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"marie\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/tools/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
+	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"marie\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/scripts/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
 	@echo "$(GREEN)✓ Task created and worker notified$(NC)"
 
 create-task-fabien: ## Create a custom task for Fabien (use: make create-task-fabien PROMPT="your task")
@@ -527,7 +527,7 @@ create-task-fabien: ## Create a custom task for Fabien (use: make create-task-fa
 		exit 1; \
 	fi
 	@echo "$(CYAN)Creating task for Fabien...$(NC)"
-	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"fabien\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/tools/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
+	@docker exec codehornets-orchestrator python3 -c "import sys; exec('''import json, os, subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nworker = \"fabien\"\nprompt = sys.argv[1]\ntrigger_root = Path(\"/shared/triggers\")\ntasks_root = Path(\"/tasks\")\nworker_task_dir = tasks_root / worker\nworker_trigger_dir = trigger_root / worker\nworker_task_dir.mkdir(parents=True, exist_ok=True)\nworker_trigger_dir.mkdir(parents=True, exist_ok=True)\nts = datetime.utcnow().strftime(\"%Y%m%dT%H%M%S\")\ntask_id = f\"custom-task-{worker}-{ts}\"\ntask_payload = {\"task_id\": task_id, \"from\": \"makefile\", \"worker\": worker, \"prompt\": prompt, \"meta\": {\"source\": \"make-create-task\", \"timestamp\": ts}}\ntask_path = worker_task_dir / f\"{task_id}.json\"\ntask_path.write_text(json.dumps(task_payload, indent=2), encoding=\"utf-8\")\ntrigger_path = worker_trigger_dir / f\"task-{task_id}.trigger\"\ntrigger_path.touch()\nprint(f\"✓ Task created: {task_id}\")\ntry:\n    subprocess.run([\"docker\", \"exec\", \"codehornets-svc-automation\", \"bash\", \"/scripts/wake_worker.sh\", worker, f\"New task: {task_id}\"], timeout=10, check=False)\nexcept: pass\n''')" "$(PROMPT)"
 	@echo "$(GREEN)✓ Task created and worker notified$(NC)"
 
 ##
@@ -644,7 +644,7 @@ msg-orchestrator: ## Send message to Orchestrator (use: make msg-orchestrator MS
 		echo "Usage: make msg-orchestrator MSG=\"What are your capabilities?\""; \
 		exit 1; \
 	fi
-	@bash tools/send_agent_message.sh orchestrator "$(MSG)"
+	@bash scripts/send_agent_message.sh orchestrator "$(MSG)"
 
 msg-anga: ## Send message to Anga (use: make msg-anga MSG="your message")
 	@if [ -z "$(MSG)" ]; then \
@@ -652,7 +652,7 @@ msg-anga: ## Send message to Anga (use: make msg-anga MSG="your message")
 		echo "Usage: make msg-anga MSG=\"Review the auth code\""; \
 		exit 1; \
 	fi
-	@bash tools/send_agent_message.sh anga "$(MSG)"
+	@bash scripts/send_agent_message.sh anga "$(MSG)"
 
 msg-marie: ## Send message to Marie (use: make msg-marie MSG="your message")
 	@if [ -z "$(MSG)" ]; then \
@@ -660,7 +660,7 @@ msg-marie: ## Send message to Marie (use: make msg-marie MSG="your message")
 		echo "Usage: make msg-marie MSG=\"Evaluate Emma's progress\""; \
 		exit 1; \
 	fi
-	@bash tools/send_agent_message.sh marie "$(MSG)"
+	@bash scripts/send_agent_message.sh marie "$(MSG)"
 
 msg-fabien: ## Send message to Fabien (use: make msg-fabien MSG="your message")
 	@if [ -z "$(MSG)" ]; then \
@@ -668,34 +668,34 @@ msg-fabien: ## Send message to Fabien (use: make msg-fabien MSG="your message")
 		echo "Usage: make msg-fabien MSG=\"Create social media post\""; \
 		exit 1; \
 	fi
-	@bash tools/send_agent_message.sh fabien "$(MSG)"
+	@bash scripts/send_agent_message.sh fabien "$(MSG)"
 
 ##
 ## Agent Activity Status (Slack/Teams-like status)
 ##
 
 activity-orchestrator: ## Check if orchestrator is busy or idle
-	@bash tools/check_agent_activity.sh orchestrator 2
+	@bash scripts/check_agent_activity.sh orchestrator 2
 
 activity-anga: ## Check if Anga is busy or idle
-	@bash tools/check_agent_activity.sh anga 2
+	@bash scripts/check_agent_activity.sh anga 2
 
 activity-marie: ## Check if Marie is busy or idle
-	@bash tools/check_agent_activity.sh marie 2
+	@bash scripts/check_agent_activity.sh marie 2
 
 activity-fabien: ## Check if Fabien is busy or idle
-	@bash tools/check_agent_activity.sh fabien 2
+	@bash scripts/check_agent_activity.sh fabien 2
 
 activity-all: ## Check all agents' activity status
 	@echo "$(CYAN)════════════════════════════════════════════════════════════$(NC)"
 	@echo "$(CYAN)  All Agents Activity Status$(NC)"
 	@echo "$(CYAN)════════════════════════════════════════════════════════════$(NC)"
 	@echo ""
-	@bash tools/check_agent_activity.sh orchestrator 1
+	@bash scripts/check_agent_activity.sh orchestrator 1
 	@echo ""
-	@bash tools/check_agent_activity.sh marie 1
+	@bash scripts/check_agent_activity.sh marie 1
 	@echo ""
-	@bash tools/check_agent_activity.sh anga 1
+	@bash scripts/check_agent_activity.sh anga 1
 	@echo ""
-	@bash tools/check_agent_activity.sh fabien 1
+	@bash scripts/check_agent_activity.sh fabien 1
 

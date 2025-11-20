@@ -9,10 +9,11 @@ echo "Role: Coordinator"
 echo "Time: $(date -Iseconds)"
 echo "========================================="
 
-# Install Python dependencies for hooks
-if [ -n "${HOOKS_MODE}" ]; then
-    echo "📦 Installing hooks dependencies..."
-    pip install --quiet --break-system-packages watchdog redis 2>/dev/null || echo "⚠️  Warning: Failed to install some dependencies"
+# Install Node.js dependencies for tools
+if [ -f "/tools/package.json" ]; then
+    echo "📦 Installing Node.js dependencies..."
+    cd /tools && npm install --quiet --no-audit --no-fund 2>/dev/null || echo "⚠️  npm install skipped (may already be installed)"
+    cd /
 fi
 
 # Create necessary directories
@@ -61,9 +62,9 @@ cat > "${HEARTBEAT_FILE}" <<EOF
 EOF
 
 # Start hook watcher in background if enabled
-if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/hook_watcher.py" ]; then
+if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/monitoring/hook_watcher.js" ]; then
     echo "👁️  Starting hook watcher for orchestrator..."
-    python3 /tools/hook_watcher.py orchestrator >> "/var/log/orchestrator-watcher.log" 2>&1 &
+    node /tools/monitoring/hook_watcher.js orchestrator >> "/var/log/orchestrator-watcher.log" 2>&1 &
     WATCHER_PID=$!
     echo "   Watcher started (PID: ${WATCHER_PID})"
 fi

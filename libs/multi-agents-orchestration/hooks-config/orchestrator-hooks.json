@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py session_start",
+            "command": "node /workspace/tools/monitoring/activation_wrapper.js session_start",
             "timeout": 10
           }
         ]
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py user_prompt_submit",
+            "command": "node /workspace/tools/monitoring/activation_wrapper.js user_prompt_submit",
             "timeout": 5
           }
         ]
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py tool_start",
+            "command": "node /workspace/tools/monitoring/activation_wrapper.js tool_start",
             "timeout": 5
           }
         ]
@@ -43,7 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py tool_end",
+            "command": "node /workspace/tools/monitoring/activation_wrapper.js tool_end",
             "timeout": 5
           }
         ]
@@ -55,7 +55,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/helpers/monitoring/activation_wrapper.py assistant_response",
+            "command": "node /workspace/tools/monitoring/activation_wrapper.js assistant_response",
             "timeout": 5
           }
         ]
@@ -67,7 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /workspace/tools/create_worker_task.py anga 'Stop Event Task' 'Task triggered by stop event'",
+            "command": "node /workspace/tools/tasks/create_worker_task.js anga 'Stop Event Task' 'Task triggered by stop event'",
             "timeout": 30
           }
         ]

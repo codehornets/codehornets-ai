@@ -14,10 +14,11 @@ echo "Role: ${AGENT_ROLE:-worker}"
 echo "Time: $(date -Iseconds)"
 echo "========================================="
 
-# Install Python dependencies if requirements.txt exists
-if [ -f "/requirements.txt" ]; then
-    echo "📦 Installing Python dependencies..."
-    pip install --quiet --break-system-packages -r /requirements.txt
+# Install Node.js dependencies for tools
+if [ -f "/tools/package.json" ]; then
+    echo "📦 Installing Node.js dependencies..."
+    cd /tools && npm install --quiet --no-audit --no-fund 2>/dev/null || echo "⚠️  npm install skipped (may already be installed)"
+    cd /
 fi
 
 # Note: expect is not needed in worker containers
@@ -60,9 +61,9 @@ cat > "${HEARTBEAT_FILE}" <<EOF
 EOF
 
 # Start file watcher in background if hooks are enabled
-if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/hook_watcher.py" ]; then
+if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/monitoring/hook_watcher.js" ]; then
     echo "👁️  Starting trigger watcher for ${AGENT_NAME}..."
-    python3 /tools/hook_watcher.py "${AGENT_NAME}" >> "/var/log/${AGENT_NAME}-watcher.log" 2>&1 &
+    node /tools/monitoring/hook_watcher.js "${AGENT_NAME}" >> "/var/log/${AGENT_NAME}-watcher.log" 2>&1 &
     WATCHER_PID=$!
     echo "   Watcher started (PID: ${WATCHER_PID})"
 fi

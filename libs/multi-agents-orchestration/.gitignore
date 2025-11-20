@@ -9,17 +9,20 @@ shared/pipes/*
 # Environment
 .env
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+# Node.js
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
 
-# Virtual environments
+# Python (legacy - no longer used)
+.venv/
 venv/
-env/
-ENV/
+__pycache__/
+*.pyc
+*.pyo
 
 # IDEs
 .vscode/

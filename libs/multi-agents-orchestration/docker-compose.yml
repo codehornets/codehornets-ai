@@ -21,7 +21,7 @@ services:
   orchestrator:
     image: docker/sandbox-templates:claude-code
     container_name: codehornets-orchestrator
-    entrypoint: ["/tools/orchestrator_entrypoint.sh"]
+    entrypoint: ["/scripts/orchestrator_entrypoint.sh"]
     group_add:
       - "0"     # Root group for Docker socket access
       - "1001"  # Docker group on host (if different)
@@ -29,7 +29,7 @@ services:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./scripts:/scripts:ro
       - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
       - ./shared/tasks:/tasks:rw
       - ./shared/results:/results:ro
@@ -64,7 +64,7 @@ services:
   marie:
     image: docker/sandbox-templates:claude-code
     container_name: codehornets-worker-marie
-    entrypoint: ["/tools/entrypoint.sh"]
+    entrypoint: ["/scripts/entrypoint.sh"]
     command: ["marie"]
     group_add:
       - "0"     # Root group for Docker socket access
@@ -73,7 +73,7 @@ services:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./scripts:/scripts:ro
       - ./shared/auth-homes/marie:/home/agent/.claude:rw
       - ./shared/tasks/marie:/tasks:ro
       - ./shared/results/marie:/results:rw
@@ -118,7 +118,7 @@ services:
   anga:
     image: docker/sandbox-templates:claude-code
     container_name: codehornets-worker-anga
-    entrypoint: ["/tools/entrypoint.sh"]
+    entrypoint: ["/scripts/entrypoint.sh"]
     command: ["anga"]
     group_add:
       - "0"     # Root group for Docker socket access
@@ -127,7 +127,7 @@ services:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./scripts:/scripts:ro
       - ./shared/auth-homes/anga:/home/agent/.claude:rw
       - ./shared/tasks/anga:/tasks:ro
       - ./shared/tasks/anga:/home/agent/workspace/tasks:ro
@@ -174,7 +174,7 @@ services:
   fabien:
     image: docker/sandbox-templates:claude-code
     container_name: codehornets-worker-fabien
-    entrypoint: ["/tools/entrypoint.sh"]
+    entrypoint: ["/scripts/entrypoint.sh"]
     command: ["fabien"]
     group_add:
       - "0"     # Root group for Docker socket access
@@ -183,7 +183,7 @@ services:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./scripts:/scripts:ro
       - ./shared/auth-homes/fabien:/home/agent/.claude:rw
       - ./shared/tasks/fabien:/tasks:ro
       - ./shared/results/fabien:/results:rw
@@ -237,7 +237,7 @@ services:
       tail -f /dev/null
       "
     volumes:
-      - ./tools:/tools:ro
+      - ./scripts:/scripts:ro
       - ./shared:/workspace/shared:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
     networks:
@@ -246,16 +246,15 @@ services:
 
   # Monitor - System observer with local LLM
   monitor:
-    image: python:3.11-slim
+    image: node:18-slim
     container_name: codehornets-svc-monitor
     command: >
       bash -c "
       echo '🔍 Installing monitor dependencies...' &&
-      pip install --quiet --upgrade pip >/dev/null 2>&1 &&
-      pip install --quiet --no-warn-script-location watchdog requests >/dev/null 2>&1 &&
+      cd /tools && npm install --quiet --no-audit --no-fund 2>/dev/null &&
       echo '📦 Installing docker-cli...' &&
       apt-get update -qq >/dev/null 2>&1 &&
-      apt-get install -y -qq docker.io >/dev/null 2>&1 &&
+      apt-get install -y -qq docker.io curl >/dev/null 2>&1 &&
       echo '✓ Dependencies installed' &&
       echo '📡 Checking for Ollama on host...' &&
       if curl -s --max-time 2 http://host.docker.internal:11434/api/tags >/dev/null 2>&1 || \
@@ -266,7 +265,7 @@ services:
         echo '  To enable AI recaps: Install Ollama on host and run: ollama pull llama3.2:1b';
       fi &&
       echo '👁️  Starting monitor daemon...' &&
-      python3 /tools/monitor_daemon.py
+      node /tools/monitoring/monitor_daemon.js
       "
     volumes:
       - ./tools:/tools:ro

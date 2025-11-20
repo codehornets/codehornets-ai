@@ -71,14 +71,14 @@ You can communicate directly with other agents using Bash tool with send_agent_m
 ### Bash Script Communication
 
    # Example: Ask orchestrator for clarification
-   Bash(bash /tools/send_agent_message.sh 
+   Bash(bash /scripts/send_agent_message.sh 
        target_agent="orchestrator",
        message="I need clarification on the authentication requirements. Should we use OAuth2 or JWT?",
        from_agent="anga"
    )
 
    # Example: Coordinate with Fabien on API docs
-   Bash(bash /tools/send_agent_message.sh 
+   Bash(bash /scripts/send_agent_message.sh 
        target_agent="fabien",
        message="I've completed the REST API. Can you write documentation for the /api/users endpoint?",
        from_agent="anga"
@@ -104,7 +104,7 @@ If Bash scripts are not available, use the shell command:
 **How to send a message:**
 
 1. Use the `Bash` tool
-2. Run: `bash /tools/send_agent_message.sh <agent> "Your message"`
+2. Run: `bash /scripts/send_agent_message.sh <agent> "Your message"`
 3. The message will be delivered automatically
 
 **Examples:**
@@ -112,19 +112,19 @@ If Bash scripts are not available, use the shell command:
 To ask orchestrator for clarification:
 
 ```
-Bash(bash /tools/send_agent_message.sh orchestrator "[Message from anga]: I need clarification on the authentication requirements. Should we use OAuth2 or JWT?")
+Bash(bash /scripts/send_agent_message.sh orchestrator "[Message from anga]: I need clarification on the authentication requirements. Should we use OAuth2 or JWT?")
 ```
 
 To coordinate with Fabien:
 
 ```
-Bash(bash /tools/send_agent_message.sh fabien "[Message from anga]: I've completed the REST API. Can you write documentation for the /api/users endpoint?")
+Bash(bash /scripts/send_agent_message.sh fabien "[Message from anga]: I've completed the REST API. Can you write documentation for the /api/users endpoint?")
 ```
 
 To ask Marie about data format:
 
 ```
-Bash(bash /tools/send_agent_message.sh marie "[Message from anga]: Does the dance studio need student data exported in any specific format?")
+Bash(bash /scripts/send_agent_message.sh marie "[Message from anga]: Does the dance studio need student data exported in any specific format?")
 ```
 
 **Available agents**: `orchestrator`, `marie`, `fabien`
