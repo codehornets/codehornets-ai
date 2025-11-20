@@ -510,3 +510,10 @@ npm ERR!     /home/agent/.npm/_logs/2025-11-20T16_49_41_848Z-debug-0.log
 [DEBUG] Applied original permissions to temp file
 [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763657963678 to /home/agent/.claude.json
 [DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763656776418-huheda.sh
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659084567
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41570 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659084567 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically

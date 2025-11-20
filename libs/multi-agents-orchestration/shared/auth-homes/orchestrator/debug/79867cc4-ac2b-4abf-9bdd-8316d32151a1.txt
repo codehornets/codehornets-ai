@@ -1,0 +1,132 @@
+[ERROR] Failed to save config with lock: Error: ENOENT: no such file or directory, lstat '/home/agent/.claude.json'
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660163931
+[DEBUG] Setting permissions for new file: 600
+[DEBUG] Temp file written successfully, size: 103 bytes
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660163931 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660164098
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 183 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660164098 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660164142
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 220 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660164142 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] >>>>> getSkillsIfEnabled() CALLED <<<<<
+[DEBUG] ENABLE_SKILLS value: false, type: boolean
+[DEBUG] ENABLE_SKILLS check failed, returning empty
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763660164613-omicz2.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/79867cc4-ac2b-4abf-9bdd-8316d32151a1-agent-79867cc4-ac2b-4abf-9bdd-8316d32151a1.json.tmp.1.1763660164648
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/79867cc4-ac2b-4abf-9bdd-8316d32151a1-agent-79867cc4-ac2b-4abf-9bdd-8316d32151a1.json.tmp.1.1763660164648 to /home/agent/.claude/todos/79867cc4-ac2b-4abf-9bdd-8316d32151a1-agent-79867cc4-ac2b-4abf-9bdd-8316d32151a1.json
+[DEBUG] File /home/agent/.claude/todos/79867cc4-ac2b-4abf-9bdd-8316d32151a1-agent-79867cc4-ac2b-4abf-9bdd-8316d32151a1.json written atomically
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Shell snapshot created successfully (1740 bytes)
+[DEBUG] Summarizing all 2 messages (~3515 tokens)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660165638
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 302 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660165638 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660165667
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 332 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660165667 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660166002
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39564 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660166002 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] rg error (signal=null, code=2, stderr: rg: /root: Permission denied (os error 13)
+rg: /var/lib/apt/lists/partial: Permission denied (os error 13)
+rg: /etc/ssl/private: Permission denied (os error 13)
+rg: /var/cache/ldconfig: Permission denied (os error 13)
+rg: /proc/81/ns: Permission denied (os error 13)
+rg: /proc/81/fdinfo: Permission denied (os error 13)
+rg: /proc/81/map_files: Permission denied (os error 13)
+rg: /proc/81/fd: Permission denied (os error 13)
+rg: /proc/117: No such file or directory (os error 2)
+rg: /proc/104: No such file or directory (os error 2)
+rg: /proc/81/task/81/ns: Permission denied (os error 13)
+rg: /proc/81/task/81/fdinfo: Permission denied (os error 13)
+rg: /proc/81/task/81/fd: Permission denied (os error 13)
+rg: /proc/80/ns: Permission denied (os error 13)
+rg: /proc/80/fdinfo: Permission denied (os error 13)
+rg: /proc/80/map_files: Permission denied (os error 13)
+rg: /proc/80/fd: Permission denied (os error 13)
+rg: /proc/100/ns: Permission denied (os error 13)
+rg: /proc/100/fdinfo: Permission denied (os error 13)
+rg: /proc/100/map_files: Permission denied (os error 13)
+rg: /proc/100/fd: Permission denied (os error 13)
+rg: /proc/86/ns: Permission denied (os error 13)
+rg: /proc/86/fdinfo: Permission denied (os error 13)
+rg: /proc/86/map_files: Permission denied (os error 13)
+rg: /proc/86/fd: Permission denied (os error 13)
+rg: /proc/100/task/100/ns: Permission denied (os error 13)
+rg: /proc/100/task/100/fdinfo: Permission denied (os error 13)
+rg: /proc/tty/driver: Permission denied (os error 13)
+rg: /proc/135/fd: No such file or directory (os error 2)
+rg: /proc/135/task: No such file or directory (os error 2)
+rg: /proc/134: No such file or directory (os error 2)
+rg: /proc/135/fdinfo: No such file or directory (os error 2)
+rg: /proc/135/map_files: No such file or directory (os error 2)
+rg: /proc/135/ns: No such file or directory (os error 2)
+rg: /proc/80/task/80/ns: Permission denied (os error 13)
+rg: /proc/80/task/80/fdinfo: Permission denied (os error 13)
+rg: /proc/80/task/80/fd: Permission denied (os error 13)
+rg: /proc/72/ns: Permission denied (os error 13)
+rg: /proc/72/fdinfo: Permission denied (os error 13)
+rg: /proc/72/map_files: Permission denied (os error 13)
+rg: /proc/72/fd: Permission denied (os error 13)
+rg: /proc/72/task/72/ns: Permission denied (os error 13)
+rg: /proc/72/task/72/fdinfo: Permission denied (os error 13)
+rg: /proc/72/task/72/fd: Permission denied (os error 13)
+rg: /proc/66/ns: Permission denied (os error 13)
+rg: /proc/66/fdinfo: Permission denied (os error 13)
+rg: /proc/66/map_files: Permission denied (os error 13)
+rg: /proc/66/fd: Permission denied (os error 13)
+rg: /proc/66/task/66/ns: Permission denied (os error 13)
+rg: /proc/66/task/66/fdinfo: Permission denied (os error 13)
+rg: /proc/66/task/66/fd: Permission denied (os error 13)
+rg: /proc/86/task/86/fd: Permission denied (os error 13)
+rg: /proc/82/ns: Permission denied (os error 13)
+rg: /proc/82/fdinfo: Permission denied (os error 13)
+rg: /proc/82/map_files: Permission denied (os error 13)
+rg: /proc/82/fd: Permission denied (os error 13)
+rg: /proc/82/task/82/ns: Permission denied (os error 13)
+rg: /proc/82/task/82/fdinfo: Permission denied (os error 13)
+rg: /proc/82/task/82/fd: Permission denied (os error 13)
+rg: /proc/86/task/86/fdinfo: Permission denied (os error 13)
+rg: /proc/99: No such file or directory (os error 2)
+rg: /var/cache/apt/archives/partial: Permission denied (os error 13)
+rg: /proc/86/task/86/ns: Permission denied (os error 13)
+rg: Invalid argument (os error 22)
+rg: /proc/100/task/100/fd: Permission denied (os error 13)
+), 88431 results
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763660166671
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39608 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763660166671 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)

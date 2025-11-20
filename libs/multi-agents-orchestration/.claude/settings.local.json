@@ -31,7 +31,13 @@
       "Bash(find:*)",
       "Bash(tree:*)",
       "Bash(docker stop:*)",
-      "Bash(docker rm:*)"
+      "Bash(docker rm:*)",
+      "Skill(superpowers:brainstorming)",
+      "Bash(for agent in marie anga fabien)",
+      "Bash(do echo \"→ Installing make in $agent...\")",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(for agent in orchestrator marie anga fabien)"
     ],
     "deny": [],
     "ask": []

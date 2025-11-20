@@ -21,6 +21,12 @@ if [ -f "/tools/package.json" ]; then
     cd /
 fi
 
+# Install make for Makefile support
+if ! command -v make &> /dev/null; then
+    echo "🔧 Installing make..."
+    apt-get update -qq && apt-get install -y -qq make 2>/dev/null || echo "⚠️  make installation skipped"
+fi
+
 # Note: expect is not needed in worker containers
 # The automation container has expect and handles all worker activation
 

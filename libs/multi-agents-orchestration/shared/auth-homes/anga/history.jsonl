@@ -15,3 +15,5 @@
 {"display":"echo TEST_MESSAGE_RECEIVED\n","pastedContents":{},"timestamp":1763640422464,"project":"/home/agent/workspace"}
 {"display":"SIMPLE TEST","pastedContents":{},"timestamp":1763640500185,"project":"/home/agent/workspace"}
 {"display":"DELIVERY_TEST_TEST_1763640577","pastedContents":{},"timestamp":1763640584494,"project":"/home/agent/workspace"}
+{"display":"Test message from orchestrator container","pastedContents":{},"timestamp":1763658994883,"project":"/"}
+{"display":"Test from Makefile","pastedContents":{},"timestamp":1763659254940,"project":"/"}

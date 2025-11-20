@@ -92,43 +92,85 @@ You have access to standard Claude Code tools PLUS specialized Bash tool for age
 ### Method 1: Direct Messages (RECOMMENDED)
 
 
-## Direct Messages via Bash Script ⭐
+## Direct Messages - Three Methods Available ⭐
 
-If Bash tool are not available, use the shell command to send messages:
+You have **THREE different ways** to send messages to worker agents. Use whichever is most convenient:
 
-**How to send a message:**
+### **Option A: Direct Bash Script** (Most Flexible)
 
-1. Use the `Bash` tool (or shell/terminal tool)
-2. Run: `bash /tools/send_agent_message.sh <agent> "Your message"`
-3. The message will be delivered and auto-submitted to the target agent
+Execute the script directly using the Bash tool:
+
+```bash
+bash /scripts/send_agent_message.sh anga "Your message here"
+bash /scripts/send_agent_message.sh marie "Your message here"
+bash /scripts/send_agent_message.sh fabien "Your message here"
+```
 
 **Examples:**
+```bash
+# Ask Anga for code help
+bash /scripts/send_agent_message.sh anga "[Message from orchestrator]: Please implement a REST API for user authentication with JWT tokens"
 
-To send a message to Anga:
+# Ask Marie about students
+bash /scripts/send_agent_message.sh marie "[Message from orchestrator]: Can you evaluate the new student Sarah's ballet technique?"
 
-```
-Bash(bash /tools/send_agent_message.sh anga "[Message from orchestrator]: Please implement a REST API for user authentication with JWT tokens")
-```
-
-To send a message to Marie:
-
-```
-Bash(bash /tools/send_agent_message.sh marie "[Message from orchestrator]: Can you evaluate the new student Sarah's ballet technique?")
+# Ask Fabien for marketing
+bash /scripts/send_agent_message.sh fabien "[Message from orchestrator]: Create a social media campaign for our product launch"
 ```
 
-To send a message to Fabien:
+### **Option B: Slash Commands** (Most Concise)
 
-```
-Bash(bash /tools/send_agent_message.sh fabien "[Message from orchestrator]: Create a social media campaign for our product launch")
+Use convenient slash commands from your Claude CLI:
+
+```bash
+/msg-anga "Your message here"
+/msg-marie "Your message here"
+/msg-fabien "Your message here"
 ```
 
-**Available agents**: `anga`, `marie`, `fabien`
+**Examples:**
+```bash
+/msg-anga "Review the authentication module in /workspace/api/auth.js"
+/msg-marie "Evaluate new student Sarah's progress"
+/msg-fabien "Draft social media post for product launch"
+```
+
+**Note**: Slash commands expand to the full bash command automatically.
+
+### **Option C: Makefile Commands** (Most Familiar)
+
+Use standard `make` commands if you're familiar with Makefiles:
+
+```bash
+make msg-anga MSG="Your message here"
+make msg-marie MSG="Your message here"
+make msg-fabien MSG="Your message here"
+```
+
+**Examples:**
+```bash
+make msg-anga MSG="Please implement JWT authentication"
+make msg-marie MSG="Evaluate student ballet technique"
+make msg-fabien MSG="Create social media campaign"
+```
+
+**Note**: Make commands use the same underlying script as Option A.
+
+---
+
+### **Choosing a Method:**
+
+- **Option A** (Bash script): Best for when you need full control, want to see all parameters, or are automating
+- **Option B** (Slash commands): Best for quick, conversational messaging within Claude CLI
+- **Option C** (Makefile): Best if you're familiar with make and prefer that syntax
+
+**All three methods do exactly the same thing** - they send a message to the target agent's container.
 
 **💡 Important**:
 
 - Always prefix your message with `[Message from orchestrator]:` so the recipient knows who sent it
-- Use the `Bash()` tool to execute the command
-- The script handles message delivery automatically
+- The message will be delivered and auto-submitted to the target agent
+- Messages are delivered via expect + docker attach mechanism
 
 **When to use**: Real-time collaboration, asking questions, giving feedback, coordinating work
 

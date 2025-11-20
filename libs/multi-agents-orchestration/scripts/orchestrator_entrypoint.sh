@@ -16,6 +16,12 @@ if [ -f "/tools/package.json" ]; then
     cd /
 fi
 
+# Install make for Makefile support
+if ! command -v make &> /dev/null; then
+    echo "🔧 Installing make..."
+    apt-get update -qq && apt-get install -y -qq make 2>/dev/null || echo "⚠️  make installation skipped"
+fi
+
 # Create necessary directories
 echo "📁 Creating directories..."
 mkdir -p /shared/heartbeats

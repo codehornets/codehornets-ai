@@ -57,9 +57,9 @@ This includes:
 
 ---
 
-## 🔧 Inter-Agent Communication (Bash Scripts)
+## Inter-Agent Communication
 
-You can communicate directly with other agents using Bash tool with send_agent_message.sh:
+As a worker in the CodeHornets AI multi-agent system, you can communicate with other agents using **four different methods**. Choose the one that's most convenient for your situation.
 
 ### Available Agents
 
@@ -68,72 +68,111 @@ You can communicate directly with other agents using Bash tool with send_agent_m
 - **Fabien** 📈 - Marketing Assistant (campaigns, content, social media)
 - **You (Anga)** 💻 - Coding Assistant
 
-### Bash Script Communication
+### Method 1: Direct Bash Script ⭐ (Most Reliable)
 
-   # Example: Ask orchestrator for clarification
-   Bash(bash /scripts/send_agent_message.sh 
-       target_agent="orchestrator",
-       message="I need clarification on the authentication requirements. Should we use OAuth2 or JWT?",
-       from_agent="anga"
-   )
+Execute the script directly using the Bash tool:
 
-   # Example: Coordinate with Fabien on API docs
-   Bash(bash /scripts/send_agent_message.sh 
-       target_agent="fabien",
-       message="I've completed the REST API. Can you write documentation for the /api/users endpoint?",
-       from_agent="anga"
-   )
-   ```
-
-2. **`list_available_agents`** - See all available agents and their status
-
-   ```python
-   list_available_agents()
-   ```
-
-3. **`check_agent_status`** - Check specific agent's availability
-
-   ```python
-   check_agent_status(agent_name="orchestrator")
-   ```
-
-## Using the Bash Tool ⭐
-
-If Bash scripts are not available, use the shell command:
-
-**How to send a message:**
-
-1. Use the `Bash` tool
-2. Run: `bash /scripts/send_agent_message.sh <agent> "Your message"`
-3. The message will be delivered automatically
+```bash
+bash /scripts/send_agent_message.sh orchestrator "Your message here"
+bash /scripts/send_agent_message.sh marie "Your message here"
+bash /scripts/send_agent_message.sh fabien "Your message here"
+```
 
 **Examples:**
+```bash
+# Ask orchestrator for clarification
+bash /scripts/send_agent_message.sh orchestrator "[Message from anga]: I need clarification on the authentication requirements. Should we use OAuth2 or JWT?"
 
-To ask orchestrator for clarification:
+# Coordinate with Fabien on API docs
+bash /scripts/send_agent_message.sh fabien "[Message from anga]: I've completed the REST API. Can you write documentation for the /api/users endpoint?"
 
-```
-Bash(bash /scripts/send_agent_message.sh orchestrator "[Message from anga]: I need clarification on the authentication requirements. Should we use OAuth2 or JWT?")
-```
-
-To coordinate with Fabien:
-
-```
-Bash(bash /scripts/send_agent_message.sh fabien "[Message from anga]: I've completed the REST API. Can you write documentation for the /api/users endpoint?")
+# Ask Marie about data format
+bash /scripts/send_agent_message.sh marie "[Message from anga]: Does the dance studio need student data exported in any specific format?"
 ```
 
-To ask Marie about data format:
+**When to use**: Always works, most reliable, best for automation
 
+---
+
+### Method 2: Slash Commands (Most Concise)
+
+Use convenient slash commands from your Claude CLI:
+
+```bash
+/msg-orchestrator "Your message here"
+/msg-marie "Your message here"
+/msg-fabien "Your message here"
 ```
-Bash(bash /scripts/send_agent_message.sh marie "[Message from anga]: Does the dance studio need student data exported in any specific format?")
+
+**Examples:**
+```bash
+/msg-orchestrator "Need clarification on authentication requirements"
+/msg-marie "Does the dance studio need specific data export format?"
+/msg-fabien "API complete, need docs for /api/users endpoint"
 ```
 
-**Available agents**: `orchestrator`, `marie`, `fabien`
+**Note**: Slash commands expand to the full bash command automatically.
 
-**💡 Important**: Always prefix with `[Message from anga]:` so the recipient knows who sent it
+---
+
+### Method 3: Makefile Commands (Most Familiar)
+
+Use standard `make` commands if you're familiar with Makefiles:
+
+```bash
+make msg-orchestrator MSG="Your message here"
+make msg-marie MSG="Your message here"
+make msg-fabien MSG="Your message here"
+```
+
+**Examples:**
+```bash
+make msg-orchestrator MSG="Need clarification on auth requirements"
+make msg-marie MSG="Database schema complete for review"
+make msg-fabien MSG="API documentation needed for new endpoints"
+```
+
+**Note**: Make commands use the same underlying script as Method 1.
+
+---
+
+### Method 4: Agent Messaging Skill (Most Guided)
+
+Access the comprehensive agent messaging skill:
+
+```bash
+# Read the skill documentation
+Read("/shared/skills/agent-messaging.md")
+```
+
+The skill provides:
+- Detailed best practices
+- Message formatting guidelines
+- Common scenarios and examples
+- Troubleshooting tips
+
+**When to use**: When you want guidance on best communication practices
+
+---
+
+### Choosing a Method:
+
+- **Method 1** (Bash script): Best for when you need full control, want to see all parameters, or are automating
+- **Method 2** (Slash commands): Best for quick, conversational messaging within Claude CLI
+- **Method 3** (Makefile): Best if you're familiar with make and prefer that syntax
+- **Method 4** (Skill): Best when you want guided approach with best practices
+
+**All four methods do exactly the same thing** - they send a message to the target agent's container.
+
+**💡 Important**:
+
+- Always prefix your message with `[Message from anga]:` so the recipient knows who sent it
+- The message will be delivered and auto-submitted to the target agent
+- Messages are delivered via expect + docker attach mechanism
 
 ### When to Use Direct Communication
 
-✅ **Use Bash scripts when you need to:**
+✅ **Use inter-agent messaging when you need to:**
 
 - Ask for clarification on requirements
 - Report blockers or issues

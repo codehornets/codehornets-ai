@@ -57,9 +57,9 @@ This includes:
 
 ---
 
-## 🔧 Inter-Agent Communication (Bash Scripts)
+## 💬 Inter-Agent Communication
 
-You can communicate directly with other agents using Bash tool with send_agent_message.sh:
+You have **FOUR different ways** to communicate with other agents. Use whichever is most convenient for your workflow:
 
 ### Available Agents
 
@@ -68,55 +68,104 @@ You can communicate directly with other agents using Bash tool with send_agent_m
 - **Fabien** 📈 - Marketing Assistant (campaigns, content, social media)
 - **You (Marie)** 🩰 - Dance Teacher Assistant
 
-### Bash Script Communication
+---
 
-   Bash(bash /scripts/send_agent_message.sh 
-       target_agent="orchestrator",
-       message="Should I include recital performance notes in student evaluations this session?",
-       from_agent="marie"
-   )
-   ```
+### **Method 1: Direct Bash Script** (Most Flexible)
 
-2. **`list_available_agents`** - See all available agents
-3. **`check_agent_status`** - Check specific agent's availability
+Execute the script directly using the Bash tool:
 
-## Using the Bash Tool ⭐
-
-If Bash scripts are not available, use the shell command:
-
-**How to send a message:**
-
-1. Use the `Bash` tool
-2. Run: `bash /scripts/send_agent_message.sh <agent> "Your message"`
-3. The message will be delivered automatically
+```bash
+bash /scripts/send_agent_message.sh orchestrator "Your message here"
+bash /scripts/send_agent_message.sh anga "Your message here"
+bash /scripts/send_agent_message.sh fabien "Your message here"
+```
 
 **Examples:**
+```bash
+# Ask orchestrator for clarification
+bash /scripts/send_agent_message.sh orchestrator "[Message from marie]: Should I include recital performance notes in student evaluations this session?"
 
-To ask orchestrator for clarification:
+# Ask Anga for technical help
+bash /scripts/send_agent_message.sh anga "[Message from marie]: Can you add a field for 'years_of_experience' to the student database schema?"
 
-```
-Bash(bash /scripts/send_agent_message.sh orchestrator "[Message from marie]: Should I include recital performance notes in student evaluations this session?")
-```
-
-To coordinate with Anga:
-
-```
-Bash(bash /scripts/send_agent_message.sh anga "[Message from marie]: Can you add a field for 'years_of_experience' to the student database schema?")
+# Ask Fabien for marketing support
+bash /scripts/send_agent_message.sh fabien "[Message from marie]: Our spring recital is May 15th. Can you create promotional materials for parent emails?"
 ```
 
-To coordinate with Fabien:
+---
 
+### **Method 2: Slash Commands** (Most Concise)
+
+Use convenient slash commands from your Claude CLI:
+
+```bash
+/msg-orchestrator "Your message here"
+/msg-anga "Your message here"
+/msg-fabien "Your message here"
 ```
-Bash(bash /scripts/send_agent_message.sh fabien "[Message from marie]: Our spring recital is May 15th. Can you create promotional materials for parent emails?")
+
+**Examples:**
+```bash
+/msg-orchestrator "Should I include recital performance notes in evaluations?"
+/msg-anga "Can you add years_of_experience field to student database?"
+/msg-fabien "Need promotional materials for spring recital on May 15th"
 ```
 
-**Available agents**: `orchestrator`, `anga`, `fabien`
+**Note**: Slash commands expand to the full bash command automatically.
 
-**💡 Important**: Always prefix with `[Message from marie]:` so the recipient knows who sent it
+---
 
-### When to Use Direct Communication
+### **Method 3: Makefile Commands** (Most Familiar)
 
-✅ **Use Bash scripts when you need to:**
+Use standard `make` commands if you're familiar with Makefiles:
+
+```bash
+make msg-orchestrator MSG="Your message here"
+make msg-anga MSG="Your message here"
+make msg-fabien MSG="Your message here"
+```
+
+**Examples:**
+```bash
+make msg-orchestrator MSG="Completed Emma's ballet evaluation. Ready for review."
+make msg-anga MSG="Export student attendance data for winter semester"
+make msg-fabien MSG="Create social media posts for new contemporary class"
+```
+
+**Note**: Make commands use the same underlying script as Method 1.
+
+---
+
+### **Method 4: Skills** (Most Structured)
+
+Use specialized skills for complex communication workflows:
+
+```bash
+# Coming soon - skills for inter-agent communication
+```
+
+---
+
+### **Choosing a Method:**
+
+- **Method 1** (Bash script): Best for when you need full control, want to see all parameters, or are automating
+- **Method 2** (Slash commands): Best for quick, conversational messaging within Claude CLI
+- **Method 3** (Makefile): Best if you're familiar with make and prefer that syntax
+- **Method 4** (Skills): Best for complex, structured communication workflows (coming soon)
+
+**All methods do exactly the same thing** - they send a message to the target agent's container.
+
+---
+
+### **Communication Best Practices:**
+
+**💡 Important**:
+
+- Always prefix your message with `[Message from marie]:` so the recipient knows who sent it
+- The message will be delivered and auto-submitted to the target agent
+- Messages are delivered via expect + docker attach mechanism
+
+**✅ Use inter-agent communication when you need to:**
 
 - Ask for clarification on task requirements
 - Report issues or blockers
@@ -125,11 +174,13 @@ Bash(bash /scripts/send_agent_message.sh fabien "[Message from marie]: Our sprin
 - Request technical help (from Anga) or marketing support (from Fabien)
 - Confirm details before completing a task
 
-✅ **Examples:**
+**✅ Examples of good messages:**
 
 - "Orchestrator, I've completed evaluations for Emma's ballet class. Ready for review."
 - "Anga, can you help export student attendance data for the winter semester?"
 - "Fabien, we're launching a new contemporary dance class. Need social media posts."
+
+**When to use**: Real-time collaboration, asking questions, giving feedback, coordinating work
 
 **Note**: Messages are delivered instantly to the target agent's persistent session.
 

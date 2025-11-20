@@ -1,0 +1,77 @@
+[ERROR] Failed to save config with lock: Error: ENOENT: no such file or directory, lstat '/home/agent/.claude.json'
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659177953
+[DEBUG] Setting permissions for new file: 600
+[DEBUG] Temp file written successfully, size: 103 bytes
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659177953 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659178022
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 183 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659178022 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659178059
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 220 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659178059 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] >>>>> getSkillsIfEnabled() CALLED <<<<<
+[DEBUG] ENABLE_SKILLS value: false, type: boolean
+[DEBUG] ENABLE_SKILLS check failed, returning empty
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763659178278-o35xd0.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/f07fc877-c761-461d-808e-67bbc1459ef3-agent-f07fc877-c761-461d-808e-67bbc1459ef3.json.tmp.1.1763659178296
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/f07fc877-c761-461d-808e-67bbc1459ef3-agent-f07fc877-c761-461d-808e-67bbc1459ef3.json.tmp.1.1763659178296 to /home/agent/.claude/todos/f07fc877-c761-461d-808e-67bbc1459ef3-agent-f07fc877-c761-461d-808e-67bbc1459ef3.json
+[DEBUG] File /home/agent/.claude/todos/f07fc877-c761-461d-808e-67bbc1459ef3-agent-f07fc877-c761-461d-808e-67bbc1459ef3.json written atomically
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Shell snapshot created successfully (1740 bytes)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659179017
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 302 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659179017 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659179049
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 332 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659179049 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659179338
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39564 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659179338 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] rg error (signal=null, code=2, stderr: rg: /root: Permission denied (os error 13)
+rg: /etc/ssl/private: Permission denied (os error 13)
+rg: /var/cache/ldconfig: Permission denied (os error 13)
+rg: /var/cache/apt/archives/partial: Permission denied (os error 13)
+rg: /proc/tty/driver: Permission denied (os error 13)
+rg: /proc/133/ns: Permission denied (os error 13)
+rg: /proc/133/fd: No such file or directory (os error 2)
+rg: /proc/133/task: No such file or directory (os error 2)
+rg: /proc/133/map_files: No such file or directory (os error 2)
+rg: /proc/133/fdinfo: No such file or directory (os error 2)
+), 86858 results
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763659182342
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39608 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763659182342 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763659178278-o35xd0.sh

@@ -30,6 +30,7 @@ services:
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
       - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
       - ./shared/tasks:/tasks:rw
       - ./shared/results:/results:ro
@@ -74,6 +75,7 @@ services:
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
       - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/marie:/home/agent/.claude:rw
       - ./shared/tasks/marie:/tasks:ro
       - ./shared/results/marie:/results:rw
@@ -82,6 +84,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
@@ -128,6 +131,7 @@ services:
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
       - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/anga:/home/agent/.claude:rw
       - ./shared/tasks/anga:/tasks:ro
       - ./shared/tasks/anga:/home/agent/workspace/tasks:ro
@@ -138,6 +142,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/anga:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
@@ -184,6 +189,7 @@ services:
       - ./hooks-config:/hooks-config:ro
       - ./tools:/tools:ro
       - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/fabien:/home/agent/.claude:rw
       - ./shared/tasks/fabien:/tasks:ro
       - ./shared/results/fabien:/results:rw
@@ -192,6 +198,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
