@@ -19,8 +19,11 @@ services:
 
   # Orchestrator - Coordinates workers
   orchestrator:
-    image: docker/sandbox-templates:claude-code
+    image: codehornets-orchestrator:latest
     container_name: codehornets-orchestrator
+    build:
+      context: .
+      dockerfile: dockerfiles/orchestrator.Dockerfile
     entrypoint: ["/scripts/orchestrator_entrypoint.sh"]
     group_add:
       - "0"     # Root group for Docker socket access
@@ -37,7 +40,6 @@ services:
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers:/shared/triggers:rw
       - ./shared/pipes:/shared/pipes:rw
-      - ./shared/messages:/shared/messages:rw
       - ./shared/messages:/shared/messages:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces:/workspaces:ro
@@ -67,8 +69,11 @@ services:
 
   # Marie - Frontend worker
   marie:
-    image: docker/sandbox-templates:claude-code
+    image: codehornets-marie:latest
     container_name: codehornets-worker-marie
+    build:
+      context: .
+      dockerfile: dockerfiles/marie.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["marie"]
     group_add:
@@ -126,8 +131,11 @@ services:
 
   # Anga - Backend worker
   anga:
-    image: docker/sandbox-templates:claude-code
+    image: codehornets-anga:latest
     container_name: codehornets-worker-anga
+    build:
+      context: .
+      dockerfile: dockerfiles/anga.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["anga"]
     group_add:
@@ -187,8 +195,11 @@ services:
 
   # Fabien - DevOps worker
   fabien:
-    image: docker/sandbox-templates:claude-code
+    image: codehornets-fabien:latest
     container_name: codehornets-worker-fabien
+    build:
+      context: .
+      dockerfile: dockerfiles/fabien.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["fabien"]
     group_add:
