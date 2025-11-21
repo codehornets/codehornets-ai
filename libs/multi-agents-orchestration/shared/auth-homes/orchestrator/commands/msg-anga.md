@@ -9,7 +9,7 @@ arguments:
 Execute this bash command to send a message to Anga:
 
 ```bash
-bash /scripts/send_agent_message.sh anga "$ARGUMENTS"
+bash /scripts/send-from-worker.sh anga "$ARGUMENTS"
 ```
 
 This will send the message to Anga (Backend/Coding Worker) in the codehornets-worker-anga container.

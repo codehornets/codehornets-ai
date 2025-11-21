@@ -9,7 +9,7 @@ arguments:
 Execute this bash command to send a message to Orchestrator:
 
 ```bash
-bash /scripts/send_agent_message.sh orchestrator "$ARGUMENTS"
+bash /scripts/send-from-worker.sh orchestrator "$ARGUMENTS"
 ```
 
 This will send the message to Orchestrator (Task Coordinator) in the codehornets-orchestrator container.

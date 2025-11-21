@@ -9,7 +9,7 @@ arguments:
 Execute this bash command to send a message to Fabien:
 
 ```bash
-bash /scripts/send_agent_message.sh fabien "$ARGUMENTS"
+bash /scripts/send-from-worker.sh fabien "$ARGUMENTS"
 ```
 
 This will send the message to Fabien (Marketing Assistant) in the codehornets-worker-fabien container.

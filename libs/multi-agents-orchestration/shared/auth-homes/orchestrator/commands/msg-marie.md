@@ -9,7 +9,7 @@ arguments:
 Execute this bash command to send a message to Marie:
 
 ```bash
-bash /scripts/send_agent_message.sh marie "$ARGUMENTS"
+bash /scripts/send-from-worker.sh marie "$ARGUMENTS"
 ```
 
 This will send the message to Marie (Frontend/Dance Teacher Worker) in the codehornets-worker-marie container.
