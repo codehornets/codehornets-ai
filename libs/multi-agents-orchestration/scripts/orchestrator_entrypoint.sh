@@ -75,6 +75,14 @@ if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/monitoring/hook_watcher.js" ]; then
     echo "   Watcher started (PID: ${WATCHER_PID})"
 fi
 
+# Start Redis message listener in background
+if [ -f "/tools/monitoring/redis_message_listener.js" ]; then
+    echo "📡 Starting Redis message listener for orchestrator..."
+    node /tools/monitoring/redis_message_listener.js orchestrator >> "/var/log/orchestrator-messages.log" 2>&1 &
+    MESSAGE_LISTENER_PID=$!
+    echo "   Message listener started (PID: ${MESSAGE_LISTENER_PID})"
+fi
+
 # Update heartbeat to active
 cat > "${HEARTBEAT_FILE}" <<EOF
 {

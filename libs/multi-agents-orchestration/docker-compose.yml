@@ -28,7 +28,7 @@ services:
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
-      - ./tools:/tools:ro
+      - ./tools:/tools:rw
       - ./scripts:/scripts:ro
       - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
@@ -39,6 +39,7 @@ services:
       - ./shared/pipes:/shared/pipes:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces:/workspaces:ro
+      - ./shared/inbox:/shared/inbox:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - NODE_ENV=${NODE_ENV:-production}
@@ -46,6 +47,7 @@ services:
       - HOOKS_MODE=${HOOKS_MODE:-enabled}
       - TRIGGER_DIR=/shared/triggers
       - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/orchestrator
       - TASKS_DIR=/tasks
       - RESULTS_DIR=/results
       - HEARTBEAT_DIR=/shared/heartbeats
@@ -73,11 +75,11 @@ services:
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
-      - ./tools:/tools:ro
+      - ./tools:/tools:rw
       - ./scripts:/scripts:ro
       - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/marie:/home/agent/.claude:rw
-      - ./shared/tasks/marie:/tasks:ro
+      - ./shared/tasks/marie:/tasks:rw
       - ./shared/results/marie:/results:rw
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers/marie:/shared/triggers:rw
@@ -85,6 +87,7 @@ services:
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
@@ -97,6 +100,7 @@ services:
       - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
       - TRIGGER_DIR=/shared/triggers
       - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/marie
       - WORKER_NAME=marie
       - AGENT_NAME=marie
       - AGENT_ROLE=worker
@@ -129,11 +133,11 @@ services:
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
-      - ./tools:/tools:ro
+      - ./tools:/tools:rw
       - ./scripts:/scripts:ro
       - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/anga:/home/agent/.claude:rw
-      - ./shared/tasks/anga:/tasks:ro
+      - ./shared/tasks/anga:/tasks:rw
       - ./shared/tasks/anga:/home/agent/workspace/tasks:ro
       - ./shared/results/anga:/results:rw
       - ./shared/results/anga:/home/agent/workspace/results:rw
@@ -143,6 +147,7 @@ services:
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/anga:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
@@ -155,6 +160,7 @@ services:
       - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
       - TRIGGER_DIR=/shared/triggers
       - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/anga
       - WORKER_NAME=anga
       - AGENT_NAME=anga
       - AGENT_ROLE=worker
@@ -187,11 +193,11 @@ services:
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
-      - ./tools:/tools:ro
+      - ./tools:/tools:rw
       - ./scripts:/scripts:ro
       - ./Makefile:/Makefile:ro
       - ./shared/auth-homes/fabien:/home/agent/.claude:rw
-      - ./shared/tasks/fabien:/tasks:ro
+      - ./shared/tasks/fabien:/tasks:rw
       - ./shared/results/fabien:/results:rw
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers/fabien:/shared/triggers:rw
@@ -199,6 +205,7 @@ services:
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
@@ -211,6 +218,7 @@ services:
       - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
       - TRIGGER_DIR=/shared/triggers
       - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/fabien
       - WORKER_NAME=fabien
       - AGENT_NAME=fabien
       - AGENT_ROLE=worker
@@ -277,7 +285,7 @@ services:
       node /tools/monitoring/monitor_daemon.js
       "
     volumes:
-      - ./tools:/tools:ro
+      - ./tools:/tools:rw
       - ./shared/tasks:/workspace/shared/tasks:rw
       - ./shared/results:/workspace/shared/results:rw
       - ./shared/heartbeats:/workspace/shared/heartbeats:ro

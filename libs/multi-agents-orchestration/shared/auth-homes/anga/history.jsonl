@@ -17,3 +17,7 @@
 {"display":"DELIVERY_TEST_TEST_1763640577","pastedContents":{},"timestamp":1763640584494,"project":"/home/agent/workspace"}
 {"display":"Test message from orchestrator container","pastedContents":{},"timestamp":1763658994883,"project":"/"}
 {"display":"Test from Makefile","pastedContents":{},"timestamp":1763659254940,"project":"/"}
+{"display":"Method 1 Test: Direct bash from orchestrator","pastedContents":{},"timestamp":1763660415848,"project":"/"}
+{"display":"Method 3 Test: Makefile from orchestrator","pastedContents":{},"timestamp":1763660437047,"project":"/"}
+{"display":"Hello from orchestrator - testing communication","pastedContents":{},"timestamp":1763660690094,"project":"/"}
+{"display":"Did you receive the hello message from orchestrator? Please reply to orchestrator by running: bash /scripts/send_agent_message.sh orchestrator 'Reply from Anga: Message received successfully'","pastedContents":{},"timestamp":1763660990979,"project":"/"}

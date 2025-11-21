@@ -37,7 +37,13 @@
       "Bash(do echo \"→ Installing make in $agent...\")",
       "Bash(echo:*)",
       "Bash(done)",
-      "Bash(for agent in orchestrator marie anga fabien)"
+      "Bash(for agent in orchestrator marie anga fabien)",
+      "Bash(do)",
+      "Bash(container=\"codehornets-$agent/orchestrator/orchestrator\")",
+      "Bash([ \"$agent\" = \"orchestrator\" ])",
+      "Bash(container=\"codehornets-worker-$agent\")",
+      "Bash(npm install:*)",
+      "Bash(SENDER=\"orchestrator\" bash:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,118 @@
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] >>>>> getSkillsIfEnabled() CALLED <<<<<
+[DEBUG] ENABLE_SKILLS value: false, type: boolean
+[DEBUG] ENABLE_SKILLS check failed, returning empty
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763665888400-uyqpv2.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/ef7238ca-af6c-422c-a7d4-4a82e1346ffb-agent-ef7238ca-af6c-422c-a7d4-4a82e1346ffb.json.tmp.1.1763665888466
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/ef7238ca-af6c-422c-a7d4-4a82e1346ffb-agent-ef7238ca-af6c-422c-a7d4-4a82e1346ffb.json.tmp.1.1763665888466 to /home/agent/.claude/todos/ef7238ca-af6c-422c-a7d4-4a82e1346ffb-agent-ef7238ca-af6c-422c-a7d4-4a82e1346ffb.json
+[DEBUG] File /home/agent/.claude/todos/ef7238ca-af6c-422c-a7d4-4a82e1346ffb-agent-ef7238ca-af6c-422c-a7d4-4a82e1346ffb.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665888531
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42097 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665888531 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Shell snapshot created successfully (1740 bytes)
+[DEBUG] rg error (signal=undefined, code=ABORT_ERR, stderr: rg: /root: Permission denied (os error 13)
+rg: /etc/ssl/private: Permission denied (os error 13)
+rg: /proc/tty/driver: Permission denied (os error 13)
+rg: /var/lib/apt/lists/partial: Permission denied (os error 13)
+rg: /proc/113: No such file or directory (os error 2)
+rg: /proc/112: No such file or directory (os error 2)
+rg: /proc/95: No such file or directory (os error 2)
+rg: /proc/82: No such file or directory (os error 2)
+rg: /proc/80: No such file or directory (os error 2)
+rg: Invalid argument (os error 22)
+rg: /proc/33/ns: Permission denied (os error 13)
+rg: /proc/33/map_files: Permission denied (os error 13)
+rg: /proc/33/fd: Permission denied (os error 13)
+rg: Invalid argument (os error 22)
+rg: /proc/33/task/33/ns: Permission denied (os error 13)
+rg: /proc/33/task/33/fd: Permission denied (os error 13)
+rg: /var/cache/ldconfig: Permission denied (os error 13)
+rg: /var/cache/apt/archives/partial: Permission denied (os error 13)
+), 12427 results
+[ERROR] AbortError: AbortError: The operation was aborted
+    at abortChildProcess (node:child_process:725:27)
+    at EventTarget.onAbortListener (node:child_process:795:7)
+    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:831:20)
+    at EventTarget.dispatchEvent (node:internal/event_target:766:26)
+    at abortSignal (node:internal/abort_controller:370:10)
+    at AbortController.abort (node:internal/abort_controller:392:5)
+    at Timeout._onTimeout (file:///usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/cli.js:3588:5435)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+[DEBUG] Lock acquisition took longer than expected - another Claude instance may be running
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665893466
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42097 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665893466 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665893662
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42097 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665893662 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665895976
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42097 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665895976 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SessionStart with query: startup
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665896982
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41992 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665896982 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665897079
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41992 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665897079 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665897270
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41992 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665897270 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdaterWrapper: Installation type: npm-global, using native: false
+[DEBUG] performStartupChecks called, ENABLE_PLUGINS=true
+[DEBUG] Trust not accepted for current directory - skipping plugin installations
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665908832
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42097 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665908832 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Slash commands included in SlashCommand tool: /msg-anga, /msg-marie, /msg-fabien
+[DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] npm view failed with code 1
+[DEBUG] npm stderr: (empty)
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763665888400-uyqpv2.sh
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763665953031
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 42494 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763665953031 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
