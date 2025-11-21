@@ -1,0 +1,38 @@
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# Documentation
+*.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+*.pyc
+
+# Shared data (mounted at runtime)
+shared/
+
+# Build artifacts
+*.log
+*.tmp
+.DS_Store

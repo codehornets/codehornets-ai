@@ -1,6 +1,0 @@
-[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763639886929
-[DEBUG] Preserving file permissions: 100600
-[DEBUG] Temp file written successfully, size: 41281 bytes
-[DEBUG] Applied original permissions to temp file
-[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763639886929 to /home/agent/.claude.json
-[DEBUG] File /home/agent/.claude.json written atomically

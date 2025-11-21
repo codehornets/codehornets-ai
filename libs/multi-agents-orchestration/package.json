@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.0"
+    "axios": "^1.7.0",
+    "docker-agent-bridge": "file:docker-agent-bridge"
   }
 }

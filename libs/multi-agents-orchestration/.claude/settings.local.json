@@ -43,7 +43,19 @@
       "Bash([ \"$agent\" = \"orchestrator\" ])",
       "Bash(container=\"codehornets-worker-$agent\")",
       "Bash(npm install:*)",
-      "Bash(SENDER=\"orchestrator\" bash:*)"
+      "Bash(SENDER=\"orchestrator\" bash:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm test)",
+      "Bash(node:*)",
+      "Bash(for container in codehornets-orchestrator codehornets-worker-marie codehornets-worker-anga codehornets-worker-fabien)",
+      "Bash(docker cp:*)",
+      "Bash(tar czf:*)",
+      "Bash(do echo \"=== Installing tmux in $container ===\" docker exec $container bash -c \"apt-get update -qq && apt-get install -y -qq tmux\")",
+      "Bash(for agent in orchestrator marie fabien)",
+      "Bash(container=\"$container/marie/worker-marie\")",
+      "Bash(container=\"$container/fabien/worker-fabien\")",
+      "Bash(__NEW_LINE__ echo \"→ $container\")",
+      "Bash(for container in codehornets-orchestrator codehornets-worker-marie codehornets-worker-fabien)"
     ],
     "deny": [],
     "ask": []

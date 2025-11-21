@@ -26,3 +26,5 @@
 {"display":"Please test inter-agent communication by sending a message to Anga. Use Method 1 (bash script): bash /scripts/send_agent_message.sh anga 'Hello from orchestrator - testing communication'","pastedContents":{},"timestamp":1763660697367,"project":"/"}
 {"display":"Reply from Anga: Message received successfully","pastedContents":{},"timestamp":1763660984912,"project":"/"}
 {"display":"send a message to anga and make hime answer to you","pastedContents":{},"timestamp":1763661129299,"project":"/"}
+{"display":"send a meesage to anga","pastedContents":{},"timestamp":1763696568444,"project":"/"}
+{"display":"said hello","pastedContents":{},"timestamp":1763696609275,"project":"/"}

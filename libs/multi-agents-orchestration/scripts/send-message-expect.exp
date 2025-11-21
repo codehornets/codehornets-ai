@@ -1,0 +1,84 @@
+#!/usr/bin/expect -f
+# Standalone Expect Script for Docker Attach Message Sending
+# Usage: expect send-message-expect.exp <container> <message>
+
+# Get arguments
+set container [lindex $argv 0]
+set message [lindex $argv 1]
+
+# Set timeout
+set timeout 30
+
+# Disable output to terminal (cleaner)
+log_user 0
+
+# Validate arguments
+if {$container eq "" || $message eq ""} {
+    puts "Usage: expect send-message-expect.exp <container> <message>"
+    puts ""
+    puts "Examples:"
+    puts "  expect send-message-expect.exp codehornets-worker-anga \"Hello Anga!\""
+    puts "  expect send-message-expect.exp codehornets-orchestrator \"Status report?\""
+    exit 1
+}
+
+# Print info
+puts "\n════════════════════════════════════════════════════════════"
+puts "📤 Sending message via Docker Attach + Expect"
+puts "════════════════════════════════════════════════════════════"
+puts "Target: $container"
+puts "Message: $message"
+puts ""
+
+# Spawn docker attach
+spawn docker attach --no-stdin $container
+
+# Wait for container to be ready
+expect {
+    -re ".+" {
+        # Got output, container is responsive
+        puts "✓ Container is responsive"
+    }
+    timeout {
+        puts "❌ Timeout: Container not responding"
+        exit 1
+    }
+    eof {
+        puts "❌ Error: Container closed unexpectedly"
+        exit 2
+    }
+}
+
+# Give it a moment
+sleep 0.5
+
+# Send the message
+send "$message"
+puts "✓ Message sent"
+
+# Wait before pressing Enter
+sleep 0.5
+
+# Press Enter to submit
+send "\r"
+puts "✓ Enter pressed (message submitted)"
+
+# Wait for Claude to process (adjust based on expected response time)
+puts "⏳ Waiting for processing (10 seconds)..."
+sleep 10
+
+# Detach cleanly (Ctrl+P, Ctrl+Q)
+send "\x10"
+send "\x11"
+puts "✓ Detached cleanly"
+
+# Wait for detach to complete
+sleep 0.5
+
+puts ""
+puts "════════════════════════════════════════════════════════════"
+puts "✅ Message delivered successfully!"
+puts "════════════════════════════════════════════════════════════"
+puts ""
+
+exit 0

@@ -37,6 +37,8 @@ services:
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers:/shared/triggers:rw
       - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/messages:/shared/messages:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces:/workspaces:ro
       - ./shared/inbox:/shared/inbox:rw
@@ -84,6 +86,7 @@ services:
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers/marie:/shared/triggers:rw
       - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/marie:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
@@ -144,6 +147,7 @@ services:
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers/anga:/shared/triggers:rw
       - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/anga:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
@@ -202,6 +206,7 @@ services:
       - ./shared/heartbeats:/shared/heartbeats:rw
       - ./shared/triggers/fabien:/shared/triggers:rw
       - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
       - ./shared/watcher-logs:/var/log:rw
       - ./shared/workspaces/fabien:/home/agent/workspace:rw
       - ./shared/skills:/shared/skills:ro
