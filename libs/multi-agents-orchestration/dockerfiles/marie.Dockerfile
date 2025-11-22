@@ -1,75 +1,39 @@
-# Marie Agent Dockerfile
-# Specialized for dance teaching, student management, and documentation
+# Marie Worker Dockerfile using custom per-agent CLI
+FROM node:22-slim
 
-FROM codehornets-base:latest
-
-# Switch to root for package installation
 USER root
 
-# Install marie-specific packages
+RUN usermod -l agent -d /home/agent -m node && \
+    groupmod -n agent node && \
+    mkdir -p /home/agent && \
+    chown -R agent:agent /home/agent
+
 RUN apt-get update && apt-get install -y \
-    # Document processing
-    pandoc \
-    texlive-latex-base \
-    texlive-fonts-recommended \
-    # Image processing
-    imagemagick \
-    graphicsmagick \
-    # Video processing
-    ffmpeg \
-    # Office tools
-    libreoffice \
-    # PDF tools
-    poppler-utils \
-    # Cleanup
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl wget git vim nano jq tree htop \
+    build-essential gcc g++ make cmake \
+    netcat-openbsd telnet iputils-ping dnsutils \
+    docker.io expect tmux screen \
+    python3 python3-pip python3-venv inotify-tools \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install document/data processing Python packages
 RUN pip3 install --no-cache-dir --break-system-packages \
-    # Document processing
-    python-docx \
-    openpyxl \
-    xlrd \
-    pypdf2 \
-    # Data analysis
-    pandas \
-    numpy \
-    matplotlib \
-    seaborn \
-    # Web scraping (for research)
-    beautifulsoup4 \
-    requests \
-    # Calendar/scheduling
-    icalendar \
-    python-dateutil \
-    # Email
-    sendgrid \
-    # Forms
-    wtforms \
-    flask-wtf
+    requests pyyaml python-dotenv redis asyncio
 
-# Install frontend/UI tools
-RUN npm install -g \
-    markdown-it \
-    marked \
-    puppeteer \
-    playwright
+RUN npm install -g pm2 nodemon
 
-# Install Playwright browsers
-RUN npx playwright install --with-deps chromium
+# Copy MARIE-SPECIFIC CLI
+COPY libs/multi-agents-orchestration/cli-agents/marie-cli.js /opt/claude-cli/cli.js
 
-# Set environment variables
-ENV AGENT_NAME=marie
-ENV AGENT_ROLE=worker
+RUN echo '#!/bin/bash' > /usr/local/bin/claude && \
+    echo 'exec node /opt/claude-cli/cli.js "$@"' >> /usr/local/bin/claude && \
+    chmod +x /usr/local/bin/claude
 
-# Set working directory
+RUN mkdir -p /shared/pipes /shared/messages /shared/tasks /shared/results \
+    /shared/heartbeats /shared/inbox /shared/triggers /shared/workspaces \
+    /tasks /results /home/agent/.claude/hooks /var/log /opt/claude-cli
+
+RUN chown -R agent:agent /shared /opt/claude-cli /home/agent /tasks /results /var/log
+
 WORKDIR /home/agent/workspace
-
-# Switch back to agent user
 USER agent
-
-LABEL ai.codehornets.agent="marie"
-LABEL ai.codehornets.role="dance_teacher_assistant"
-LABEL ai.codehornets.description="Student management and documentation"
-LABEL ai.codehornets.specialties="documentation,spreadsheets,student_tracking,scheduling"
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]

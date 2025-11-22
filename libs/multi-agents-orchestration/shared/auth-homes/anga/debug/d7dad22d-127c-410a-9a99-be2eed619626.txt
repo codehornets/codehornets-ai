@@ -76,3 +76,150 @@
 [DEBUG] Applied original permissions to temp file
 [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774006888 to /home/agent/.claude.json
 [DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774143777
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39914 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774143777 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774143805
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39914 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774143805 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Telemetry flushed successfully
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774165587
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39914 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774165587 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774165614
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39914 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774165614 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774165917
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40194 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774165917 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774166107
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40318 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774166107 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774166601
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40379 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774166601 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Skipping Notification:auth_success hook execution - workspace trust not accepted
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774169766
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40450 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774169766 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774171784
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40491 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774171784 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774171910
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40522 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774171910 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774171945
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40542 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774171945 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SessionStart with query: startup
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774172155
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40542 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774172155 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774172182
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40578 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774172182 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774172207
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 40976 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774172207 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdaterWrapper: Installation type: unknown
+[DEBUG] performStartupChecks called
+[DEBUG] Starting background plugin installations
+[DEBUG] performBackgroundPluginInstallations called
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774172719
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41081 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774172719 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+[DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774173282
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41257 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774173282 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdater: Detected installation type: unknown
+[DEBUG] AutoUpdater: Unknown installation type, falling back to config
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774173572
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41257 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774173572 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[ERROR] AtA: AtA: Insufficient permissions for global npm install.
+    at gl1 (file:///opt/claude-cli/cli.js:323892:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async KzA (file:///opt/claude-cli/cli.js:323948:13)
+    at async file:///opt/claude-cli/cli.js:325145:26
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774176533
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41301 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774176533 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Getting matching hook commands for SessionEnd with query: other
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763774005357-8l57pw.sh
+[DEBUG] LSP server manager shut down successfully
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774650673
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41737 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774650673 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically

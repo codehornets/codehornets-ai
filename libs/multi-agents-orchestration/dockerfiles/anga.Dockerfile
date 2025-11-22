@@ -1,101 +1,39 @@
-# Anga Agent Dockerfile
-# Specialized for coding, backend development, and software engineering
+# Anga Worker Dockerfile using custom per-agent CLI
+FROM node:22-slim
 
-FROM codehornets-base:latest
-
-# Switch to root for package installation
 USER root
 
-# Install coding-specific packages
-RUN apt-get update && apt-get install -y \
-    # Version control
-    git-lfs \
-    tig \
-    # Code analysis
-    cloc \
-    shellcheck \
-    # Databases
-    sqlite3 \
-    postgresql-client \
-    mysql-client \
-    redis-tools \
-    # Backend tools
-    nginx \
-    apache2-utils \
-    # API testing
-    httpie \
-    # Cleanup
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN usermod -l agent -d /home/agent -m node && \
+    groupmod -n agent node && \
+    mkdir -p /home/agent && \
+    chown -R agent:agent /home/agent
 
-# Install multiple Python versions
 RUN apt-get update && apt-get install -y \
-    python3.10 \
-    python3.11 \
-    python3-pip \
-    && apt-get clean
+    curl wget git vim nano jq tree htop \
+    build-essential gcc g++ make cmake \
+    netcat-openbsd telnet iputils-ping dnsutils \
+    docker.io expect tmux screen \
+    python3 python3-pip python3-venv inotify-tools \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install coding-specific Python packages
 RUN pip3 install --no-cache-dir --break-system-packages \
-    # Web frameworks
-    fastapi \
-    uvicorn \
-    flask \
-    django \
-    # Database ORMs
-    sqlalchemy \
-    psycopg2-binary \
-    pymongo \
-    # Testing
-    pytest \
-    pytest-cov \
-    pytest-asyncio \
-    # Code quality
-    black \
-    flake8 \
-    pylint \
-    mypy \
-    # Async
-    aiohttp \
-    asyncpg \
-    # Data processing
-    pandas \
-    numpy
+    requests pyyaml python-dotenv redis asyncio
 
-# Install Node.js development tools
-RUN npm install -g \
-    typescript \
-    ts-node \
-    nodemon \
-    jest \
-    eslint \
-    prettier \
-    webpack \
-    vite
+RUN npm install -g pm2 nodemon
 
-# Install Go
-RUN wget -q https://go.dev/dl/go1.21.5.linux-amd64.tar.gz && \
-    tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz && \
-    rm go1.21.5.linux-amd64.tar.gz
+# Copy ANGA-SPECIFIC CLI
+COPY libs/multi-agents-orchestration/cli-agents/anga-cli.js /opt/claude-cli/cli.js
 
-ENV PATH=$PATH:/usr/local/go/bin
-ENV GOPATH=/home/agent/go
+RUN echo '#!/bin/bash' > /usr/local/bin/claude && \
+    echo 'exec node /opt/claude-cli/cli.js "$@"' >> /usr/local/bin/claude && \
+    chmod +x /usr/local/bin/claude
 
-# Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+RUN mkdir -p /shared/pipes /shared/messages /shared/tasks /shared/results \
+    /shared/heartbeats /shared/inbox /shared/triggers /shared/workspaces \
+    /tasks /results /home/agent/.claude/hooks /var/log /opt/claude-cli
 
-# Set environment variables
-ENV AGENT_NAME=anga
-ENV AGENT_ROLE=worker
+RUN chown -R agent:agent /shared /opt/claude-cli /home/agent /tasks /results /var/log
 
-# Set working directory
 WORKDIR /home/agent/workspace
-
-# Switch back to agent user
 USER agent
-
-LABEL ai.codehornets.agent="anga"
-LABEL ai.codehornets.role="coding_assistant"
-LABEL ai.codehornets.description="Software development and backend engineering"
-LABEL ai.codehornets.specialties="python,nodejs,go,rust,databases,apis"
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]

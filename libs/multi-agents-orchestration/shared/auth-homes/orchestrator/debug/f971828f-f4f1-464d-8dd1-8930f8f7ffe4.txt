@@ -1,0 +1,378 @@
+[DEBUG] [LSP MANAGER] initializeLspServerManager() called
+[DEBUG] [LSP MANAGER] Created manager instance, state=pending
+[DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+[DEBUG] [LSP SERVER MANAGER] initialize() called
+[DEBUG] [LSP SERVER MANAGER] Calling getAllLspServers()
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] Total LSP servers loaded: 0
+[DEBUG] [LSP SERVER MANAGER] getAllLspServers returned 0 server(s)
+[DEBUG] LSP manager initialized with 0 servers
+[DEBUG] LSP server manager initialized successfully
+[DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+[DEBUG] Loading skills from directories: managed=/etc/claude-code/.claude/skills, user=/home/agent/.claude/skills, project=/.claude/skills
+[DEBUG] >>>>> getPluginSkills CALLED <<<<<
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763774884178-9m6ut7.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/f971828f-f4f1-464d-8dd1-8930f8f7ffe4-agent-f971828f-f4f1-464d-8dd1-8930f8f7ffe4.json.tmp.1.1763774884199
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/f971828f-f4f1-464d-8dd1-8930f8f7ffe4-agent-f971828f-f4f1-464d-8dd1-8930f8f7ffe4.json.tmp.1.1763774884199 to /home/agent/.claude/todos/f971828f-f4f1-464d-8dd1-8930f8f7ffe4-agent-f971828f-f4f1-464d-8dd1-8930f8f7ffe4.json
+[DEBUG] File /home/agent/.claude/todos/f971828f-f4f1-464d-8dd1-8930f8f7ffe4-agent-f971828f-f4f1-464d-8dd1-8930f8f7ffe4.json written atomically
+[DEBUG] getPluginSkills: Processing 0 enabled plugins
+[DEBUG] Total plugin skills loaded: 0
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, duplicates removed: 0)
+[DEBUG] getSkillsIfEnabled returning: 0 skill dir commands, 0 plugin skills
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] rg error (signal=undefined, code=ENOENT, stderr: ), 0 results
+[ERROR] Error: Error: spawn /opt/claude-cli/vendor/ripgrep/x64-linux/rg ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[DEBUG] rg error (signal=undefined, code=ENOENT, stderr: ), 0 results
+[ERROR] Error: Error: spawn /opt/claude-cli/vendor/ripgrep/x64-linux/rg ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[DEBUG] Shell snapshot created successfully (1651 bytes)
+[DEBUG] Ripgrep first use test: FAILED (mode=builtin, path=/opt/claude-cli/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774884489
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41301 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774884489 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774884509
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41301 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774884509 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774885009
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41301 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774885009 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for SessionStart with query: startup
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774885172
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41196 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774885172 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774885227
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41196 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774885227 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774885262
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41196 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774885262 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] AutoUpdaterWrapper: Installation type: unknown
+[DEBUG] performStartupChecks called
+[DEBUG] Starting background plugin installations
+[DEBUG] performBackgroundPluginInstallations called
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774885678
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41301 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774885678 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+[DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+[DEBUG] AutoUpdater: Detected installation type: unknown
+[DEBUG] AutoUpdater: Unknown installation type, falling back to config
+[ERROR] AtA: AtA: Insufficient permissions for global npm install.
+    at gl1 (file:///opt/claude-cli/cli.js:323892:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async KzA (file:///opt/claude-cli/cli.js:323948:13)
+    at async file:///opt/claude-cli/cli.js:325145:26
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] FileHistory: Added snapshot for 7f2b304b-8d0d-4b9e-957b-dc60d8440907, tracking 0 files
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774941863
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41350 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774941863 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Stop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774941962
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41388 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774941962 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] FileHistory: Making snapshot for message 21d95e5e-5f24-4ffc-986c-411193ad371e
+[DEBUG] FileHistory: Added snapshot for 21d95e5e-5f24-4ffc-986c-411193ad371e, tracking 0 files
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774965172
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41413 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774965172 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Stop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763774965328
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41438 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774965328 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] FileHistory: Making snapshot for message a3d39540-0f21-4ef7-a19f-628d589c4bc2
+[DEBUG] FileHistory: Added snapshot for a3d39540-0f21-4ef7-a19f-628d589c4bc2, tracking 0 files
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] No hook environment files found
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763775002728
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41462 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763775002728 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Stop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763775002834
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41484 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763775002834 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] FileHistory: Making snapshot for message 10effbdd-8e8a-453d-abac-9b3a0ab8d150
+[DEBUG] FileHistory: Added snapshot for 10effbdd-8e8a-453d-abac-9b3a0ab8d150, tracking 0 files
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] executePreToolHooks called for tool: Bash
+[DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+[DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+[DEBUG] LSP Diagnostics: Checking registry - 0 pending
+[DEBUG] LSP Diagnostics: Returning 0 diagnostic set(s) for delivery
+[DEBUG] Hooks: getAsyncHookResponseAttachments called
+[DEBUG] Hooks: checkForNewResponses called
+[DEBUG] Hooks: Found 0 total hooks in registry
+[DEBUG] Hooks: checkForNewResponses returning 0 responses
+[DEBUG] Skills and commands included in Skill tool:
+[DEBUG] Slash commands included in SlashCommand tool:
+[DEBUG] Stream started - received first chunk
+[DEBUG] Stream started - received first chunk
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763775067938
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41511 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763775067938 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Stop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763775068061
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 41534 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763775068061 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)

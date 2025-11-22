@@ -1,54 +1,43 @@
-# Orchestrator Agent Dockerfile
-# Specialized for task coordination, delegation, and monitoring
+# Orchestrator Dockerfile using custom per-agent CLI
+FROM node:22-slim
 
-FROM codehornets-base:latest
-
-# Switch to root for package installation
 USER root
 
-# Install orchestrator-specific packages
+# Rename node user to agent
+RUN usermod -l agent -d /home/agent -m node && \
+    groupmod -n agent node && \
+    mkdir -p /home/agent && \
+    chown -R agent:agent /home/agent
+
+# Install packages
 RUN apt-get update && apt-get install -y \
-    # Monitoring tools
-    sysstat \
-    iotop \
-    iftop \
-    # Process management
-    supervisor \
-    # Database clients (for querying worker DBs)
-    postgresql-client \
-    mysql-client \
-    redis-tools \
-    # Cleanup
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl wget git vim nano jq tree htop \
+    build-essential gcc g++ make cmake \
+    netcat-openbsd telnet iputils-ping dnsutils \
+    docker.io expect tmux screen \
+    python3 python3-pip python3-venv inotify-tools \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install orchestrator-specific Python packages
 RUN pip3 install --no-cache-dir --break-system-packages \
-    schedule \
-    celery \
-    flower \
-    psutil \
-    docker \
-    pyyaml \
-    jsonschema
+    requests pyyaml python-dotenv redis asyncio
 
-# Install orchestrator-specific Node packages
-RUN npm install -g \
-    commander \
-    chalk \
-    ora \
-    inquirer
+RUN npm install -g pm2 nodemon
 
-# Set environment variables
-ENV AGENT_NAME=orchestrator
-ENV AGENT_ROLE=orchestrator
+# Copy ORCHESTRATOR-SPECIFIC CLI
+COPY libs/multi-agents-orchestration/cli-agents/orchestrator-cli.js /opt/claude-cli/cli.js
 
-# Set working directory
+# Create wrapper
+RUN echo '#!/bin/bash' > /usr/local/bin/claude && \
+    echo 'exec node /opt/claude-cli/cli.js "$@"' >> /usr/local/bin/claude && \
+    chmod +x /usr/local/bin/claude
+
+# Create directories
+RUN mkdir -p /shared/pipes /shared/messages /shared/tasks /shared/results \
+    /shared/heartbeats /shared/inbox /shared/triggers /shared/workspaces \
+    /tasks /results /home/agent/.claude/hooks /var/log /opt/claude-cli
+
+RUN chown -R agent:agent /shared /opt/claude-cli /home/agent /tasks /results /var/log
+
 WORKDIR /home/agent/workspace
-
-# Switch back to agent user
 USER agent
-
-LABEL ai.codehornets.agent="orchestrator"
-LABEL ai.codehornets.role="coordinator"
-LABEL ai.codehornets.description="Task coordination and delegation"
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]

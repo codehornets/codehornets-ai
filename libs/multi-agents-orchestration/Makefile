@@ -33,26 +33,26 @@ help: ## Show this help message
 ##
 
 up: ## Start all agents (orchestrator + workers)
-	@echo "$(GREEN)Starting CodeHornets AI agents...$(NC)"
+	@echo "Starting CodeHornets AI agents..."
 	./build-images.sh
 	docker-compose -f $(COMPOSE_FILE) up -d
-	@echo "$(GREEN)✓ All agents started$(NC)"
-	@echo "$(CYAN)Waiting for agents to initialize...$(NC)"
+	@echo "All agents started"
+	@echo "Waiting for agents to initialize..."
 	@sleep 6
-	@$(MAKE) --no-print-directory status
+	@docker-compose -f $(COMPOSE_FILE) ps
 
 down: ## Stop all agents
-	@echo "$(YELLOW)Stopping all agents...$(NC)"
+	@echo "Stopping all agents..."
 	docker-compose -f $(COMPOSE_FILE) down
-	@echo "$(GREEN)✓ All agents stopped$(NC)"
+	@echo "All agents stopped"
 
 restart: ## Restart all agents
-	@echo "$(YELLOW)Restarting all agents...$(NC)"
-	@$(MAKE) --no-print-directory down
+	@echo "Restarting all agents..."
+	docker-compose -f $(COMPOSE_FILE) down
 	@sleep 2
-	@$(MAKE) --no-print-directory up
-	@echo ""
-	@echo "$(YELLOW)⚠ After restart, agents need theme selection:$(NC) make complete-theme"
+	./build-images.sh
+	docker-compose -f $(COMPOSE_FILE) up -d
+	@echo "All agents restarted"
 
 start-orchestrator: ## Start only the orchestrator
 	@echo "$(GREEN)Starting orchestrator...$(NC)"
@@ -701,70 +701,3 @@ activity-all: ## Check all agents' activity status
 	@bash scripts/check_agent_activity.sh fabien 1
 
 
-##
-## Custom CLI Mode (using core/cli.js)
-##
-
-COMPOSE_FILE_CUSTOM := docker-compose-custom.yml
-
-up-custom: ## Start all agents with custom CLI (core/cli.js)
-	@echo "$(GREEN)Starting CodeHornets AI agents (Custom CLI)...$(NC)"
-	./build-custom-images.sh
-	docker-compose -f $(COMPOSE_FILE_CUSTOM) up -d
-	@echo "$(GREEN)✓ All agents started with custom CLI$(NC)"
-	@echo "$(CYAN)Waiting for agents to initialize...$(NC)"
-	@sleep 6
-	@docker-compose -f $(COMPOSE_FILE_CUSTOM) ps
-
-down-custom: ## Stop all custom CLI agents
-	@echo "$(YELLOW)Stopping all custom agents...$(NC)"
-	docker-compose -f $(COMPOSE_FILE_CUSTOM) down
-	@echo "$(GREEN)✓ All custom agents stopped$(NC)"
-
-restart-custom: ## Restart all custom CLI agents
-	@echo "$(YELLOW)Restarting all custom agents...$(NC)"
-	docker-compose -f $(COMPOSE_FILE_CUSTOM) down
-	@sleep 2
-	./build-custom-images.sh
-	docker-compose -f $(COMPOSE_FILE_CUSTOM) up -d
-	@echo "$(GREEN)✓ All custom agents restarted$(NC)"
-
-status-custom: ## Show status of custom CLI agents
-	@echo "$(CYAN)CodeHornets AI Custom CLI System Status$(NC)"
-	@echo ""
-	@docker-compose -f $(COMPOSE_FILE_CUSTOM) ps
-
-logs-custom: ## Show logs from all custom CLI agents
-	docker-compose -f $(COMPOSE_FILE_CUSTOM) logs -f
-
-shell-custom-orchestrator: ## Open shell in custom orchestrator container
-	@docker exec -it codehornets-custom-orchestrator /bin/bash
-
-shell-custom-anga: ## Open shell in custom Anga container
-	@docker exec -it codehornets-custom-worker-anga /bin/bash
-
-shell-custom-marie: ## Open shell in custom Marie container
-	@docker exec -it codehornets-custom-worker-marie /bin/bash
-
-shell-custom-fabien: ## Open shell in custom Fabien container
-	@docker exec -it codehornets-custom-worker-fabien /bin/bash
-
-attach-custom-orchestrator: ## Attach to custom orchestrator
-	@echo "$(CYAN)Attaching to custom orchestrator...$(NC)"
-	@echo "$(YELLOW)Press Ctrl+P then Ctrl+Q to detach$(NC)"
-	docker attach codehornets-custom-orchestrator
-
-attach-custom-anga: ## Attach to custom Anga
-	@echo "$(CYAN)Attaching to custom Anga...$(NC)"
-	@echo "$(YELLOW)Press Ctrl+P then Ctrl+Q to detach$(NC)"
-	docker attach codehornets-custom-worker-anga
-
-attach-custom-marie: ## Attach to custom Marie
-	@echo "$(CYAN)Attaching to custom Marie...$(NC)"
-	@echo "$(YELLOW)Press Ctrl+P then Ctrl+Q to detach$(NC)"
-	docker attach codehornets-custom-worker-marie
-
-attach-custom-fabien: ## Attach to custom Fabien
-	@echo "$(CYAN)Attaching to custom Fabien...$(NC)"
-	@echo "$(YELLOW)Press Ctrl+P then Ctrl+Q to detach$(NC)"
-	docker attach codehornets-custom-worker-fabien

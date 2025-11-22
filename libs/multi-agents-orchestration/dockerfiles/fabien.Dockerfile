@@ -1,93 +1,39 @@
-# Fabien Agent Dockerfile
-# Specialized for marketing, DevOps, and infrastructure
+# Fabien Worker Dockerfile using custom per-agent CLI
+FROM node:22-slim
 
-FROM codehornets-base:latest
-
-# Switch to root for package installation
 USER root
 
-# Install DevOps and infrastructure tools from apt
+RUN usermod -l agent -d /home/agent -m node && \
+    groupmod -n agent node && \
+    mkdir -p /home/agent && \
+    chown -R agent:agent /home/agent
+
 RUN apt-get update && apt-get install -y \
-    awscli \
-    docker-compose \
-    prometheus-node-exporter \
-    nmap \
-    tcpdump \
-    gnupg \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install kubectl from official source
-RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg \
-    && echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' > /etc/apt/sources.list.d/kubernetes.list \
-    && apt-get update && apt-get install -y kubectl \
+    curl wget git vim nano jq tree htop \
+    build-essential gcc g++ make cmake \
+    netcat-openbsd telnet iputils-ping dnsutils \
+    docker.io expect tmux screen \
+    python3 python3-pip python3-venv inotify-tools \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Terraform from HashiCorp
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list \
-    && apt-get update && apt-get install -y terraform \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Helm
-RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
-# Install marketing/analytics Python packages
 RUN pip3 install --no-cache-dir --break-system-packages \
-    # SEO/Analytics
-    google-api-python-client \
-    google-analytics-data \
-    # Social media
-    tweepy \
-    facebook-sdk \
-    # Email marketing
-    sendgrid \
-    mailchimp3 \
-    # Data visualization
-    matplotlib \
-    seaborn \
-    plotly \
-    # Web scraping
-    beautifulsoup4 \
-    selenium \
-    # Cloud SDKs
-    boto3 \
-    azure-mgmt \
-    google-cloud-storage
+    requests pyyaml python-dotenv redis asyncio
 
-# Install DevOps Node packages
-RUN npm install -g \
-    # Deployment
-    pm2 \
-    # Monitoring
-    @datadog/datadog-ci \
-    # Testing
-    artillery \
-    loadtest \
-    # Documentation
-    @stoplight/spectral-cli \
-    swagger-ui-dist
+RUN npm install -g pm2 nodemon
 
-# Install marketing/social media tools
-RUN npm install -g \
-    lighthouse \
-    pa11y \
-    sitemap-generator-cli
+# Copy FABIEN-SPECIFIC CLI
+COPY libs/multi-agents-orchestration/cli-agents/fabien-cli.js /opt/claude-cli/cli.js
 
-# Set environment variables
-ENV AGENT_NAME=fabien
-ENV AGENT_ROLE=worker
+RUN echo '#!/bin/bash' > /usr/local/bin/claude && \
+    echo 'exec node /opt/claude-cli/cli.js "$@"' >> /usr/local/bin/claude && \
+    chmod +x /usr/local/bin/claude
 
-# Set working directory
+RUN mkdir -p /shared/pipes /shared/messages /shared/tasks /shared/results \
+    /shared/heartbeats /shared/inbox /shared/triggers /shared/workspaces \
+    /tasks /results /home/agent/.claude/hooks /var/log /opt/claude-cli
+
+RUN chown -R agent:agent /shared /opt/claude-cli /home/agent /tasks /results /var/log
+
 WORKDIR /home/agent/workspace
-
-# Switch back to agent user
 USER agent
-
-LABEL ai.codehornets.agent="fabien"
-LABEL ai.codehornets.role="marketing_devops"
-LABEL ai.codehornets.description="Marketing automation and DevOps"
-LABEL ai.codehornets.specialties="marketing,seo,social_media,devops,infrastructure,monitoring"
+CMD ["/bin/bash", "-c", "tail -f /dev/null"]

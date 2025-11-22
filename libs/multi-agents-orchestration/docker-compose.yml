@@ -22,12 +22,13 @@ services:
     image: codehornets-orchestrator:latest
     container_name: codehornets-orchestrator
     build:
-      context: .
-      dockerfile: dockerfiles/orchestrator.Dockerfile
-    entrypoint: ["/scripts/orchestrator_entrypoint.sh"]
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/orchestrator.Dockerfile
+    entrypoint: ["/scripts/entrypoint.sh"]
+    command: ["orchestrator"]
     group_add:
-      - "0"     # Root group for Docker socket access
-      - "1001"  # Docker group on host (if different)
+      - "0"
+      - "1001"
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -72,13 +73,13 @@ services:
     image: codehornets-marie:latest
     container_name: codehornets-worker-marie
     build:
-      context: .
-      dockerfile: dockerfiles/marie.Dockerfile
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/marie.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["marie"]
     group_add:
-      - "0"     # Root group for Docker socket access
-      - "1001"  # Docker group on host
+      - "0"
+      - "1001"
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -134,13 +135,13 @@ services:
     image: codehornets-anga:latest
     container_name: codehornets-worker-anga
     build:
-      context: .
-      dockerfile: dockerfiles/anga.Dockerfile
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/anga.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["anga"]
     group_add:
-      - "0"     # Root group for Docker socket access
-      - "1001"  # Docker group on host
+      - "0"
+      - "1001"
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -198,13 +199,13 @@ services:
     image: codehornets-fabien:latest
     container_name: codehornets-worker-fabien
     build:
-      context: .
-      dockerfile: dockerfiles/fabien.Dockerfile
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/fabien.Dockerfile
     entrypoint: ["/scripts/entrypoint.sh"]
     command: ["fabien"]
     group_add:
-      - "0"     # Root group for Docker socket access
-      - "1001"  # Docker group on host
+      - "0"
+      - "1001"
     volumes:
       - ./prompts:/prompts:ro
       - ./hooks-config:/hooks-config:ro
@@ -255,16 +256,13 @@ services:
         condition: service_healthy
         required: false
 
-  # Automation Helper - Sends messages to workers via expect
+  # Automation Helper
   automation:
     image: alpine:latest
     container_name: codehornets-svc-automation
     command: >
       sh -c "
-      echo '📦 Installing automation tools...' &&
       apk add --no-cache bash expect docker-cli curl &&
-      echo '✓ Automation tools ready' &&
-      echo '💤 Waiting for commands...' &&
       tail -f /dev/null
       "
     volumes:
@@ -275,29 +273,17 @@ services:
       - claude-network
     restart: unless-stopped
 
-  # Monitor - System observer with local LLM
+  # Monitor
   monitor:
-    image: node:18-slim
+    image: node:22-slim
     container_name: codehornets-svc-monitor
     working_dir: /app
     command: >
       bash -c "
-      echo '🔍 Installing monitor dependencies...' &&
       cp /tools/package.json /app/ &&
       npm install &&
-      echo '📦 Installing docker-cli...' &&
       apt-get update -qq &&
       apt-get install -y -qq docker.io curl &&
-      echo '✓ Dependencies installed' &&
-      echo '📡 Checking for Ollama on host...' &&
-      if curl -s --max-time 2 http://host.docker.internal:11434/api/tags >/dev/null 2>&1 || \
-         curl -s --max-time 2 http://172.17.0.1:11434/api/tags >/dev/null 2>&1; then
-        echo '✓ Ollama detected - AI recaps enabled';
-      else
-        echo 'ℹ Ollama not detected - using rule-based recaps';
-        echo '  To enable AI recaps: Install Ollama on host and run: ollama pull llama3.2:1b';
-      fi &&
-      echo '👁️  Starting monitor daemon...' &&
       node /tools/monitoring/monitor_daemon.js
       "
     volumes:
