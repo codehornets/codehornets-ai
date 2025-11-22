@@ -1,0 +1,324 @@
+name: codehornets-ai-custom
+
+services:
+  # Redis for coordination (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: codehornets-custom-svc-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data-custom:/data
+    networks:
+      - claude-network-custom
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Orchestrator - Coordinates workers (Custom CLI)
+  orchestrator:
+    image: codehornets-orchestrator-custom:latest
+    container_name: codehornets-custom-orchestrator
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/orchestrator-custom.Dockerfile
+    entrypoint: ["/scripts/entrypoint-custom.sh"]
+    command: ["orchestrator"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
+      - ./shared/tasks:/tasks:rw
+      - ./shared/results:/results:ro
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces:/workspaces:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/orchestrator
+      - TASKS_DIR=/tasks
+      - RESULTS_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - AGENT_NAME=orchestrator
+      - AGENT_ROLE=orchestrator
+    networks:
+      - claude-network-custom
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Marie - Frontend worker (Custom CLI)
+  marie:
+    image: codehornets-marie-custom:latest
+    container_name: codehornets-custom-worker-marie
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/marie-custom.Dockerfile
+    entrypoint: ["/scripts/entrypoint-custom.sh"]
+    command: ["marie"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/marie:/home/agent/.claude:rw
+      - ./shared/tasks/marie:/tasks:rw
+      - ./shared/results/marie:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/marie:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/marie
+      - WORKER_NAME=marie
+      - AGENT_NAME=marie
+      - AGENT_ROLE=worker
+    networks:
+      - claude-network-custom
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/marie.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Anga - Backend worker (Custom CLI)
+  anga:
+    image: codehornets-anga-custom:latest
+    container_name: codehornets-custom-worker-anga
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/anga-custom.Dockerfile
+    entrypoint: ["/scripts/entrypoint-custom.sh"]
+    command: ["anga"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/anga:/home/agent/.claude:rw
+      - ./shared/tasks/anga:/tasks:rw
+      - ./shared/tasks/anga:/home/agent/workspace/tasks:ro
+      - ./shared/results/anga:/results:rw
+      - ./shared/results/anga:/home/agent/workspace/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/anga:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/anga:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/anga
+      - WORKER_NAME=anga
+      - AGENT_NAME=anga
+      - AGENT_ROLE=worker
+    networks:
+      - claude-network-custom
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/anga.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Fabien - DevOps worker (Custom CLI)
+  fabien:
+    image: codehornets-fabien-custom:latest
+    container_name: codehornets-custom-worker-fabien
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/fabien-custom.Dockerfile
+    entrypoint: ["/scripts/entrypoint-custom.sh"]
+    command: ["fabien"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/fabien:/home/agent/.claude:rw
+      - ./shared/tasks/fabien:/tasks:rw
+      - ./shared/results/fabien:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/fabien:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/fabien:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/fabien
+      - WORKER_NAME=fabien
+      - AGENT_NAME=fabien
+      - AGENT_ROLE=worker
+    networks:
+      - claude-network-custom
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/fabien.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Automation Helper
+  automation:
+    image: alpine:latest
+    container_name: codehornets-custom-svc-automation
+    command: >
+      sh -c "
+      echo '📦 Installing automation tools...' &&
+      apk add --no-cache bash expect docker-cli curl &&
+      echo '✓ Automation tools ready' &&
+      echo '💤 Waiting for commands...' &&
+      tail -f /dev/null
+      "
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./shared:/workspace/shared:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    networks:
+      - claude-network-custom
+    restart: unless-stopped
+
+  # Monitor
+  monitor:
+    image: node:22-slim
+    container_name: codehornets-custom-svc-monitor
+    working_dir: /app
+    command: >
+      bash -c "
+      echo '🔍 Installing monitor dependencies...' &&
+      cp /tools/package.json /app/ &&
+      npm install &&
+      echo '📦 Installing docker-cli...' &&
+      apt-get update -qq &&
+      apt-get install -y -qq docker.io curl &&
+      echo '✓ Dependencies installed' &&
+      echo '👁️  Starting monitor daemon...' &&
+      node /tools/monitoring/monitor_daemon.js
+      "
+    volumes:
+      - ./tools:/tools:rw
+      - ./shared/tasks:/workspace/shared/tasks:rw
+      - ./shared/results:/workspace/shared/results:rw
+      - ./shared/heartbeats:/workspace/shared/heartbeats:ro
+      - ./shared/triggers:/workspace/shared/triggers:rw
+      - ./shared/archive:/workspace/shared/archive:rw
+      - ./shared/watcher-logs:/workspace/shared/watcher-logs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MONITOR_INTERVAL=${MONITOR_INTERVAL:-3}
+      - LLM_MODEL=${LLM_MODEL:-llama3.2:1b}
+    networks:
+      - claude-network-custom
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+networks:
+  claude-network-custom:
+    driver: bridge
+
+volumes:
+  redis-data-custom:

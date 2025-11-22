@@ -3,6 +3,9 @@
 
 FROM codehornets-base:latest
 
+# Switch to root for package installation
+USER root
+
 # Install coding-specific packages
 RUN apt-get update && apt-get install -y \
     # Version control
@@ -15,7 +18,6 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     postgresql-client \
     mysql-client \
-    mongodb-clients \
     redis-tools \
     # Backend tools
     nginx \
@@ -34,7 +36,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install coding-specific Python packages
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     # Web frameworks
     fastapi \
     uvicorn \
@@ -89,6 +91,9 @@ ENV AGENT_ROLE=worker
 
 # Set working directory
 WORKDIR /home/agent/workspace
+
+# Switch back to agent user
+USER agent
 
 LABEL ai.codehornets.agent="anga"
 LABEL ai.codehornets.role="coding_assistant"

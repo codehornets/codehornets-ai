@@ -3,6 +3,9 @@
 
 FROM docker/sandbox-templates:claude-code
 
+# Switch to root for package installation
+USER root
+
 # Install common packages for all agents
 RUN apt-get update && apt-get install -y \
     # Core utilities
@@ -41,8 +44,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install common Python packages
-RUN pip3 install --no-cache-dir \
+# Install common Python packages (--break-system-packages needed for PEP 668 compliance in newer Python)
+RUN pip3 install --no-cache-dir --break-system-packages \
     requests \
     pyyaml \
     python-dotenv \
@@ -67,6 +70,9 @@ RUN mkdir -p \
 
 # Set working directory
 WORKDIR /home/agent/workspace
+
+# Switch back to agent user
+USER agent
 
 # Keep container running
 CMD ["/bin/bash", "-c", "tail -f /dev/null"]

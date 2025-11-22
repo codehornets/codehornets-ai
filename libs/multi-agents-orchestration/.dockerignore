@@ -36,3 +36,8 @@ shared/
 *.log
 *.tmp
 .DS_Store
+
+# Libs - not needed in container
+libs/
+node_modules/
+**/node_modules/

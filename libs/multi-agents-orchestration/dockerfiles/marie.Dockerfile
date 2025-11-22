@@ -3,6 +3,9 @@
 
 FROM codehornets-base:latest
 
+# Switch to root for package installation
+USER root
+
 # Install marie-specific packages
 RUN apt-get update && apt-get install -y \
     # Document processing
@@ -23,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install document/data processing Python packages
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     # Document processing
     python-docx \
     openpyxl \
@@ -62,6 +65,9 @@ ENV AGENT_ROLE=worker
 
 # Set working directory
 WORKDIR /home/agent/workspace
+
+# Switch back to agent user
+USER agent
 
 LABEL ai.codehornets.agent="marie"
 LABEL ai.codehornets.role="dance_teacher_assistant"

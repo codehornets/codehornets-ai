@@ -3,6 +3,9 @@
 
 FROM codehornets-base:latest
 
+# Switch to root for package installation
+USER root
+
 # Install orchestrator-specific packages
 RUN apt-get update && apt-get install -y \
     # Monitoring tools
@@ -20,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install orchestrator-specific Python packages
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     schedule \
     celery \
     flower \
@@ -42,6 +45,9 @@ ENV AGENT_ROLE=orchestrator
 
 # Set working directory
 WORKDIR /home/agent/workspace
+
+# Switch back to agent user
+USER agent
 
 LABEL ai.codehornets.agent="orchestrator"
 LABEL ai.codehornets.role="coordinator"
