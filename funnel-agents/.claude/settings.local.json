@@ -7,9 +7,23 @@
       "Bash(mv:*)",
       "Bash(rmdir:*)",
       "Bash(npx nx show:*)",
-      "Bash(npx nx:*)"
+      "Bash(npx nx:*)",
+      "Bash(npm install:*)",
+      "Bash(npm view:*)",
+      "Bash(docker ps:*)",
+      "Bash(make docker-infra:*)",
+      "Bash(make docker-status:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker compose ps:*)",
+      "Bash(make docker-infra-full:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "task-master-ai"
+  ]
 }

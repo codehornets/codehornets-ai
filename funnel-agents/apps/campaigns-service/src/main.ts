@@ -12,7 +12,7 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: process.env.CAMPAIGNS_SERVICE_HOST || '0.0.0.0',
-        port: parseInt(process.env.CAMPAIGNS_SERVICE_PORT, 10) || 3003,
+        port: parseInt(process.env.CAMPAIGNS_SERVICE_PORT || '', 10) || 3003,
       },
     },
   );

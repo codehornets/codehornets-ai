@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "scheduler:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9239"
       }
     },
     "test": {

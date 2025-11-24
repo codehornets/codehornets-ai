@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "reports-service:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9237"
       }
     },
     "test": {

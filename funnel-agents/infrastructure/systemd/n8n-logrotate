@@ -1,0 +1,75 @@
+# ============================================================================
+# Logrotate Configuration for n8n PainterFlow
+# ============================================================================
+# This file configures automatic log rotation for n8n to prevent disk space
+# issues and maintain log history.
+#
+# Installation:
+#   sudo cp infrastructure/systemd/n8n-logrotate /etc/logrotate.d/n8n-painterflow
+#   sudo chmod 644 /etc/logrotate.d/n8n-painterflow
+#
+# Test:
+#   sudo logrotate -d /etc/logrotate.d/n8n-painterflow
+#   sudo logrotate -f /etc/logrotate.d/n8n-painterflow
+# ============================================================================
+
+# n8n application logs
+/var/www/painterflow-crm/storage/logs/n8n/*.log {
+    # Rotate daily
+    daily
+
+    # Keep 30 days of logs
+    rotate 30
+
+    # Compress old logs (saves disk space)
+    compress
+    delaycompress
+
+    # Don't error if log file is missing
+    missingok
+
+    # Don't rotate empty logs
+    notifempty
+
+    # Create new log file with permissions
+    create 0644 www-data www-data
+
+    # Date extension (YYYYMMDD)
+    dateext
+    dateformat -%Y%m%d
+
+    # Maximum size before rotation (regardless of time)
+    size 100M
+
+    # Shared scripts for all logs
+    sharedscripts
+
+    # Post-rotation script
+    postrotate
+        # Reload n8n to use new log file
+        /usr/bin/systemctl reload n8n-painterflow > /dev/null 2>&1 || true
+    endscript
+}
+
+# systemd journal logs (archived)
+/var/log/journal/n8n-painterflow/*.log {
+    weekly
+    rotate 8
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 root systemd-journal
+}
+
+# Docker container logs
+/var/lib/docker/containers/*-n8n-*/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    size 50M
+}

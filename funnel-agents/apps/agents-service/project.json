@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "agents-service:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9234"
       }
     },
     "test": {

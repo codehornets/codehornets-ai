@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "api-gateway:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9229"
       }
     },
     "test": {

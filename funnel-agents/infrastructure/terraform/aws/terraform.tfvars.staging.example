@@ -1,0 +1,75 @@
+# Staging Environment Configuration
+# Copy this file to terraform.tfvars.staging and update with your values
+
+# AWS Configuration
+aws_region  = "us-east-1"
+environment = "staging"
+
+# VPC Configuration
+vpc_cidr = "10.1.0.0/16"
+private_subnet_cidrs = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
+public_subnet_cidrs  = ["10.1.101.0/24", "10.1.102.0/24", "10.1.103.0/24"]
+
+# EKS Configuration
+cluster_name    = "painterflow-staging"
+cluster_version = "1.28"
+
+node_groups = {
+  general = {
+    desired_size   = 2
+    max_size       = 6
+    min_size       = 2
+    instance_types = ["t3.medium"]
+    capacity_type  = "ON_DEMAND"
+    disk_size      = 100
+  }
+  spot = {
+    desired_size   = 1
+    max_size       = 4
+    min_size       = 0
+    instance_types = ["t3.medium", "t3a.medium"]
+    capacity_type  = "SPOT"
+    disk_size      = 50
+  }
+}
+
+# RDS Configuration
+central_db_instance_class = "db.t3.medium"
+central_db_username       = "painterflow_admin"
+central_db_password       = "CHANGE_ME_TO_SECURE_PASSWORD"  # Use AWS Secrets Manager
+
+# ElastiCache Redis Configuration
+redis_node_type = "cache.t3.small"
+redis_num_nodes = 2
+
+# S3 Configuration
+s3_lifecycle_rules = [
+  {
+    id                       = "archive-old-uploads"
+    enabled                  = true
+    transition_days          = 60
+    transition_storage_class = "STANDARD_IA"
+    expiration_days          = 180
+  }
+]
+
+# Domain Configuration
+domain_name = "staging.painterflow.com"
+
+# High Availability Settings for Staging
+enable_nat_gateway         = true
+single_nat_gateway        = false  # Multi-AZ NAT for better availability
+enable_flow_logs          = true
+enable_cross_region_replication = false
+
+# Monitoring
+enable_performance_insights = true
+monitoring_interval        = 60
+
+# Additional Tags
+additional_tags = {
+  Project     = "PainterFlow"
+  Owner       = "DevOps Team"
+  CostCenter  = "Staging"
+  Terraform   = "true"
+}

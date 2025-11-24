@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "automations-service:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9236"
       }
     },
     "test": {

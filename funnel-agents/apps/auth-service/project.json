@@ -18,7 +18,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "auth-service:build",
-        "watch": true
+        "watch": true,
+        "inspect": "inspect:9230"
       }
     },
     "test": {

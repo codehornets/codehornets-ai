@@ -1,0 +1,130 @@
+# ==============================================================================
+# Krayin DanceStudio - Production Dockerfile for Render.com
+# ==============================================================================
+
+# Stage 1: Build PHP dependencies
+FROM composer:2.6 AS composer-build
+
+WORKDIR /app
+
+# Copy composer files first for better layer caching
+COPY composer.json composer.lock ./
+
+# Install dependencies (production only, optimized)
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --no-scripts \
+    --prefer-dist \
+    --optimize-autoloader
+
+COPY . .
+
+# Generate optimized autoload files
+RUN composer dump-autoload --optimize --no-dev
+
+# Stage 2: Build frontend assets
+FROM node:18-alpine AS node-build
+
+WORKDIR /app
+
+# Copy package files for better layer caching
+COPY package*.json ./
+
+# Install NPM dependencies
+RUN npm ci --only=production
+
+# Copy source files
+COPY . .
+COPY --from=composer-build /app/vendor ./vendor
+
+# Build production assets
+RUN npm run build
+
+# Stage 3: Production Runtime
+FROM php:8.3-fpm-alpine
+
+LABEL maintainer="DanceStudio Team"
+LABEL description="Krayin DanceStudio CRM - Production Image"
+
+# Install system dependencies and PHP extensions
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    mysql-client \
+    postgresql-client \
+    redis \
+    bash \
+    curl \
+    git \
+    zip \
+    unzip \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    icu-dev \
+    libxml2-dev \
+    oniguruma-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        pdo_mysql \
+        pdo_pgsql \
+        mysqli \
+        mbstring \
+        gd \
+        zip \
+        intl \
+        soap \
+        opcache \
+        bcmath \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && rm -rf /tmp/* /var/cache/apk/*
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files from build stages
+COPY --chown=www-data:www-data . .
+COPY --chown=www-data:www-data --from=composer-build /app/vendor ./vendor
+COPY --chown=www-data:www-data --from=node-build /app/public/build ./public/build
+
+# Copy production PHP configuration
+COPY docker/php/production.ini /usr/local/etc/php/conf.d/production.ini
+
+# Copy Nginx configuration
+COPY docker/nginx/render.conf /etc/nginx/nginx.conf
+
+# Copy Supervisor configuration
+COPY docker/supervisor/render.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Create necessary directories and set permissions
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    storage/app/public \
+    bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Create health check endpoint
+RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
+
+# Expose port 80
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost/health.php || exit 1
+
+# Copy startup script
+COPY docker/scripts/render-start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Start supervisor (manages Nginx, PHP-FPM, and queue workers)
+# Note: Runs as root for supervisord, but processes run as www-data
+CMD ["/usr/local/bin/start.sh"]

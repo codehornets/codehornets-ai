@@ -167,32 +167,57 @@ db-reset: ## Reset database (drop + migrate + seed)
 db-studio: ## Open Prisma Studio / TypeORM admin
 	npx nx run infrastructure:studio
 
-##@ Docker
+##@ Docker Infrastructure
+
+docker-infra: ## Start infrastructure (PostgreSQL, Redis, n8n, Mailhog)
+	@echo "$(CYAN)Starting infrastructure services...$(RESET)"
+	cd infrastructure/docker && docker compose up -d postgres redis n8n mailhog
+	@echo "$(GREEN)Infrastructure started!$(RESET)"
+
+docker-infra-full: ## Start all infrastructure including n8n workers
+	@echo "$(CYAN)Starting all infrastructure services...$(RESET)"
+	cd infrastructure/docker && docker compose up -d postgres redis n8n n8n-worker-crm n8n-worker-campaigns n8n-worker-content n8n-worker-reports n8n-worker-automations mailhog
+	@echo "$(GREEN)Full infrastructure started!$(RESET)"
+
+docker-infra-tools: ## Start infrastructure with dev tools (pgAdmin, Redis Commander)
+	@echo "$(CYAN)Starting infrastructure with dev tools...$(RESET)"
+	cd infrastructure/docker && docker compose --profile dev-tools up -d
+	@echo "$(GREEN)Infrastructure with dev tools started!$(RESET)"
 
 docker-build: ## Build all Docker images
 	@echo "$(CYAN)Building Docker images...$(RESET)"
-	docker compose build
+	cd infrastructure/docker && docker compose build
 
 docker-up: ## Start all containers
-	docker compose up -d
+	cd infrastructure/docker && docker compose up -d
 
 docker-down: ## Stop all containers
-	docker compose down
+	cd infrastructure/docker && docker compose down
 
 docker-logs: ## View container logs
-	docker compose logs -f
+	cd infrastructure/docker && docker compose logs -f
+
+docker-logs-n8n: ## View n8n logs
+	cd infrastructure/docker && docker compose logs -f n8n
+
+docker-logs-service: ## View specific service logs (usage: make docker-logs-service SERVICE=api-gateway)
+	cd infrastructure/docker && docker compose logs -f $(SERVICE)
 
 docker-ps: ## List running containers
-	docker compose ps
+	cd infrastructure/docker && docker compose ps
 
 docker-clean: ## Remove all containers and volumes
-	docker compose down -v --remove-orphans
+	cd infrastructure/docker && docker compose down -v --remove-orphans
 	docker system prune -f
 
 docker-rebuild: ## Rebuild and restart containers
-	docker compose down
-	docker compose build --no-cache
-	docker compose up -d
+	cd infrastructure/docker && docker compose down
+	cd infrastructure/docker && docker compose build --no-cache
+	cd infrastructure/docker && docker compose up -d
+
+docker-status: ## Show status of all services
+	@echo "$(CYAN)Docker Infrastructure Status$(RESET)"
+	@cd infrastructure/docker && docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
 
 ##@ Frontend (web-ui)
 
