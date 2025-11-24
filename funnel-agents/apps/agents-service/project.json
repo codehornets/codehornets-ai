@@ -1,0 +1,40 @@
+{
+  "name": "agents-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/agents-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/agents-service",
+        "main": "apps/agents-service/src/main.ts",
+        "tsConfig": "apps/agents-service/tsconfig.app.json",
+        "assets": ["apps/agents-service/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "agents-service:build",
+        "watch": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/agents-service"],
+      "options": {
+        "jestConfig": "apps/agents-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/agents-service/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["scope:agents", "type:microservice"]
+}

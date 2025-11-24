@@ -1,0 +1,40 @@
+{
+  "name": "agent-comm",
+  "version": "1.0.0",
+  "description": "Unified communication layer for CodeHornets AI agents - tmux, pty-wrapper, and file-based strategies",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "agent-comm": "./cli.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "cli": "node cli.js"
+  },
+  "keywords": [
+    "agent",
+    "communication",
+    "claude",
+    "tmux",
+    "pty",
+    "orchestration",
+    "ipc"
+  ],
+  "author": "CodeHornets AI",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cli.js",
+    "strategies/",
+    "README.md"
+  ]
+}

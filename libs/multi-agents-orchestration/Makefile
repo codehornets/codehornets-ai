@@ -700,4 +700,460 @@ activity-all: ## Check all agents' activity status
 	@echo ""
 	@bash scripts/check_agent_activity.sh fabien 1
 
+##
+## tmux Communication (send commands to Claude TUI)
+##
+
+# tmux compose file
+TMUX_COMPOSE_FILE := docker-compose.tmux.yml
+
+up-tmux: ## Start all agents in tmux mode
+	@echo "Starting CodeHornets AI agents (tmux mode)..."
+	./build-images.sh
+	docker-compose -f $(TMUX_COMPOSE_FILE) up -d
+	@echo "All agents started in tmux mode"
+	@echo "Waiting for agents to initialize..."
+	@sleep 6
+	@docker-compose -f $(TMUX_COMPOSE_FILE) ps
+
+down-tmux: ## Stop all agents (tmux mode)
+	@echo "Stopping all agents (tmux mode)..."
+	docker-compose -f $(TMUX_COMPOSE_FILE) down
+	@echo "All agents stopped"
+
+restart-tmux: ## Restart all agents (tmux mode)
+	@echo "Restarting all agents (tmux mode)..."
+	docker-compose -f $(TMUX_COMPOSE_FILE) down
+	@sleep 2
+	./build-images.sh
+	docker-compose -f $(TMUX_COMPOSE_FILE) up -d
+	@echo "All agents restarted"
+
+tmux-send: ## Send message to agent via tmux (use: make tmux-send AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-send AGENT=anga MSG=\"your message\""; \
+		echo "Agents: orchestrator, marie, anga, fabien"; \
+		exit 1; \
+	fi
+	@if [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: MSG is required$(NC)"; \
+		echo "Usage: make tmux-send AGENT=$(AGENT) MSG=\"your message\""; \
+		exit 1; \
+	fi
+	@bash scripts/tmux-send.sh $(AGENT) "$(MSG)"
+
+tmux-output: ## Get screen output from agent via tmux (use: make tmux-output AGENT=anga [LINES=100])
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-output AGENT=anga [LINES=100]"; \
+		echo "Agents: orchestrator, marie, anga, fabien"; \
+		exit 1; \
+	fi
+	@bash scripts/tmux-output.sh $(AGENT) $(LINES)
+
+tmux-status: ## Check tmux session status for all agents
+	@bash scripts/tmux-status.sh
+
+tmux-status-agent: ## Check tmux status for specific agent (use: make tmux-status-agent AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-status-agent AGENT=anga"; \
+		exit 1; \
+	fi
+	@bash scripts/tmux-status.sh $(AGENT) -v
+
+tmux-attach: ## Attach to agent's tmux session (use: make tmux-attach AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-attach AGENT=anga"; \
+		exit 1; \
+	fi
+	@case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator" ;; \
+		marie|anga|fabien) CONTAINER="codehornets-worker-$(AGENT)" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	echo "Attaching to $$CONTAINER tmux session..."; \
+	echo "Press Ctrl+B then D to detach"; \
+	docker exec -it $$CONTAINER tmux attach -t claude-session
+
+tmux-key: ## Send special key to agent (use: make tmux-key AGENT=anga KEY=C-c)
+	@if [ -z "$(AGENT)" ] || [ -z "$(KEY)" ]; then \
+		echo "$(RED)Error: AGENT and KEY are required$(NC)"; \
+		echo "Usage: make tmux-key AGENT=anga KEY=C-c"; \
+		echo "Keys: Enter, C-c, Escape, Up, Down, Tab, etc."; \
+		exit 1; \
+	fi
+	@case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator" ;; \
+		marie|anga|fabien) CONTAINER="codehornets-worker-$(AGENT)" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	docker exec $$CONTAINER tmux send-keys -t claude-session $(KEY)
+
+tmux-interrupt: ## Send Ctrl+C to agent (use: make tmux-interrupt AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-interrupt AGENT=anga"; \
+		exit 1; \
+	fi
+	@$(MAKE) --no-print-directory tmux-key AGENT=$(AGENT) KEY=C-c
+	@echo "Sent Ctrl+C to $(AGENT)"
+
+tmux-clear: ## Clear Claude conversation (use: make tmux-clear AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-clear AGENT=anga"; \
+		exit 1; \
+	fi
+	@$(MAKE) --no-print-directory tmux-send AGENT=$(AGENT) MSG="/clear"
+	@echo "Sent /clear to $(AGENT)"
+
+tmux-exit: ## Exit Claude gracefully (use: make tmux-exit AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make tmux-exit AGENT=anga"; \
+		exit 1; \
+	fi
+	@$(MAKE) --no-print-directory tmux-send AGENT=$(AGENT) MSG="/exit"
+	@echo "Sent /exit to $(AGENT)"
+
+tmux-controller-status: ## Get all agent status via Node.js controller
+	@node tmux-controller/index.js status
+
+tmux-controller-send: ## Send message via Node.js controller (use: make tmux-controller-send AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ] || [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: AGENT and MSG are required$(NC)"; \
+		echo "Usage: make tmux-controller-send AGENT=anga MSG=\"hello\""; \
+		exit 1; \
+	fi
+	@node tmux-controller/index.js send $(AGENT) "$(MSG)"
+
+
+##
+## PTY Wrapper Mode (node-pty for bidirectional communication)
+##
+
+# PTY compose file
+PTY_COMPOSE_FILE := docker-compose.pty.yml
+
+pty-up: ## Start all agents in PTY wrapper mode
+	@echo "$(CYAN)Starting CodeHornets AI agents (PTY wrapper mode)...$(NC)"
+	@mkdir -p shared/sockets
+	./build-images.sh pty
+	docker-compose -f $(PTY_COMPOSE_FILE) up -d
+	@echo "$(GREEN)All agents started in PTY wrapper mode$(NC)"
+	@echo "Waiting for agents to initialize..."
+	@sleep 8
+	@docker-compose -f $(PTY_COMPOSE_FILE) ps
+	@echo ""
+	@$(MAKE) --no-print-directory pty-status
+
+pty-down: ## Stop all agents (PTY mode)
+	@echo "$(YELLOW)Stopping all agents (PTY mode)...$(NC)"
+	docker-compose -f $(PTY_COMPOSE_FILE) down
+	@rm -f shared/sockets/*.sock 2>/dev/null || true
+	@echo "$(GREEN)All agents stopped$(NC)"
+
+pty-restart: ## Restart all agents (PTY mode)
+	@echo "$(YELLOW)Restarting all agents (PTY mode)...$(NC)"
+	docker-compose -f $(PTY_COMPOSE_FILE) down
+	@rm -f shared/sockets/*.sock 2>/dev/null || true
+	@sleep 2
+	./build-images.sh pty
+	docker-compose -f $(PTY_COMPOSE_FILE) up -d
+	@echo "$(GREEN)All agents restarted$(NC)"
+
+pty-logs: ## Show logs from all PTY agents
+	docker-compose -f $(PTY_COMPOSE_FILE) logs -f
+
+pty-logs-agent: ## Show logs for specific agent (use: make pty-logs-agent AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make pty-logs-agent AGENT=anga"; \
+		exit 1; \
+	fi
+	docker-compose -f $(PTY_COMPOSE_FILE) logs -f $(AGENT)
+
+pty-status: ## Show PTY wrapper status for all agents
+	@bash scripts/pty-status.sh
+
+pty-send: ## Send command to agent via PTY socket (use: make pty-send AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make pty-send AGENT=anga MSG=\"your message\""; \
+		echo "Agents: orchestrator, marie, anga, fabien"; \
+		exit 1; \
+	fi
+	@if [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: MSG is required$(NC)"; \
+		echo "Usage: make pty-send AGENT=$(AGENT) MSG=\"your message\""; \
+		exit 1; \
+	fi
+	@bash scripts/pty-send.sh $(AGENT) "$(MSG)" $(TIMEOUT)
+
+pty-ping: ## Ping an agent via PTY socket (use: make pty-ping AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make pty-ping AGENT=anga"; \
+		exit 1; \
+	fi
+	@echo '{"type":"ping"}' | nc -U -q 2 "./shared/sockets/$(AGENT).sock" 2>/dev/null || echo "$(AGENT): Not responding"
+
+pty-ping-all: ## Ping all agents via PTY socket
+	@echo "$(CYAN)Pinging all PTY agents...$(NC)"
+	@for agent in orchestrator marie anga fabien; do \
+		printf "%-15s: " "$$agent"; \
+		RESPONSE=$$(echo '{"type":"ping"}' | timeout 3 nc -U -q 1 "./shared/sockets/$$agent.sock" 2>/dev/null | head -n 2); \
+		if echo "$$RESPONSE" | grep -q '"type":"pong"' 2>/dev/null; then \
+			echo "$(GREEN)PONG$(NC)"; \
+		elif echo "$$RESPONSE" | grep -q '"type":"connected"' 2>/dev/null; then \
+			echo "$(GREEN)CONNECTED$(NC)"; \
+		else \
+			echo "$(RED)NOT RESPONDING$(NC)"; \
+		fi; \
+	done
+
+pty-client-status: ## Get detailed status from PTY client
+	@docker exec codehornets-orchestrator node /orchestrator/pty-client.js status 2>/dev/null || echo "Orchestrator not running or PTY client not available"
+
+pty-client-send: ## Send command via orchestrator PTY client (use: make pty-client-send AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ] || [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: AGENT and MSG are required$(NC)"; \
+		echo "Usage: make pty-client-send AGENT=anga MSG=\"hello\""; \
+		exit 1; \
+	fi
+	@docker exec codehornets-orchestrator node /orchestrator/pty-client.js send $(AGENT) "$(MSG)"
+
+pty-build: ## Build PTY wrapper Docker images only
+	@echo "$(CYAN)Building PTY wrapper images...$(NC)"
+	./build-images.sh pty
+	@echo "$(GREEN)PTY wrapper images built$(NC)"
+
+pty-setup: ## Setup PTY wrapper directories and permissions
+	@echo "$(CYAN)Setting up PTY wrapper...$(NC)"
+	@mkdir -p shared/sockets
+	@chmod 777 shared/sockets 2>/dev/null || true
+	@echo "$(GREEN)PTY wrapper setup complete$(NC)"
+
+pty-clean: ## Clean PTY wrapper socket files
+	@echo "$(YELLOW)Cleaning PTY wrapper files...$(NC)"
+	@rm -f shared/sockets/*.sock 2>/dev/null || true
+	@echo "$(GREEN)PTY wrapper files cleaned$(NC)"
+
+pty-shell: ## Open shell in PTY agent container (use: make pty-shell AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make pty-shell AGENT=anga"; \
+		exit 1; \
+	fi
+	@case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator" ;; \
+		marie|anga|fabien) CONTAINER="codehornets-worker-$(AGENT)" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	docker exec -it $$CONTAINER /bin/bash
+
+pty-test: ## Test PTY wrapper communication
+	@echo "$(CYAN)Testing PTY wrapper communication...$(NC)"
+	@echo ""
+	@echo "1. Checking socket files..."
+	@ls -la shared/sockets/*.sock 2>/dev/null || echo "   No socket files found"
+	@echo ""
+	@echo "2. Pinging agents..."
+	@$(MAKE) --no-print-directory pty-ping-all
+	@echo ""
+	@echo "3. Checking heartbeats..."
+	@for agent in orchestrator marie anga fabien; do \
+		if [ -f "./shared/heartbeats/$$agent.json" ]; then \
+			MODE=$$(jq -r '.mode // "standard"' "./shared/heartbeats/$$agent.json" 2>/dev/null); \
+			STATUS=$$(jq -r '.status // "unknown"' "./shared/heartbeats/$$agent.json" 2>/dev/null); \
+			printf "   %-15s: %s (%s)\n" "$$agent" "$$STATUS" "$$MODE"; \
+		else \
+			printf "   %-15s: no heartbeat\n" "$$agent"; \
+		fi; \
+	done
+	@echo ""
+	@echo "$(GREEN)PTY wrapper test complete$(NC)"
+
+
+##
+## Communication Infrastructure (tmux/wrapper strategies)
+##
+
+# Compose override files
+COMPOSE_TMUX_OVERRIDE := docker-compose.tmux.yml
+COMPOSE_WRAPPER_OVERRIDE := docker-compose.wrapper.yml
+
+up-tmux-mode: ## Start all agents with tmux communication strategy
+	@echo "$(CYAN)Starting CodeHornets AI (tmux communication mode)...$(NC)"
+	@./scripts/setup-communication.sh setup
+	./build-images.sh
+	docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_TMUX_OVERRIDE) up -d
+	@echo "$(GREEN)All agents started in tmux mode$(NC)"
+	@sleep 8
+	@docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_TMUX_OVERRIDE) ps
+	@echo ""
+	@$(MAKE) --no-print-directory comm-status
+
+up-wrapper-mode: ## Start all agents with node-pty wrapper communication strategy
+	@echo "$(CYAN)Starting CodeHornets AI (wrapper communication mode)...$(NC)"
+	@./scripts/setup-communication.sh setup
+	./build-images.sh
+	docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_WRAPPER_OVERRIDE) up -d
+	@echo "$(GREEN)All agents started in wrapper mode$(NC)"
+	@sleep 8
+	@docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_WRAPPER_OVERRIDE) ps
+	@echo ""
+	@$(MAKE) --no-print-directory comm-status
+
+down-tmux-mode: ## Stop all agents (tmux mode)
+	@echo "$(YELLOW)Stopping all agents (tmux mode)...$(NC)"
+	docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_TMUX_OVERRIDE) down
+	@echo "$(GREEN)All agents stopped$(NC)"
+
+down-wrapper-mode: ## Stop all agents (wrapper mode)
+	@echo "$(YELLOW)Stopping all agents (wrapper mode)...$(NC)"
+	docker-compose -f $(COMPOSE_FILE) -f $(COMPOSE_WRAPPER_OVERRIDE) down
+	@./scripts/setup-communication.sh clean
+	@echo "$(GREEN)All agents stopped$(NC)"
+
+build-all: ## Build all Docker images with new dependencies
+	@echo "$(CYAN)Building all Docker images...$(NC)"
+	./build-images.sh
+	@echo "$(GREEN)All images built$(NC)"
+
+setup-communication: ## Setup communication infrastructure (directories, permissions)
+	@./scripts/setup-communication.sh setup
+
+check-communication: ## Check communication infrastructure status
+	@./scripts/setup-communication.sh check
+
+clean-sockets: ## Clean up socket files
+	@./scripts/setup-communication.sh clean
+
+comm-status: ## Show communication status for all agents
+	@echo "$(CYAN)Communication Status:$(NC)"
+	@echo ""
+	@for agent in orchestrator marie anga fabien; do \
+		if [ -f "./shared/heartbeats/$$agent.json" ]; then \
+			STRATEGY=$$(cat "./shared/heartbeats/$$agent.json" | grep -o '"communication_strategy":"[^"]*"' | cut -d'"' -f4 2>/dev/null || echo "unknown"); \
+			STATUS=$$(cat "./shared/heartbeats/$$agent.json" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 2>/dev/null || echo "unknown"); \
+			printf "  %-15s: %s (%s)\n" "$$agent" "$$STATUS" "$$STRATEGY"; \
+		else \
+			printf "  %-15s: no heartbeat\n" "$$agent"; \
+		fi; \
+	done
+
+send-tmux: ## Send message via tmux (use: make send-tmux AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ] || [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: AGENT and MSG are required$(NC)"; \
+		echo "Usage: make send-tmux AGENT=anga MSG=\"hello\""; \
+		exit 1; \
+	fi
+	@case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator"; SESSION="claude-orchestrator" ;; \
+		marie) CONTAINER="codehornets-worker-marie"; SESSION="claude-marie" ;; \
+		anga) CONTAINER="codehornets-worker-anga"; SESSION="claude-anga" ;; \
+		fabien) CONTAINER="codehornets-worker-fabien"; SESSION="claude-fabien" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	echo "Sending to $$CONTAINER ($$SESSION)..."; \
+	docker exec $$CONTAINER tmux send-keys -t $$SESSION "$(MSG)" Enter
+
+output-tmux: ## Get output from tmux session (use: make output-tmux AGENT=anga [LINES=50])
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make output-tmux AGENT=anga [LINES=50]"; \
+		exit 1; \
+	fi
+	@LINES_ARG=$${LINES:-50}; \
+	case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator"; SESSION="claude-orchestrator" ;; \
+		marie) CONTAINER="codehornets-worker-marie"; SESSION="claude-marie" ;; \
+		anga) CONTAINER="codehornets-worker-anga"; SESSION="claude-anga" ;; \
+		fabien) CONTAINER="codehornets-worker-fabien"; SESSION="claude-fabien" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	docker exec $$CONTAINER tmux capture-pane -t $$SESSION -p | tail -$$LINES_ARG
+
+attach-tmux: ## Attach to agent's tmux session (use: make attach-tmux AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make attach-tmux AGENT=anga"; \
+		exit 1; \
+	fi
+	@case "$(AGENT)" in \
+		orchestrator) CONTAINER="codehornets-orchestrator"; SESSION="claude-orchestrator" ;; \
+		marie) CONTAINER="codehornets-worker-marie"; SESSION="claude-marie" ;; \
+		anga) CONTAINER="codehornets-worker-anga"; SESSION="claude-anga" ;; \
+		fabien) CONTAINER="codehornets-worker-fabien"; SESSION="claude-fabien" ;; \
+		*) echo "Unknown agent: $(AGENT)"; exit 1 ;; \
+	esac; \
+	echo "Attaching to $$CONTAINER:$$SESSION (Ctrl+B D to detach)..."; \
+	docker exec -it $$CONTAINER tmux attach -t $$SESSION
+
+send-wrapper: ## Send message via wrapper socket (use: make send-wrapper AGENT=anga MSG="hello")
+	@if [ -z "$(AGENT)" ] || [ -z "$(MSG)" ]; then \
+		echo "$(RED)Error: AGENT and MSG are required$(NC)"; \
+		echo "Usage: make send-wrapper AGENT=anga MSG=\"hello\""; \
+		exit 1; \
+	fi
+	@SOCKET="./shared/sockets/$(AGENT).input.sock"; \
+	if [ ! -S "$$SOCKET" ]; then \
+		echo "$(RED)Error: Socket not found at $$SOCKET$(NC)"; \
+		exit 1; \
+	fi; \
+	echo "$(MSG)" | socat - UNIX-CONNECT:$$SOCKET
+
+logs-wrapper: ## View wrapper logs for agent (use: make logs-wrapper AGENT=anga)
+	@if [ -z "$(AGENT)" ]; then \
+		echo "$(RED)Error: AGENT is required$(NC)"; \
+		echo "Usage: make logs-wrapper AGENT=anga"; \
+		exit 1; \
+	fi
+	@tail -100 "./shared/watcher-logs/$(AGENT)-wrapper.log" 2>/dev/null || echo "No wrapper logs for $(AGENT)"
+
+socket-test: ## Test socket connectivity for all agents
+	@echo "$(CYAN)Testing socket connectivity...$(NC)"
+	@echo ""
+	@echo "Input sockets:"
+	@for agent in orchestrator marie anga fabien; do \
+		SOCKET="./shared/sockets/$$agent.input.sock"; \
+		if [ -S "$$SOCKET" ]; then \
+			printf "  %-15s: $(GREEN)exists$(NC)\n" "$$agent"; \
+		else \
+			printf "  %-15s: $(RED)not found$(NC)\n" "$$agent"; \
+		fi; \
+	done
+	@echo ""
+	@echo "tmux sessions:"
+	@for agent in orchestrator marie anga fabien; do \
+		STATUS_FILE="./shared/sockets/$$agent.tmux"; \
+		if [ -f "$$STATUS_FILE" ]; then \
+			SESSION=$$(cat "$$STATUS_FILE"); \
+			printf "  %-15s: $(GREEN)$$SESSION$(NC)\n" "$$agent"; \
+		else \
+			printf "  %-15s: $(YELLOW)no status file$(NC)\n" "$$agent"; \
+		fi; \
+	done
+
+healthcheck-all: ## Run healthcheck for all agents
+	@echo "$(CYAN)Running healthchecks...$(NC)"
+	@echo ""
+	@for agent in orchestrator marie anga fabien; do \
+		case "$$agent" in \
+			orchestrator) CONTAINER="codehornets-orchestrator" ;; \
+			*) CONTAINER="codehornets-worker-$$agent" ;; \
+		esac; \
+		printf "  %-15s: " "$$agent"; \
+		if docker exec $$CONTAINER bash /scripts/healthcheck-tmux.sh $$agent 2>/dev/null; then \
+			echo ""; \
+		elif docker exec $$CONTAINER bash /scripts/healthcheck-wrapper.sh $$agent 2>/dev/null; then \
+			echo ""; \
+		else \
+			echo "$(RED)FAILED$(NC)"; \
+		fi; \
+	done
 

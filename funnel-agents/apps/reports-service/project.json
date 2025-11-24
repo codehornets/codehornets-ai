@@ -1,0 +1,40 @@
+{
+  "name": "reports-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/reports-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/reports-service",
+        "main": "apps/reports-service/src/main.ts",
+        "tsConfig": "apps/reports-service/tsconfig.app.json",
+        "assets": ["apps/reports-service/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "reports-service:build",
+        "watch": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/reports-service"],
+      "options": {
+        "jestConfig": "apps/reports-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/reports-service/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["scope:reports", "type:microservice"]
+}

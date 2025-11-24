@@ -1,0 +1,4168 @@
+{
+  "section": "1-85000",
+  "totalFunctions": 656,
+  "totalClasses": 29,
+  "analysisDate": "2025-11-21",
+  "functions": [
+    {
+      "name": "qB9",
+      "line": 54,
+      "description": "Gets tag from object using Symbol.toStringTag",
+      "category": "utility"
+    },
+    {
+      "name": "MB9",
+      "line": 74,
+      "description": "Calls toString on object",
+      "category": "utility"
+    },
+    {
+      "name": "TB9",
+      "line": 83,
+      "description": "Gets type tag (null/undefined check)",
+      "category": "utility"
+    },
+    {
+      "name": "PB9",
+      "line": 98,
+      "description": "Checks if value is object-like",
+      "category": "utility"
+    },
+    {
+      "name": "SB9",
+      "line": 106,
+      "description": "Checks if value is symbol",
+      "category": "utility"
+    },
+    {
+      "name": "yB9",
+      "line": 117,
+      "description": "Array map implementation",
+      "category": "utility"
+    },
+    {
+      "name": "hQ0",
+      "line": 133,
+      "description": "Converts value to string",
+      "category": "utility"
+    },
+    {
+      "name": "xB9",
+      "line": 151,
+      "description": "Checks if value is object or function",
+      "category": "utility"
+    },
+    {
+      "name": "vB9",
+      "line": 160,
+      "description": "Identity function",
+      "category": "utility"
+    },
+    {
+      "name": "uB9",
+      "line": 168,
+      "description": "Checks if value is function",
+      "category": "utility"
+    },
+    {
+      "name": "dB9",
+      "line": 189,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "lB9",
+      "line": 202,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "eB9",
+      "line": 219,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "AQ9",
+      "line": 234,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "BQ9",
+      "line": 242,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "GQ9",
+      "line": 273,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "ZQ9",
+      "line": 291,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "YQ9",
+      "line": 297,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "FQ9",
+      "line": 309,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "CQ9",
+      "line": 329,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "EQ9",
+      "line": 369,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "HQ9",
+      "line": 381,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "zQ9",
+      "line": 393,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "UQ9",
+      "line": 401,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "wQ9",
+      "line": 413,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "LQ9",
+      "line": 434,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "MQ9",
+      "line": 445,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "OQ9",
+      "line": 460,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "PQ9",
+      "line": 468,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "jQ9",
+      "line": 480,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "SQ9",
+      "line": 501,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "yQ9",
+      "line": 522,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "_Q9",
+      "line": 533,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "xQ9",
+      "line": 542,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "vQ9",
+      "line": 552,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "bQ9",
+      "line": 567,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "hQ9",
+      "line": 589,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "gQ9",
+      "line": 600,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "mQ9",
+      "line": 611,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "lQ9",
+      "line": 632,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "w29",
+      "line": 650,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "R29",
+      "line": 720,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "T29",
+      "line": 744,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "y29",
+      "line": 759,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "k29",
+      "line": 774,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "_29",
+      "line": 785,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "b29",
+      "line": 796,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "f29",
+      "line": 813,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "u29",
+      "line": 824,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "d29",
+      "line": 843,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "c29",
+      "line": 852,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "n29",
+      "line": 861,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "r29",
+      "line": 877,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "t29",
+      "line": 888,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Je",
+      "line": 899,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "e29",
+      "line": 923,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "A99",
+      "line": 931,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "I99",
+      "line": 943,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "G99",
+      "line": 959,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Z99",
+      "line": 970,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Y99",
+      "line": 979,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Xe",
+      "line": 992,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "X99",
+      "line": 1022,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "W99",
+      "line": 1037,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "F99",
+      "line": 1046,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "C99",
+      "line": 1056,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "V99",
+      "line": 1066,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "K99",
+      "line": 1075,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "D99",
+      "line": 1084,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "We",
+      "line": 1095,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "o21",
+      "line": 1119,
+      "description": "Memoize function (lodash memoize)",
+      "category": "utility"
+    },
+    {
+      "name": "z99",
+      "line": 1139,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "q99",
+      "line": 1165,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "N99",
+      "line": 1174,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "M99",
+      "line": 1187,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "O99",
+      "line": 1199,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "R99",
+      "line": 1213,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "T99",
+      "line": 1223,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "P99",
+      "line": 1235,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "v90",
+      "line": 1247,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "j99",
+      "line": 1267,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "S99",
+      "line": 1277,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "f99",
+      "line": 1293,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "h99",
+      "line": 1310,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "g99",
+      "line": 1325,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "a99",
+      "line": 1335,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "s99",
+      "line": 1350,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "X49",
+      "line": 1358,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "W49",
+      "line": 1376,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "F49",
+      "line": 1387,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "V49",
+      "line": 1410,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "K49",
+      "line": 1420,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "D49",
+      "line": 1429,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "E49",
+      "line": 1439,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "H49",
+      "line": 1447,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "U49",
+      "line": 1455,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Ee",
+      "line": 1473,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "w49",
+      "line": 1493,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "N49",
+      "line": 1517,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "L49",
+      "line": 1530,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "M49",
+      "line": 1546,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "P49",
+      "line": 1565,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "y49",
+      "line": 1587,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "k49",
+      "line": 1597,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "_49",
+      "line": 1608,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "x49",
+      "line": 1619,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "i49",
+      "line": 1684,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "a49",
+      "line": 1701,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "s49",
+      "line": 1711,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "o49",
+      "line": 1721,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "t49",
+      "line": 1731,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "e49",
+      "line": 1741,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "w89",
+      "line": 1751,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "N89",
+      "line": 1824,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "O89",
+      "line": 1842,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "hNA",
+      "line": 1860,
+      "description": "Deep clone implementation",
+      "category": "utility"
+    },
+    {
+      "name": "B69",
+      "line": 1956,
+      "description": "lodash cloneDeep",
+      "category": "utility"
+    },
+    {
+      "name": "I69",
+      "line": 1967,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "G69",
+      "line": 1976,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "uNA",
+      "line": 1984,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Z69",
+      "line": 2000,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Y69",
+      "line": 2012,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "W69",
+      "line": 2020,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "F69",
+      "line": 2065,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "C69",
+      "line": 2077,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "O69",
+      "line": 2089,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "j69",
+      "line": 2146,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "k69",
+      "line": 2190,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "P80",
+      "line": 2234,
+      "description": "Base isEqual function",
+      "category": "utility"
+    },
+    {
+      "name": "v69",
+      "line": 2246,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "b69",
+      "line": 2280,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "f69",
+      "line": 2289,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "h69",
+      "line": 2306,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "g69",
+      "line": 2317,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "u69",
+      "line": 2332,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "m69",
+      "line": 2340,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "d69",
+      "line": 2364,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "l69",
+      "line": 2374,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "i69",
+      "line": 2395,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "n69",
+      "line": 2405,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "a69",
+      "line": 2416,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "s69",
+      "line": 2428,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "r69",
+      "line": 2444,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "o69",
+      "line": 2458,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "e69",
+      "line": 2481,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "A59",
+      "line": 2491,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Q59",
+      "line": 2515,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "I59",
+      "line": 2526,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "G59",
+      "line": 2542,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Z59",
+      "line": 2552,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "Y59",
+      "line": 2562,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "J59",
+      "line": 2572,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "X59",
+      "line": 2582,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "C60",
+      "line": 2630,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "F59",
+      "line": 2661,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "C59",
+      "line": 2673,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "V59",
+      "line": 2682,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "K59",
+      "line": 2694,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "D59",
+      "line": 2705,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "E59",
+      "line": 2715,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "H59",
+      "line": 2725,
+      "description": "lodash isEqual",
+      "category": "utility"
+    },
+    {
+      "name": "z59",
+      "line": 2734,
+      "description": "lodash mapValues",
+      "category": "utility"
+    },
+    {
+      "name": "U59",
+      "line": 2748,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "q59",
+      "line": 2785,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "N59",
+      "line": 2797,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "T59",
+      "line": 2831,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "y59",
+      "line": 2872,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "k59",
+      "line": 2881,
+      "description": "lodash reject",
+      "category": "utility"
+    },
+    {
+      "name": "_59",
+      "line": 2895,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "x59",
+      "line": 2905,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "v59",
+      "line": 2915,
+      "description": "lodash sample",
+      "category": "utility"
+    },
+    {
+      "name": "b59",
+      "line": 2927,
+      "description": "lodash setWith",
+      "category": "utility"
+    },
+    {
+      "name": "f59",
+      "line": 2936,
+      "description": "lodash sumBy",
+      "category": "utility"
+    },
+    {
+      "name": "m59",
+      "line": 2956,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "d59",
+      "line": 2997,
+      "description": "lodash uniqBy",
+      "category": "utility"
+    },
+    {
+      "name": "c59",
+      "line": 3007,
+      "description": "Minified function",
+      "category": "utility"
+    },
+    {
+      "name": "p59",
+      "line": 3023,
+      "description": "lodash zipObject",
+      "category": "utility"
+    },
+    {
+      "name": "V9",
+      "line": 3053,
+      "description": "Writes to stdout in chunks",
+      "category": "io"
+    },
+    {
+      "name": "IT",
+      "line": 3057,
+      "description": "Writes to stderr in chunks",
+      "category": "io"
+    },
+    {
+      "name": "l59",
+      "line": 3061,
+      "description": "Extracts log tags from message",
+      "category": "io"
+    },
+    {
+      "name": "i59",
+      "line": 3080,
+      "description": "Minified function",
+      "category": "io"
+    },
+    {
+      "name": "Q50",
+      "line": 3087,
+      "description": "Filters log by message",
+      "category": "io"
+    },
+    {
+      "name": "BC",
+      "line": 3116,
+      "description": "Resolves symlink path",
+      "category": "filesystem"
+    },
+    {
+      "name": "HGA",
+      "line": 3135,
+      "description": "Gets all paths including symlinks",
+      "category": "filesystem"
+    },
+    {
+      "name": "NA",
+      "line": 3147,
+      "description": "Gets filesystem implementation",
+      "category": "filesystem"
+    },
+    {
+      "name": "dB",
+      "line": 3287,
+      "description": "Gets claude config directory",
+      "category": "config"
+    },
+    {
+      "name": "K0",
+      "line": 3291,
+      "description": "Parses boolean env var",
+      "category": "config"
+    },
+    {
+      "name": "Ne",
+      "line": 3298,
+      "description": "Checks if value is explicitly false",
+      "category": "config"
+    },
+    {
+      "name": "Z50",
+      "line": 3306,
+      "description": "Parses environment variable array",
+      "category": "config"
+    },
+    {
+      "name": "Le",
+      "line": 3317,
+      "description": "Gets AWS region",
+      "category": "config"
+    },
+    {
+      "name": "pL",
+      "line": 3321,
+      "description": "Gets Cloud ML region",
+      "category": "config"
+    },
+    {
+      "name": "k91",
+      "line": 3325,
+      "description": "Minified function",
+      "category": "config"
+    },
+    {
+      "name": "QLA",
+      "line": 3329,
+      "description": "Gets vertex region for model",
+      "category": "config"
+    },
+    {
+      "name": "GT",
+      "line": 3394,
+      "description": "Gets context window size for model",
+      "category": "config"
+    },
+    {
+      "name": "BI9",
+      "line": 3409,
+      "description": "Creates initial session state",
+      "category": "session"
+    },
+    {
+      "name": "L0",
+      "line": 3460,
+      "description": "Gets current session ID",
+      "category": "session"
+    },
+    {
+      "name": "J50",
+      "line": 3464,
+      "description": "Generates new session ID",
+      "category": "session"
+    },
+    {
+      "name": "lL",
+      "line": 3468,
+      "description": "Sets session ID",
+      "category": "session"
+    },
+    {
+      "name": "WQ",
+      "line": 3472,
+      "description": "Gets original working directory",
+      "category": "session"
+    },
+    {
+      "name": "oy",
+      "line": 3476,
+      "description": "Gets current working directory",
+      "category": "session"
+    },
+    {
+      "name": "X50",
+      "line": 3480,
+      "description": "Sets current working directory",
+      "category": "session"
+    },
+    {
+      "name": "W50",
+      "line": 3484,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "F50",
+      "line": 3488,
+      "description": "Adds API cost and usage",
+      "category": "session"
+    },
+    {
+      "name": "bV",
+      "line": 3502,
+      "description": "Gets total cost in USD",
+      "category": "session"
+    },
+    {
+      "name": "iL",
+      "line": 3506,
+      "description": "Gets total API duration",
+      "category": "session"
+    },
+    {
+      "name": "zGA",
+      "line": 3510,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "C50",
+      "line": 3514,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "_91",
+      "line": 3518,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "UGA",
+      "line": 3522,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "x91",
+      "line": 3526,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Me",
+      "line": 3530,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Oe",
+      "line": 3534,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "V50",
+      "line": 3538,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "K50",
+      "line": 3542,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "D50",
+      "line": 3546,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "E50",
+      "line": 3550,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "H50",
+      "line": 3554,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "v91",
+      "line": 3558,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "z50",
+      "line": 3562,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "JLA",
+      "line": 3566,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "tp",
+      "line": 3570,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "wGA",
+      "line": 3574,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "XLA",
+      "line": 3578,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "ep",
+      "line": 3582,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Re",
+      "line": 3586,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "U50",
+      "line": 3590,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "w50",
+      "line": 3594,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "b91",
+      "line": 3598,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "WLA",
+      "line": 3602,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "f91",
+      "line": 3606,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "q50",
+      "line": 3633,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "h91",
+      "line": 3637,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "g91",
+      "line": 3641,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "N50",
+      "line": 3645,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "L50",
+      "line": 3649,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Te",
+      "line": 3657,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "u91",
+      "line": 3661,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "m91",
+      "line": 3665,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "M50",
+      "line": 3669,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "O50",
+      "line": 3673,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "R50",
+      "line": 3677,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "T50",
+      "line": 3681,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "P50",
+      "line": 3685,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "d91",
+      "line": 3689,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "j50",
+      "line": 3693,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "k5",
+      "line": 3697,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "S50",
+      "line": 3701,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "FLA",
+      "line": 3705,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "y50",
+      "line": 3709,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "CLA",
+      "line": 3713,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "k50",
+      "line": 3717,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "c91",
+      "line": 3721,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "p91",
+      "line": 3725,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "_50",
+      "line": 3729,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "x50",
+      "line": 3733,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Pe",
+      "line": 3737,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "v50",
+      "line": 3741,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "je",
+      "line": 3745,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "b50",
+      "line": 3749,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "Se",
+      "line": 3753,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "f50",
+      "line": 3757,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "h50",
+      "line": 3761,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "VLA",
+      "line": 3765,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "g50",
+      "line": 3769,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "u50",
+      "line": 3773,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "m50",
+      "line": 3778,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "d50",
+      "line": 3782,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "c50",
+      "line": 3786,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "p50",
+      "line": 3790,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "l50",
+      "line": 3794,
+      "description": "Minified function",
+      "category": "session"
+    },
+    {
+      "name": "II9",
+      "line": 3808,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "a50",
+      "line": 3814,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "m",
+      "line": 3818,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "Al",
+      "line": 3836,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "o50",
+      "line": 3875,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "II",
+      "line": 3880,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "n91",
+      "line": 3885,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "s50",
+      "line": 3889,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "ZI9",
+      "line": 3893,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "t50",
+      "line": 3913,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "pJ",
+      "line": 3924,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "ye",
+      "line": 3928,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "xY",
+      "line": 5276,
+      "description": "Parses command line arguments",
+      "category": "cli"
+    },
+    {
+      "name": "ke",
+      "line": 5298,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "tI9",
+      "line": 5302,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "UI0",
+      "line": 5310,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "LGA",
+      "line": 5322,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "eI9",
+      "line": 5327,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "I39",
+      "line": 5388,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "q",
+      "line": 5523,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "Y39",
+      "line": 5530,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "J39",
+      "line": 5538,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "X39",
+      "line": 5548,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "OI0",
+      "line": 5592,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "PI0",
+      "line": 5616,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "jI0",
+      "line": 5626,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "RGA",
+      "line": 5639,
+      "description": "Minified function",
+      "category": "cli"
+    },
+    {
+      "name": "g79",
+      "line": 7920,
+      "description": "Logs error",
+      "category": "logging"
+    },
+    {
+      "name": "de",
+      "line": 7924,
+      "description": "Minified function",
+      "category": "logging"
+    },
+    {
+      "name": "IQ",
+      "line": 7933,
+      "description": "Logs message to console",
+      "category": "logging"
+    },
+    {
+      "name": "B8",
+      "line": 8064,
+      "description": "Creates logger instance",
+      "category": "logging"
+    },
+    {
+      "name": "m30",
+      "line": 8352,
+      "description": "Gets terminal columns",
+      "category": "terminal"
+    },
+    {
+      "name": "IG9",
+      "line": 8360,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "d30",
+      "line": 8364,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "GG9",
+      "line": 8371,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "ZG9",
+      "line": 8377,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "YG9",
+      "line": 8394,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "JG9",
+      "line": 8400,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "pe",
+      "line": 8409,
+      "description": "Creates text alignment function",
+      "category": "terminal"
+    },
+    {
+      "name": "R41",
+      "line": 8430,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "c30",
+      "line": 8482,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "g30",
+      "line": 8490,
+      "description": "Minified function",
+      "category": "terminal"
+    },
+    {
+      "name": "p30",
+      "line": 8499,
+      "description": "Creates box around text",
+      "category": "terminal"
+    },
+    {
+      "name": "nLA",
+      "line": 11779,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xJ9",
+      "line": 16823,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "DMA",
+      "line": 16827,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "fJ9",
+      "line": 16839,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "hJ9",
+      "line": 16923,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "T81",
+      "line": 16932,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "HMA",
+      "line": 16934,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "gJ9",
+      "line": 17018,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "uJ9",
+      "line": 17047,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "y81",
+      "line": 17052,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "BY0",
+      "line": 17056,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "mJ9",
+      "line": 17067,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WY0",
+      "line": 17398,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "FY0",
+      "line": 17403,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "DY0",
+      "line": 17486,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "EY0",
+      "line": 17495,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sJ9",
+      "line": 17515,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rJ9",
+      "line": 17521,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "oJ9",
+      "line": 17525,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "GZA",
+      "line": 17637,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "AX9",
+      "line": 17672,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "BX9",
+      "line": 17682,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "IX9",
+      "line": 17703,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "s9",
+      "line": 18609,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "NF0",
+      "line": 18614,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "DZA",
+      "line": 18966,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "FW9",
+      "line": 18972,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "CW9",
+      "line": 18976,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "HZA",
+      "line": 18983,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "fF0",
+      "line": 18999,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "L61",
+      "line": 19009,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "dW9",
+      "line": 19023,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "UAA",
+      "line": 19257,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "s61",
+      "line": 28986,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sV0",
+      "line": 28990,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "aV0",
+      "line": 28994,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xC9",
+      "line": 29001,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bC9",
+      "line": 29005,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rV0",
+      "line": 29068,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "oV0",
+      "line": 29083,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "fC9",
+      "line": 29104,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ml",
+      "line": 29108,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "B51",
+      "line": 29228,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "pC9",
+      "line": 29242,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "lC9",
+      "line": 29248,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "iC9",
+      "line": 29257,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "nC9",
+      "line": 29286,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "NZA",
+      "line": 29387,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zOA",
+      "line": 29391,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sC9",
+      "line": 29396,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "G51",
+      "line": 29404,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "oC9",
+      "line": 29412,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tC9",
+      "line": 29418,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MZA",
+      "line": 29568,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "OZA",
+      "line": 29583,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "EK0",
+      "line": 29587,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ET",
+      "line": 29600,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Z51",
+      "line": 29609,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Y51",
+      "line": 29613,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Rl",
+      "line": 29617,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "yZA",
+      "line": 30463,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "N51",
+      "line": 30468,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "VK9",
+      "line": 30698,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "KK9",
+      "line": 30725,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "NK9",
+      "line": 30792,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YD0",
+      "line": 30797,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XM",
+      "line": 31167,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "y51",
+      "line": 31646,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_OA",
+      "line": 31651,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bK9",
+      "line": 31670,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_51",
+      "line": 31920,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "x51",
+      "line": 31926,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_D0",
+      "line": 32005,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "aAA",
+      "line": 35051,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "cl",
+      "line": 44854,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "iJ",
+      "line": 44858,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WT0",
+      "line": 44862,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "FT0",
+      "line": 44866,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sb9",
+      "line": 44877,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "w4",
+      "line": 44881,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JC",
+      "line": 44941,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Gf9",
+      "line": 44961,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "r71",
+      "line": 45113,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "G0",
+      "line": 45117,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JYA",
+      "line": 45128,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "o71",
+      "line": 45369,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YYA",
+      "line": 45373,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "k1A",
+      "line": 45377,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "e71",
+      "line": 45422,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_1A",
+      "line": 45544,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Jf9",
+      "line": 45550,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Xf9",
+      "line": 45564,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XYA",
+      "line": 45580,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zT0",
+      "line": 45589,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "BG1",
+      "line": 45627,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "nRA",
+      "line": 45711,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "QG1",
+      "line": 45730,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ff9",
+      "line": 45910,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "UT0",
+      "line": 45937,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "pl",
+      "line": 46072,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "aRA",
+      "line": 46100,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "LT0",
+      "line": 46108,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MT0",
+      "line": 46112,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "RT0",
+      "line": 46148,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "TT0",
+      "line": 46173,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "CYA",
+      "line": 46212,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "h1A",
+      "line": 47382,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "AP0",
+      "line": 47397,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ol",
+      "line": 47417,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rz",
+      "line": 47423,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "IP0",
+      "line": 47436,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tl",
+      "line": 47451,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "GP0",
+      "line": 47464,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ZP0",
+      "line": 47468,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "el",
+      "line": 47481,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Qh9",
+      "line": 47507,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XTA",
+      "line": 47524,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WTA",
+      "line": 47530,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JP0",
+      "line": 47535,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ih9",
+      "line": 47559,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "FTA",
+      "line": 47569,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vY",
+      "line": 47737,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Eh9",
+      "line": 47752,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "N8",
+      "line": 47777,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qG1",
+      "line": 47804,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Hh9",
+      "line": 47814,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "g9",
+      "line": 47888,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "wk",
+      "line": 47907,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "d1A",
+      "line": 47915,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "LG1",
+      "line": 47926,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MG1",
+      "line": 48214,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "DTA",
+      "line": 48224,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "OG1",
+      "line": 48273,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_G1",
+      "line": 48977,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rG1",
+      "line": 49473,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "c1A",
+      "line": 49545,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xj0",
+      "line": 49603,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "J3",
+      "line": 49695,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "NB",
+      "line": 49734,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "t6",
+      "line": 49748,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "eG1",
+      "line": 49818,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tg9",
+      "line": 49826,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "uj0",
+      "line": 49875,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "CD",
+      "line": 49978,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "mj0",
+      "line": 50007,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "cj0",
+      "line": 50050,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "AZ1",
+      "line": 50084,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "BZ1",
+      "line": 50105,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zZ1",
+      "line": 56390,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "UZ1",
+      "line": 56476,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ES0",
+      "line": 56492,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "HS0",
+      "line": 56496,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zS0",
+      "line": 56500,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Tu9",
+      "line": 56505,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "a1A",
+      "line": 56509,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tE",
+      "line": 56524,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "s1A",
+      "line": 56551,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "PYA",
+      "line": 56561,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ju9",
+      "line": 56576,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "q7",
+      "line": 56604,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xu9",
+      "line": 56642,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "t1A",
+      "line": 56774,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jYA",
+      "line": 56889,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "yT",
+      "line": 56894,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "iTA",
+      "line": 56952,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MZ1",
+      "line": 56962,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_Z1",
+      "line": 67933,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Qy0",
+      "line": 68044,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MB",
+      "line": 68425,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Gy0",
+      "line": 68487,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bZ1",
+      "line": 68658,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "wm9",
+      "line": 68666,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qm9",
+      "line": 68683,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Nm9",
+      "line": 68693,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Cy0",
+      "line": 68721,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Lm9",
+      "line": 68730,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Wi",
+      "line": 68736,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Dy0",
+      "line": 68764,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qk",
+      "line": 68774,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "dZ1",
+      "line": 68787,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "GPA",
+      "line": 68791,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "cZ1",
+      "line": 68804,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "wh",
+      "line": 68814,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ey0",
+      "line": 68823,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Hy0",
+      "line": 68835,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Om9",
+      "line": 68851,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Rm9",
+      "line": 68859,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Tm9",
+      "line": 68868,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Uy0",
+      "line": 68878,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YPA",
+      "line": 68917,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bY",
+      "line": 68922,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Sm9",
+      "line": 68927,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "e1A",
+      "line": 68931,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JPA",
+      "line": 68941,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ny0",
+      "line": 68947,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ly0",
+      "line": 68955,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "My0",
+      "line": 68970,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "aZ1",
+      "line": 69143,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WPA",
+      "line": 69317,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ky0",
+      "line": 69338,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_y0",
+      "line": 69537,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xy0",
+      "line": 69572,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vy0",
+      "line": 69590,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XY1",
+      "line": 69940,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "EQ",
+      "line": 69968,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WY1",
+      "line": 69976,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "w",
+      "line": 69999,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "KY1",
+      "line": 70045,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qd9",
+      "line": 70132,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Md9",
+      "line": 70146,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Jk0",
+      "line": 70155,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Td9",
+      "line": 70359,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kd9",
+      "line": 70658,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_d9",
+      "line": 70662,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zY1",
+      "line": 70668,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "UY1",
+      "line": 70679,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YY1",
+      "line": 70845,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "OPA",
+      "line": 70924,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Nh",
+      "line": 70932,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zM",
+      "line": 70967,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "cW",
+      "line": 70986,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Mk",
+      "line": 71087,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "GG",
+      "line": 71111,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tz",
+      "line": 71125,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qZ",
+      "line": 71139,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "PPA",
+      "line": 71148,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Q0A",
+      "line": 71202,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kT",
+      "line": 71218,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "OY1",
+      "line": 71359,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "dk0",
+      "line": 71415,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jPA",
+      "line": 71433,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "pk0",
+      "line": 71506,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "SPA",
+      "line": 71528,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "lk0",
+      "line": 71549,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ik0",
+      "line": 71556,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "nk0",
+      "line": 71560,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ak0",
+      "line": 71564,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jY1",
+      "line": 71593,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "SY1",
+      "line": 71617,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "uYA",
+      "line": 71622,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kPA",
+      "line": 71627,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_PA",
+      "line": 71631,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rk0",
+      "line": 71635,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ok0",
+      "line": 71672,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "tk0",
+      "line": 71682,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "G0A",
+      "line": 71686,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ek0",
+      "line": 71722,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "A_0",
+      "line": 71747,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "B_0",
+      "line": 71753,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "I_0",
+      "line": 71810,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "G_0",
+      "line": 71828,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "TQ",
+      "line": 76116,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "V0",
+      "line": 76123,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jk",
+      "line": 76130,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Mv0",
+      "line": 76223,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YJ1",
+      "line": 76228,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XjA",
+      "line": 76234,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "YJA",
+      "line": 76252,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Pv0",
+      "line": 76288,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JJA",
+      "line": 76297,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "JJ1",
+      "line": 76302,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Yn9",
+      "line": 76339,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jv0",
+      "line": 76355,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "WjA",
+      "line": 76372,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "yv0",
+      "line": 76377,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kv0",
+      "line": 76383,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "XJA",
+      "line": 76407,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "CjA",
+      "line": 76409,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "lW",
+      "line": 76414,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Cn9",
+      "line": 76515,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "gv0",
+      "line": 76809,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "uv0",
+      "line": 76813,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "e3",
+      "line": 77222,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "wM",
+      "line": 77226,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "U0A",
+      "line": 77233,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "LjA",
+      "line": 77237,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "nv0",
+      "line": 77303,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ov0",
+      "line": 77352,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "MjA",
+      "line": 77418,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ab0",
+      "line": 77427,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Yb0",
+      "line": 77755,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Jb0",
+      "line": 77759,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Xb0",
+      "line": 77763,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Wb0",
+      "line": 77767,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Fb0",
+      "line": 77771,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Cb0",
+      "line": 77858,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Sn9",
+      "line": 78445,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Kb0",
+      "line": 78455,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "yn9",
+      "line": 78516,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Eb0",
+      "line": 78529,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Hb0",
+      "line": 78545,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "zb0",
+      "line": 78550,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "SJ1",
+      "line": 78556,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kn9",
+      "line": 78562,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "yjA",
+      "line": 78605,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "qb0",
+      "line": 78627,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Lb0",
+      "line": 78671,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "N0A",
+      "line": 78680,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kJ1",
+      "line": 78688,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ob0",
+      "line": 78714,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "gn9",
+      "line": 78744,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "TJA",
+      "line": 78749,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "un9",
+      "line": 78754,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "L0A",
+      "line": 78762,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "cn9",
+      "line": 78821,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "M0A",
+      "line": 78826,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "pn9",
+      "line": 78831,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_jA",
+      "line": 78839,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "jb0",
+      "line": 78853,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "PJA",
+      "line": 78894,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "kb0",
+      "line": 78930,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "_b0",
+      "line": 78934,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xb0",
+      "line": 78938,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vb0",
+      "line": 78942,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vJ1",
+      "line": 79082,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bjA",
+      "line": 79233,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "hb0",
+      "line": 79237,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "gb0",
+      "line": 79242,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ub0",
+      "line": 79246,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "en9",
+      "line": 79254,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vk",
+      "line": 79323,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sf0",
+      "line": 79820,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "bk",
+      "line": 79833,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Mi",
+      "line": 79839,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "rf0",
+      "line": 79844,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "R0A",
+      "line": 79848,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Gh0",
+      "line": 79875,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Jh0",
+      "line": 80061,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "ljA",
+      "line": 80371,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Lr9",
+      "line": 80375,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Mr9",
+      "line": 80391,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Dh0",
+      "line": 80402,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Or9",
+      "line": 80411,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Sr9",
+      "line": 80485,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "xr9",
+      "line": 80825,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Th0",
+      "line": 80844,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "vr9",
+      "line": 80849,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "br9",
+      "line": 80855,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "fr9",
+      "line": 80860,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "hr9",
+      "line": 80874,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "gr9",
+      "line": 80885,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "Ph0",
+      "line": 80891,
+      "description": "Minified function",
+      "category": "aws"
+    },
+    {
+      "name": "sjA",
+      "line": 80917,
+      "description": "Minified function",
+      "category": "aws"
+    }
+  ],
+  "classes": [
+    {
+      "name": "QC",
+      "line": 7943,
+      "category": "logging"
+    },
+    {
+      "name": "tL",
+      "line": 8052,
+      "category": "logging"
+    },
+    {
+      "name": "k8",
+      "line": 8098,
+      "category": "logging"
+    },
+    {
+      "name": "oGA",
+      "line": 11506,
+      "category": "aws"
+    },
+    {
+      "name": "eGA",
+      "line": 16806,
+      "category": "aws"
+    },
+    {
+      "name": "R81",
+      "line": 16849,
+      "category": "aws"
+    },
+    {
+      "name": "_MA",
+      "line": 17895,
+      "category": "aws"
+    },
+    {
+      "name": "s81",
+      "line": 18068,
+      "category": "aws"
+    },
+    {
+      "name": "BK0",
+      "line": 29129,
+      "category": "aws"
+    },
+    {
+      "name": "mK0",
+      "line": 30599,
+      "category": "aws"
+    },
+    {
+      "name": "xZA",
+      "line": 31716,
+      "category": "aws"
+    },
+    {
+      "name": "k51",
+      "line": 31856,
+      "category": "aws"
+    },
+    {
+      "name": "wI1",
+      "line": 35054,
+      "category": "aws"
+    },
+    {
+      "name": "pP0",
+      "line": 48761,
+      "category": "aws"
+    },
+    {
+      "name": "yG1",
+      "line": 48800,
+      "category": "aws"
+    },
+    {
+      "name": "xYA",
+      "line": 69000,
+      "category": "aws"
+    },
+    {
+      "name": "AY1",
+      "line": 69347,
+      "category": "aws"
+    },
+    {
+      "name": "by0",
+      "line": 69629,
+      "category": "aws"
+    },
+    {
+      "name": "B0A",
+      "line": 69658,
+      "category": "aws"
+    },
+    {
+      "name": "MPA",
+      "line": 70711,
+      "category": "aws"
+    },
+    {
+      "name": "gYA",
+      "line": 71316,
+      "category": "aws"
+    },
+    {
+      "name": "I0A",
+      "line": 71374,
+      "category": "aws"
+    },
+    {
+      "name": "kh",
+      "line": 76307,
+      "category": "aws"
+    },
+    {
+      "name": "vv0",
+      "line": 76490,
+      "category": "aws"
+    },
+    {
+      "name": "PI",
+      "line": 77908,
+      "category": "aws"
+    },
+    {
+      "name": "RjA",
+      "line": 78214,
+      "category": "aws"
+    },
+    {
+      "name": "Vb0",
+      "line": 78232,
+      "category": "aws"
+    },
+    {
+      "name": "tJ1",
+      "line": 80076,
+      "category": "aws"
+    },
+    {
+      "name": "qh0",
+      "line": 80461,
+      "category": "aws"
+    }
+  ],
+  "summary": "Section 1 (lines 1-85000) contains 656 functions and 29 classes. Key areas: lodash utilities (lines 1-3050), session state management (3409-3800), CLI parsing (5276-5640), logging infrastructure (7920-8100), and AWS SDK integration (80900+). The code uses bundler patterns with lazy initialization wrappers T(() => {...}) and CommonJS-style module wrappers z((exports, module) => {...}). Most function names are minified (e.g., qB9, TB9) but maintain semantic organization.",
+  "exports": [
+    "B69 (cloneDeep)",
+    "H59 (isEqual)",
+    "z59 (mapValues)",
+    "k59 (reject)",
+    "v59 (sample)",
+    "b59 (setWith)",
+    "f59 (sumBy)",
+    "d59 (uniqBy)",
+    "p59 (zipObject)"
+  ],
+  "modulePatterns": [
+    {
+      "pattern": "T(() => {...})",
+      "description": "Lazy initialization wrapper"
+    },
+    {
+      "pattern": "z((exports, module) => {...})",
+      "description": "CommonJS-style module wrapper"
+    },
+    {
+      "pattern": "E",
+      "description": "Export spreading pattern"
+    },
+    {
+      "pattern": "IA(module, 1)",
+      "description": "ESM interop import"
+    }
+  ],
+  "functionalAreas": [
+    {
+      "name": "Lodash Utilities",
+      "lineRange": "1-3050",
+      "description": "Lodash-style utility functions"
+    },
+    {
+      "name": "IO and Logging",
+      "lineRange": "3053-3110",
+      "description": "Console output utilities"
+    },
+    {
+      "name": "Filesystem",
+      "lineRange": "3110-3285",
+      "description": "File system abstraction"
+    },
+    {
+      "name": "Configuration",
+      "lineRange": "3287-3400",
+      "description": "Environment and config management"
+    },
+    {
+      "name": "Session State",
+      "lineRange": "3409-3800",
+      "description": "Session state management"
+    },
+    {
+      "name": "CLI Parsing",
+      "lineRange": "5276-5640",
+      "description": "Command-line argument parsing"
+    },
+    {
+      "name": "Logging",
+      "lineRange": "7920-8100",
+      "description": "Logger infrastructure"
+    },
+    {
+      "name": "Terminal",
+      "lineRange": "8352-8600",
+      "description": "ANSI formatting and terminal utils"
+    },
+    {
+      "name": "AWS SDK",
+      "lineRange": "80900-85000",
+      "description": "AWS SDK middleware and types"
+    }
+  ]
+}

@@ -55,7 +55,16 @@
       "Bash(container=\"$container/marie/worker-marie\")",
       "Bash(container=\"$container/fabien/worker-fabien\")",
       "Bash(__NEW_LINE__ echo \"→ $container\")",
-      "Bash(for container in codehornets-orchestrator codehornets-worker-marie codehornets-worker-fabien)"
+      "Bash(for container in codehornets-orchestrator codehornets-worker-marie codehornets-worker-fabien)",
+      "WebSearch",
+      "WebFetch(domain:iximiuz.com)",
+      "WebFetch(domain:blog.damonkelley.me)",
+      "WebFetch(domain:damonkelley.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.redhat.com)",
+      "Bash(ls:*)",
+      "Bash(timeout 180 node:*)",
+      "Bash(npm run test:agent:*)"
     ],
     "deny": [],
     "ask": []

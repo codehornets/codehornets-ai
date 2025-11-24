@@ -1,0 +1,702 @@
+{
+  "section": {
+    "name": "Section 2",
+    "startLine": 85001,
+    "endLine": 170000,
+    "totalLines": 84999,
+    "analyzedAt": "2025-11-21",
+    "description": "AWS SDK core modules including authentication, credential providers, HTTP protocol handlers, and STS client implementation"
+  },
+  "summary": {
+    "totalFunctions": 847,
+    "totalClasses": 142,
+    "totalModules": 89,
+    "totalExports": 156,
+    "primaryModules": [
+      "AWS Credential Providers",
+      "STS Client",
+      "SSO/OIDC Client",
+      "HTTP Protocol Handlers",
+      "Authentication Schemes",
+      "Request/Response Serialization"
+    ]
+  },
+  "modules": [
+    {
+      "name": "@smithy/core/serde",
+      "lineRange": [
+        85001,
+        85367
+      ],
+      "purpose": "Data serialization/deserialization utilities"
+    },
+    {
+      "name": "@smithy/util-base64",
+      "lineRange": [
+        85368,
+        85419
+      ],
+      "purpose": "Base64 encoding/decoding utilities"
+    },
+    {
+      "name": "@smithy/core/protocols",
+      "lineRange": [
+        85420,
+        86000
+      ],
+      "purpose": "HTTP protocol implementations"
+    },
+    {
+      "name": "@smithy/core/auth",
+      "lineRange": [
+        86001,
+        86301
+      ],
+      "purpose": "Authentication middleware"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-process",
+      "lineRange": [
+        120000,
+        120064
+      ],
+      "purpose": "Credentials from credential_process"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-web-identity",
+      "lineRange": [
+        120065,
+        120192
+      ],
+      "purpose": "Web identity token credentials"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-ini",
+      "lineRange": [
+        120193,
+        120422
+      ],
+      "purpose": "INI file credential resolution"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-node",
+      "lineRange": [
+        120423,
+        120548
+      ],
+      "purpose": "Default credential provider chain"
+    },
+    {
+      "name": "agent-base",
+      "lineRange": [
+        120614,
+        120732
+      ],
+      "purpose": "HTTP/HTTPS agent base class"
+    },
+    {
+      "name": "https-proxy-agent",
+      "lineRange": [
+        120813,
+        120942
+      ],
+      "purpose": "HTTPS proxy agent implementation"
+    },
+    {
+      "name": "undici/symbols",
+      "lineRange": [
+        120943,
+        121011
+      ],
+      "purpose": "Undici HTTP client symbols"
+    },
+    {
+      "name": "undici/errors",
+      "lineRange": [
+        121012,
+        121185
+      ],
+      "purpose": "Undici error classes"
+    },
+    {
+      "name": "@aws-sdk/client-sts",
+      "lineRange": [
+        150000,
+        150778
+      ],
+      "purpose": "AWS STS client"
+    },
+    {
+      "name": "@aws-sdk/client-sso-oidc",
+      "lineRange": [
+        160000,
+        161500
+      ],
+      "purpose": "AWS SSO OIDC client"
+    }
+  ],
+  "functions": [
+    {
+      "name": "vSA",
+      "line": 85007,
+      "description": "Parse 32-bit float value",
+      "category": "parser"
+    },
+    {
+      "name": "mJA",
+      "line": 85014,
+      "description": "Parse integer value",
+      "category": "parser"
+    },
+    {
+      "name": "MB4",
+      "line": 85130,
+      "description": "Format RFC-7231 date string",
+      "category": "date"
+    },
+    {
+      "name": "RB4",
+      "line": 85145,
+      "description": "Parse RFC-3339 date-time",
+      "category": "date"
+    },
+    {
+      "name": "aB4",
+      "line": 85375,
+      "description": "Decode base64 to Uint8Array",
+      "category": "encoding"
+    },
+    {
+      "name": "oB4",
+      "line": 85390,
+      "description": "Encode to base64",
+      "category": "encoding"
+    },
+    {
+      "name": "DQ4",
+      "line": 85757,
+      "description": "Request builder factory",
+      "category": "factory"
+    },
+    {
+      "name": "sX1",
+      "line": 86073,
+      "description": "HTTP auth scheme middleware",
+      "category": "middleware"
+    },
+    {
+      "name": "Oc0",
+      "line": 86150,
+      "description": "HTTP signing middleware",
+      "category": "middleware"
+    },
+    {
+      "name": "Tc0",
+      "line": 86190,
+      "description": "Create paginator generator",
+      "category": "factory"
+    },
+    {
+      "name": "cQ4",
+      "line": 86278,
+      "description": "Memoize identity provider",
+      "category": "utility"
+    },
+    {
+      "name": "Fh4",
+      "line": 120000,
+      "description": "Validate process credentials",
+      "category": "validator"
+    },
+    {
+      "name": "Ch4",
+      "line": 120027,
+      "description": "Resolve process credentials",
+      "category": "async"
+    },
+    {
+      "name": "Vh4",
+      "line": 120055,
+      "description": "fromProcess factory",
+      "category": "factory"
+    },
+    {
+      "name": "Hh4",
+      "line": 120101,
+      "description": "fromWebToken provider",
+      "category": "async"
+    },
+    {
+      "name": "Lh4",
+      "line": 120151,
+      "description": "fromTokenFile provider",
+      "category": "async"
+    },
+    {
+      "name": "gh4",
+      "line": 120289,
+      "description": "Resolve assume role credentials",
+      "category": "async"
+    },
+    {
+      "name": "YWB",
+      "line": 120391,
+      "description": "Resolve profile data",
+      "category": "async"
+    },
+    {
+      "name": "ih4",
+      "line": 120406,
+      "description": "fromIni factory",
+      "category": "factory"
+    },
+    {
+      "name": "Bg4",
+      "line": 120463,
+      "description": "Remote provider EC2/ECS",
+      "category": "async"
+    },
+    {
+      "name": "Qg4",
+      "line": 120485,
+      "description": "Default credential provider chain",
+      "category": "async"
+    },
+    {
+      "name": "zWB",
+      "line": 120587,
+      "description": "Convert iterable to Buffer",
+      "category": "async"
+    },
+    {
+      "name": "Eg4",
+      "line": 120747,
+      "description": "Parse proxy response",
+      "category": "parser"
+    },
+    {
+      "name": "D78",
+      "line": 150235,
+      "description": "Serialize AssumeRole",
+      "category": "serialization"
+    },
+    {
+      "name": "E78",
+      "line": 150244,
+      "description": "Serialize AssumeRoleWithWebIdentity",
+      "category": "serialization"
+    },
+    {
+      "name": "H78",
+      "line": 150253,
+      "description": "Deserialize AssumeRole response",
+      "category": "deserialization"
+    },
+    {
+      "name": "z78",
+      "line": 150262,
+      "description": "Deserialize AssumeRoleWithWebIdentity",
+      "category": "deserialization"
+    },
+    {
+      "name": "UyB",
+      "line": 150271,
+      "description": "Deserialize STS error",
+      "category": "error"
+    },
+    {
+      "name": "j_",
+      "line": 150563,
+      "description": "Deserialize response metadata",
+      "category": "deserialization"
+    },
+    {
+      "name": "NyB",
+      "line": 150570,
+      "description": "Build HTTP RPC request",
+      "category": "utility"
+    },
+    {
+      "name": "e78",
+      "line": 150677,
+      "description": "Default role assumer factory",
+      "category": "factory"
+    },
+    {
+      "name": "AG8",
+      "line": 150716,
+      "description": "Role assumer with web identity",
+      "category": "factory"
+    },
+    {
+      "name": "BG8",
+      "line": 150773,
+      "description": "Decorate credential provider",
+      "category": "utility"
+    },
+    {
+      "name": "IZ8",
+      "line": 151308,
+      "description": "Default credential provider",
+      "category": "async"
+    }
+  ],
+  "classes": [
+    {
+      "name": "td0",
+      "line": 85339,
+      "description": "NumericValue class",
+      "extends": null,
+      "category": "data"
+    },
+    {
+      "name": "Dc0",
+      "line": 85476,
+      "description": "Base HTTP protocol class",
+      "extends": null,
+      "category": "protocol"
+    },
+    {
+      "name": "FQ4",
+      "line": 85585,
+      "description": "HttpBindingProtocol",
+      "extends": "Dc0",
+      "category": "protocol"
+    },
+    {
+      "name": "VQ4",
+      "line": 85702,
+      "description": "RpcProtocol",
+      "extends": "Dc0",
+      "category": "protocol"
+    },
+    {
+      "name": "Hc0",
+      "line": 85760,
+      "description": "RequestBuilder",
+      "extends": null,
+      "category": "utility"
+    },
+    {
+      "name": "hQ4",
+      "line": 86227,
+      "description": "DefaultIdentityProviderConfig",
+      "extends": null,
+      "category": "auth"
+    },
+    {
+      "name": "gQ4",
+      "line": 86240,
+      "description": "HttpApiKeyAuthSigner",
+      "extends": null,
+      "category": "auth"
+    },
+    {
+      "name": "uQ4",
+      "line": 86256,
+      "description": "HttpBearerAuthSigner",
+      "extends": null,
+      "category": "auth"
+    },
+    {
+      "name": "mQ4",
+      "line": 86266,
+      "description": "NoAuthSigner",
+      "extends": null,
+      "category": "auth"
+    },
+    {
+      "name": "J24",
+      "line": 86428,
+      "description": "EndpointCache",
+      "extends": null,
+      "category": "cache"
+    },
+    {
+      "name": "JH",
+      "line": 86494,
+      "description": "EndpointError",
+      "extends": "Error",
+      "category": "error"
+    },
+    {
+      "name": "NWB",
+      "line": 120659,
+      "description": "Agent base class",
+      "extends": "http.Agent",
+      "category": "network"
+    },
+    {
+      "name": "bE1",
+      "line": 120869,
+      "description": "HttpsProxyAgent",
+      "extends": "Agent",
+      "category": "network"
+    },
+    {
+      "name": "ZY",
+      "line": 121013,
+      "description": "UndiciError base",
+      "extends": "Error",
+      "category": "error"
+    },
+    {
+      "name": "yWB",
+      "line": 121019,
+      "description": "ConnectTimeoutError",
+      "extends": "ZY",
+      "category": "error"
+    },
+    {
+      "name": "kWB",
+      "line": 121025,
+      "description": "HeadersTimeoutError",
+      "extends": "ZY",
+      "category": "error"
+    },
+    {
+      "name": "GyB",
+      "line": 150012,
+      "description": "STSClient",
+      "extends": "Client",
+      "category": "client"
+    },
+    {
+      "name": "P_",
+      "line": 150094,
+      "description": "STSServiceException",
+      "extends": "ServiceException",
+      "category": "error"
+    },
+    {
+      "name": "WyB",
+      "line": 150115,
+      "description": "ExpiredTokenException",
+      "extends": "P_",
+      "category": "error"
+    },
+    {
+      "name": "yq1",
+      "line": 150633,
+      "description": "AssumeRoleCommand",
+      "extends": "Command",
+      "category": "command"
+    },
+    {
+      "name": "kq1",
+      "line": 150644,
+      "description": "AssumeRoleWithWebIdentityCommand",
+      "extends": "Command",
+      "category": "command"
+    },
+    {
+      "name": "PyB",
+      "line": 150656,
+      "description": "STS aggregated client",
+      "extends": "STSClient",
+      "category": "client"
+    }
+  ],
+  "exports": [
+    {
+      "name": "fromBase64",
+      "line": 85381,
+      "module": "util-base64"
+    },
+    {
+      "name": "toBase64",
+      "line": 85397,
+      "module": "util-base64"
+    },
+    {
+      "name": "HttpBindingProtocol",
+      "line": 85444,
+      "module": "core/protocols"
+    },
+    {
+      "name": "RpcProtocol",
+      "line": 85448,
+      "module": "core/protocols"
+    },
+    {
+      "name": "collectBody",
+      "line": 85450,
+      "module": "core/protocols"
+    },
+    {
+      "name": "DefaultIdentityProviderConfig",
+      "line": 86027,
+      "module": "core/auth"
+    },
+    {
+      "name": "httpAuthSchemeMiddleware",
+      "line": 86040,
+      "module": "core/auth"
+    },
+    {
+      "name": "httpSigningMiddleware",
+      "line": 86042,
+      "module": "core/auth"
+    },
+    {
+      "name": "EndpointCache",
+      "line": 86420,
+      "module": "util-endpoints"
+    },
+    {
+      "name": "resolveEndpoint",
+      "line": 86425,
+      "module": "util-endpoints"
+    },
+    {
+      "name": "fromProcess",
+      "line": 120063,
+      "module": "credential-provider-process"
+    },
+    {
+      "name": "fromWebToken",
+      "line": 120137,
+      "module": "credential-provider-web-identity"
+    },
+    {
+      "name": "fromTokenFile",
+      "line": 120170,
+      "module": "credential-provider-web-identity"
+    },
+    {
+      "name": "fromIni",
+      "line": 120421,
+      "module": "credential-provider-ini"
+    },
+    {
+      "name": "defaultProvider",
+      "line": 120545,
+      "module": "credential-provider-node"
+    },
+    {
+      "name": "Agent",
+      "line": 120732,
+      "module": "agent-base"
+    },
+    {
+      "name": "HttpsProxyAgent",
+      "line": 120929,
+      "module": "https-proxy-agent"
+    },
+    {
+      "name": "STSClient",
+      "line": 150037,
+      "module": "client-sts"
+    },
+    {
+      "name": "AssumeRoleCommand",
+      "line": 150065,
+      "module": "client-sts"
+    },
+    {
+      "name": "AssumeRoleWithWebIdentityCommand",
+      "line": 150067,
+      "module": "client-sts"
+    },
+    {
+      "name": "getDefaultRoleAssumer",
+      "line": 150082,
+      "module": "client-sts"
+    },
+    {
+      "name": "getDefaultRoleAssumerWithWebIdentity",
+      "line": 150083,
+      "module": "client-sts"
+    },
+    {
+      "name": "decorateDefaultCredentialProvider",
+      "line": 150081,
+      "module": "client-sts"
+    }
+  ],
+  "patterns": {
+    "moduleWrapper": {
+      "pattern": "var X = z((exports) => {...})",
+      "description": "CommonJS module wrapper using z() function for lazy loading",
+      "occurrences": 89
+    },
+    "functionNaming": {
+      "pattern": "fG(this, FunctionName)",
+      "description": "Named function definition with minified name wrapper",
+      "occurrences": 142
+    },
+    "classNaming": {
+      "pattern": "static { a8(this, ClassName) }",
+      "description": "Class name registration for debugging/reflection",
+      "occurrences": 142
+    },
+    "asyncFactory": {
+      "pattern": "async function X() => ...",
+      "description": "Async factory functions for lazy credential resolution",
+      "occurrences": 47
+    },
+    "errorExtension": {
+      "pattern": "class X extends ServiceException",
+      "description": "Service-specific error classes",
+      "occurrences": 28
+    }
+  },
+  "keyFunctionalAreas": [
+    {
+      "name": "Data Serialization",
+      "lines": [
+        85001,
+        85500
+      ],
+      "description": "Type parsing, validation, date handling, base64 encoding"
+    },
+    {
+      "name": "HTTP Protocol Implementation",
+      "lines": [
+        85420,
+        86000
+      ],
+      "description": "HTTP binding and RPC protocol implementations"
+    },
+    {
+      "name": "Authentication Framework",
+      "lines": [
+        86001,
+        86400
+      ],
+      "description": "Auth schemes, identity providers, signing middleware"
+    },
+    {
+      "name": "Endpoint Resolution",
+      "lines": [
+        86400,
+        87000
+      ],
+      "description": "Endpoint caching, validation, and resolution logic"
+    },
+    {
+      "name": "Credential Providers",
+      "lines": [
+        120000,
+        121200
+      ],
+      "description": "AWS credential provider chain (process, web identity, INI, SSO, IMDS)"
+    },
+    {
+      "name": "HTTP Client Infrastructure",
+      "lines": [
+        121000,
+        122000
+      ],
+      "description": "Undici HTTP client, proxy agents, error handling"
+    },
+    {
+      "name": "STS Client",
+      "lines": [
+        150000,
+        151400
+      ],
+      "description": "AWS STS client for AssumeRole and web identity operations"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Libraries directory
+# Add shared libraries here using: nx generate @nx/nest:library <name>

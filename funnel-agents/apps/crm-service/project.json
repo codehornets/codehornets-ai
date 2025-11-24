@@ -1,0 +1,40 @@
+{
+  "name": "crm-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/crm-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/crm-service",
+        "main": "apps/crm-service/src/main.ts",
+        "tsConfig": "apps/crm-service/tsconfig.app.json",
+        "assets": ["apps/crm-service/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "crm-service:build",
+        "watch": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/crm-service"],
+      "options": {
+        "jestConfig": "apps/crm-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/crm-service/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["scope:crm", "type:microservice"]
+}

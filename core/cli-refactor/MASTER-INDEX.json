@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "file": "cli.js",
+    "totalLines": 421069,
+    "analysisDate": "2025-11-21",
+    "description": "Bundled Claude Code CLI application - complete function index by section"
+  },
+  "overview": {
+    "totalFunctions": "~1600+",
+    "totalClasses": "~200+",
+    "totalModules": "~100+",
+    "bundler": "esbuild/webpack",
+    "uiFramework": "React + Ink (terminal UI)",
+    "mainEntryPoint": {
+      "function": "h4I",
+      "line": 421050
+    }
+  },
+  "sections": [
+    {
+      "section": 1,
+      "lineRange": "1-85000",
+      "totalFunctions": 656,
+      "totalClasses": 29,
+      "keyAreas": [
+        { "name": "Lodash Utilities", "lines": "1-3050", "description": "Deep clone, isEqual, memoize, mapValues, etc." },
+        { "name": "IO and Logging", "lines": "3053-3110", "description": "Console output and log filtering" },
+        { "name": "Filesystem", "lines": "3110-3285", "description": "File system abstraction with symlink support" },
+        { "name": "Configuration", "lines": "3287-3400", "description": "Environment and config management" },
+        { "name": "Session State", "lines": "3409-3800", "description": "Session ID, costs, usage tracking" },
+        { "name": "CLI Parsing", "lines": "5276-5640", "description": "Command-line argument parsing" },
+        { "name": "Terminal", "lines": "8352-8600", "description": "ANSI formatting, text wrapping, boxing" },
+        { "name": "AWS SDK Core", "lines": "80900-85000", "description": "Smithy protocol types and HTTP middleware" }
+      ],
+      "keyFunctions": [
+        { "name": "o21", "line": 1119, "description": "Memoize function" },
+        { "name": "hNA", "line": 1860, "description": "Deep clone implementation" },
+        { "name": "BI9", "line": 3409, "description": "Creates initial session state" },
+        { "name": "L0", "line": 3460, "description": "Gets current session ID" },
+        { "name": "dB", "line": 3287, "description": "Gets claude config directory" },
+        { "name": "xY", "line": 5276, "description": "Parses command line arguments" },
+        { "name": "IQ", "line": 7933, "description": "Logs message to console" }
+      ],
+      "keyExports": ["cloneDeep", "isEqual", "mapValues", "reject", "sample", "setWith", "sumBy", "uniqBy", "zipObject"]
+    },
+    {
+      "section": 2,
+      "lineRange": "85001-170000",
+      "totalFunctions": 847,
+      "totalClasses": 142,
+      "keyAreas": [
+        { "name": "Data Serialization", "lines": "85001-85500", "description": "Type parsing, date handling, base64" },
+        { "name": "HTTP Protocol", "lines": "85420-86000", "description": "HTTP binding and RPC protocol" },
+        { "name": "Authentication", "lines": "86001-86400", "description": "Auth schemes, identity providers, signing" },
+        { "name": "Endpoint Resolution", "lines": "86400-87000", "description": "Endpoint caching and resolution" },
+        { "name": "Credential Providers", "lines": "120000-121200", "description": "AWS credentials (process, web identity, INI, SSO, IMDS)" },
+        { "name": "HTTP Client", "lines": "121000-122000", "description": "Undici, proxy agents, error handling" },
+        { "name": "STS Client", "lines": "150000-151400", "description": "AWS STS AssumeRole operations" }
+      ],
+      "keyFunctions": [
+        { "name": "aB4", "line": 85375, "description": "Decode base64 to Uint8Array" },
+        { "name": "oB4", "line": 85390, "description": "Encode to base64" },
+        { "name": "Vh4", "line": 120055, "description": "fromProcess credential factory" },
+        { "name": "ih4", "line": 120406, "description": "fromIni credential factory" },
+        { "name": "Qg4", "line": 120485, "description": "Default credential provider chain" },
+        { "name": "e78", "line": 150677, "description": "Default role assumer factory" }
+      ],
+      "keyClasses": [
+        { "name": "GyB (STSClient)", "line": 150012 },
+        { "name": "bE1 (HttpsProxyAgent)", "line": 120869 },
+        { "name": "FQ4 (HttpBindingProtocol)", "line": 85585 },
+        { "name": "VQ4 (RpcProtocol)", "line": 85702 }
+      ]
+    },
+    {
+      "section": 3,
+      "lineRange": "170001-255000",
+      "totalFunctions": 32,
+      "totalClasses": 7,
+      "keyAreas": [
+        { "name": "IDNA/Punycode", "lines": "170001-186463", "description": "Unicode IDNA processing, domain names" },
+        { "name": "URL Parser", "lines": "186614-187272", "description": "WHATWG URL Standard implementation" },
+        { "name": "IDE Integration", "lines": "252000-252824", "description": "VS Code, Cursor, Windsurf, JetBrains" },
+        { "name": "Diagnostics", "lines": "252825-252975", "description": "IDE diagnostics manager" },
+        { "name": "React Components", "lines": "252976-253558", "description": "Message rendering" },
+        { "name": "Diff Utilities", "lines": "253688-253758", "description": "Diff generation" },
+        { "name": "LSP Core", "lines": "253800-255000", "description": "JSON-RPC, Events, Message I/O" }
+      ],
+      "keyFunctions": [
+        { "name": "X_8", "line": 186400, "description": "toASCII - punycode conversion" },
+        { "name": "W_8", "line": 186438, "description": "toUnicode conversion" },
+        { "name": "XY", "line": 186924, "description": "URL state machine parser" },
+        { "name": "Ax8", "line": 187194, "description": "Serialize URL" },
+        { "name": "ZiA", "line": 252544, "description": "Detect running IDEs" },
+        { "name": "jx", "line": 253367, "description": "Render message - main" },
+        { "name": "dqQ", "line": 253711, "description": "Create diff hunks" }
+      ],
+      "keyClasses": [
+        { "name": "k8A", "line": 252086, "description": "WSL path converter" },
+        { "name": "LO", "line": 252825, "description": "Diagnostics manager" },
+        { "name": "Px1 (LinkedMap)", "line": 254028 },
+        { "name": "wNQ (LRUCache)", "line": 254256 },
+        { "name": "mNQ (Semaphore)", "line": 254542 }
+      ]
+    },
+    {
+      "section": 4,
+      "lineRange": "255001-340000",
+      "totalFunctions": 16,
+      "totalClasses": 10,
+      "keyAreas": [
+        { "name": "OpenTelemetry Metrics", "lines": "330076-330450", "description": "Histogram aggregation" },
+        { "name": "OpenTelemetry Propagation", "lines": "330715", "description": "W3C Baggage propagator" },
+        { "name": "OpenTelemetry Core", "lines": "330754", "description": "AnchoredClock for time sync" },
+        { "name": "OpenTelemetry Attributes", "lines": "330820", "description": "Attribute sanitization" },
+        { "name": "OpenTelemetry Semantic", "lines": "330900", "description": "Semantic attribute constants" },
+        { "name": "OpenTelemetry Protobuf", "lines": "338100-338750", "description": "Trace export protobuf" }
+      ],
+      "keyFunctions": [
+        { "name": "B92", "line": 330076, "description": "HistogramAggregator" },
+        { "name": "G92", "line": 330450, "description": "ExponentialHistogramAggregator" },
+        { "name": "p92", "line": 330715, "description": "W3CBaggagePropagator" },
+        { "name": "a92", "line": 330754, "description": "AnchoredClock" }
+      ],
+      "keyClasses": [
+        { "name": "B92 (HistogramAggregator)", "line": 330076 },
+        { "name": "mi1 (Buckets)", "line": 330083 },
+        { "name": "H92 (ExponentMapping)", "line": 330259 },
+        { "name": "ResourceSpans", "line": 338100 },
+        { "name": "Span", "line": 338400 }
+      ]
+    },
+    {
+      "section": 5,
+      "lineRange": "340001-421069",
+      "totalFunctions": 43,
+      "totalClasses": 13,
+      "keyAreas": [
+        { "name": "OpenTelemetry Protobuf", "lines": "340001-345000", "description": "Metrics protobuf definitions" },
+        { "name": "gRPC Infrastructure", "lines": "345001-360000", "description": "Load balancing, connectivity, calls" },
+        { "name": "Session Management", "lines": "360001-380000", "description": "Session and React UI" },
+        { "name": "Tool Implementations", "lines": "380001-410000", "description": "File processing (Read, Image, PDF, Notebook)" },
+        { "name": "MCP Server", "lines": "410001-420000", "description": "MCP server and plugin management" },
+        { "name": "CLI Commands", "lines": "420001-421069", "description": "Command definitions and main entry" }
+      ],
+      "keyFunctions": [
+        { "name": "ep5", "line": 365100, "description": "Fetch remote session events" },
+        { "name": "Ht1", "line": 365200, "description": "Create remote session connection" },
+        { "name": "renderMainUI", "line": 375400, "description": "Main UI rendering" },
+        { "name": "readFileContent", "line": 400100, "description": "Read file with encoding detection" },
+        { "name": "processPDF", "line": 400300, "description": "Extract PDF content" },
+        { "name": "processNotebook", "line": 400400, "description": "Parse Jupyter notebooks" },
+        { "name": "MCPServer.initialize", "line": 415100, "description": "Initialize MCP server" },
+        { "name": "registerHook", "line": 415700, "description": "Register tool lifecycle hook" },
+        { "name": "h4I", "line": 421050, "description": "MAIN ENTRY POINT" }
+      ],
+      "cliCommands": ["mcp", "plugin", "doctor", "update"],
+      "mcpSubcommands": ["servers", "tools", "info", "call", "grep", "resources", "read"],
+      "hookEventTypes": ["PreToolExecution", "PostToolExecution", "Notification", "Stop"]
+    }
+  ],
+  "architectureSummary": {
+    "bundlingPatterns": {
+      "T(() => {...})": "Lazy initialization wrapper",
+      "z((exports, module) => {...})": "CommonJS-style module wrapper",
+      "E$(target, exports)": "Export spreading pattern",
+      "IA(module, 1)": "ESM interop import"
+    },
+    "majorDependencies": [
+      "AWS SDK v3 (@aws-sdk/*)",
+      "@smithy/* (Smithy protocols)",
+      "OpenTelemetry (metrics, tracing, propagation)",
+      "gRPC (connectivity, load balancing)",
+      "React + Ink (terminal UI)",
+      "Undici (HTTP client)",
+      "Lodash-style utilities"
+    ],
+    "functionalDomains": [
+      { "domain": "Core Utilities", "sections": [1], "description": "Lodash utilities, config, session" },
+      { "domain": "AWS Integration", "sections": [1, 2], "description": "SDK, credentials, STS" },
+      { "domain": "Network/Protocol", "sections": [2, 3], "description": "HTTP, URL parsing, proxy" },
+      { "domain": "IDE Integration", "sections": [3], "description": "VS Code, JetBrains, diagnostics" },
+      { "domain": "Observability", "sections": [4, 5], "description": "OpenTelemetry metrics/tracing" },
+      { "domain": "gRPC", "sections": [5], "description": "Load balancing, calls, channels" },
+      { "domain": "UI/UX", "sections": [3, 5], "description": "React components, message rendering" },
+      { "domain": "Tools/MCP", "sections": [5], "description": "File tools, MCP server, plugins" },
+      { "domain": "CLI", "sections": [1, 5], "description": "Argument parsing, commands, entry point" }
+    ]
+  }
+}

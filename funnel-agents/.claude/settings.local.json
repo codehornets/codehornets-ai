@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(xargs:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(npx nx show:*)",
+      "Bash(npx nx:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

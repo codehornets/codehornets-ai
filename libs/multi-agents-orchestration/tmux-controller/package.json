@@ -1,0 +1,23 @@
+{
+  "name": "tmux-controller",
+  "version": "1.0.0",
+  "description": "Node.js controller for sending commands to Claude Code TUI via tmux",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "status": "node index.js status",
+    "send": "node index.js send"
+  },
+  "keywords": [
+    "tmux",
+    "claude",
+    "docker",
+    "automation",
+    "codehornets"
+  ],
+  "author": "CodeHornets",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

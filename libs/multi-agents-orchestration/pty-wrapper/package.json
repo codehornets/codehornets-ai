@@ -1,0 +1,25 @@
+{
+  "name": "pty-wrapper",
+  "version": "1.0.0",
+  "description": "PTY wrapper for bidirectional Claude CLI communication",
+  "type": "module",
+  "main": "src/wrapper.js",
+  "scripts": {
+    "start": "node src/wrapper.js",
+    "client": "node src/client.js",
+    "test": "node src/test.js"
+  },
+  "keywords": [
+    "pty",
+    "claude",
+    "wrapper",
+    "ipc"
+  ],
+  "author": "CodeHornets AI",
+  "license": "ISC",
+  "dependencies": {
+    "node-pty": "^1.0.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.11.0"
+  }
+}

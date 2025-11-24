@@ -1,0 +1,40 @@
+{
+  "name": "content-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/content-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/content-service",
+        "main": "apps/content-service/src/main.ts",
+        "tsConfig": "apps/content-service/tsconfig.app.json",
+        "assets": ["apps/content-service/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "content-service:build",
+        "watch": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/content-service"],
+      "options": {
+        "jestConfig": "apps/content-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/content-service/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["scope:content", "type:microservice"]
+}

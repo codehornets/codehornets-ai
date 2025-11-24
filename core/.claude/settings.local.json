@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(node -e:*)",
+      "Bash(\"C:/workspace/@codehornets-ai/core/cli-refactor/section-5-functions.json\")",
+      "Bash(\"C:/workspace/@codehornets-ai/core/cli-refactor/section-3-functions.json\")",
+      "Bash(cat:*)",
+      "Bash(\"C:/workspace/@codehornets-ai/core/cli-refactor/build-json.js\")",
+      "Bash(python3:*)",
+      "Bash(node -p:*)",
+      "Bash(\"C:/workspace/@codehornets-ai/core/cli-refactor/section-2-functions.json\")",
+      "Bash(printf:*)",
+      "Bash(\"C:/workspace/@codehornets-ai/core/cli-refactor/gen.js\")",
+      "Bash(node:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm install:*)",
+      "Bash(npm show:*)",
+      "Bash(npx --yes typescript@5.3.0:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm view:*)",
+      "Bash(where:*)",
+      "Bash(for f in \"C:\\workspace\\@codehornets-ai\\core\\cli-refactor\\src\\core\"/*.ts)",
+      "Bash(done)",
+      "Bash(npm run build:*)",
+      "Bash(find:*)",
+      "Bash(chmod:*)",
+      "Bash(npm link:*)",
+      "Bash(claude-refactor:*)",
+      "Bash(echo:*)",
+      "Bash(timeout 10 node:*)",
+      "Bash(timeout 5 node:*)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

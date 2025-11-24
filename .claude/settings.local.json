@@ -75,7 +75,13 @@
       "Bash(git commit:*)",
       "Bash(/home/anga/workspace/beta/codehornets-ai/tools/validate_hooks_installation.sh)",
       "Bash(node cli.js:*)",
-      "Bash(./build-custom-images.sh:*)"
+      "Bash(./build-custom-images.sh:*)",
+      "mcp__MCP_DOCKER__mcp-find",
+      "Bash(xargs:*)",
+      "Bash(dir \"C:\\workspace\\@codehornets-ai\\funnel-agents\")",
+      "Bash(test:*)",
+      "Bash(printf:*)",
+      "Bash(\"C:/workspace/@codehornets-ai/funnel-agents/README.md\")"
     ],
     "deny": [
       "Read(*.csv)",

@@ -76,3 +76,6 @@
 [DEBUG] Applied original permissions to temp file
 [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763774622754 to /home/agent/.claude.json
 [DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Skipping SessionEnd:other hook execution - workspace trust not accepted
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763774621469-hzohpp.sh
+[DEBUG] LSP server manager shut down successfully

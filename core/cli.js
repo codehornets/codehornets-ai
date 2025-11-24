@@ -421046,6 +421046,7 @@ async function vt2(A) {
 process.env.COREPACK_ENABLE_AUTO_PIN = "0";
 II("cli_entry");
 II("cli_imports_loaded");
+
 async function h4I() {
     if (pJ() && process.argv[2] === "--mcp-cli") {
         let B = process.argv.slice(3);

@@ -346,3 +346,71 @@ make heartbeat   # Check health
 make logs        # View logs
 make help        # Show all available commands
 ```
+
+## Agent Communication
+
+The orchestration system supports multiple communication strategies for inter-agent messaging:
+
+### Available Strategies
+
+| Strategy | Latency | Best For |
+|----------|---------|----------|
+| PTY Wrapper | ~5ms | High-throughput, low-latency |
+| tmux Send-Keys | ~20ms | Interactive sessions |
+| Shared Volume | ~15ms | Cross-platform compatibility |
+
+### Quick Examples
+
+```bash
+# Send task to worker
+node examples/send-task.js anga "Review the authentication code"
+
+# Monitor all agents
+node examples/monitor-agents.js
+
+# Send batch commands
+node examples/batch-commands.js --parallel
+```
+
+### Communication API
+
+```javascript
+const AgentComm = require('./lib/agent-comm');
+
+const comm = new AgentComm({
+  strategy: 'auto',        // auto-select best strategy
+  retryAttempts: 3,
+  timeout: 30000
+});
+
+await comm.initialize();
+
+// Send to specific agent
+await comm.send('anga', { type: 'task', action: 'review code' });
+
+// Broadcast to all workers
+await comm.broadcast(['marie', 'anga', 'fabien'], {
+  type: 'announcement',
+  message: 'System maintenance in 10 minutes'
+});
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suite
+npm run test:tmux
+npm run test:pty
+npm run test:integration
+
+# Run benchmarks
+npm run benchmark
+```
+
+See [docs/COMMUNICATION.md](docs/COMMUNICATION.md) for detailed documentation on:
+- [tmux Guide](docs/TMUX-GUIDE.md) - tmux communication approach
+- [PTY Wrapper Guide](docs/PTY-WRAPPER-GUIDE.md) - PTY wrapper implementation
+- [Migration Guide](docs/MIGRATION.md) - Migrating from file-based approach

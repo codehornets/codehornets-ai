@@ -1,0 +1,40 @@
+{
+  "name": "worker-runner",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/worker-runner/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/worker-runner",
+        "main": "apps/worker-runner/src/main.ts",
+        "tsConfig": "apps/worker-runner/tsconfig.app.json",
+        "assets": ["apps/worker-runner/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "worker-runner:build",
+        "watch": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/worker-runner"],
+      "options": {
+        "jestConfig": "apps/worker-runner/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/worker-runner/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["scope:worker", "type:background"]
+}

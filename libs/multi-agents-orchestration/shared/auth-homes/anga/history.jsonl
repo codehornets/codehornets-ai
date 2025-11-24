@@ -31,3 +31,6 @@
 {"display":"Hello again Anga! This is the Orchestrator checking in. Please send a message back to confirm you're receiving these communications.","pastedContents":{},"timestamp":1763706283794,"project":"/"}
 {"display":"/msg-orchestrator \"said hello from orchestrator","pastedContents":{},"timestamp":1763706563518,"project":"/"}
 {"display":"/msg-orchestrator \"said hello from orchestrator","pastedContents":{},"timestamp":1763706563696,"project":"/"}
+{"display":"[Message from orchestrator]: Hello Anga! Testing the fixed communication. Please respond!","pastedContents":{},"timestamp":1763775349492,"project":"/","sessionId":"2faaf5e2-de64-4a2c-b22f-d2e6462584e6"}
+{"display":"what can you do ?","pastedContents":{},"timestamp":1763816096339,"project":"/","sessionId":"e7e60d06-62e2-4bfb-8092-5bc0e08d0cf6"}
+{"display":"send a message to the orchestrator to let him know that your are available","pastedContents":{},"timestamp":1763816176846,"project":"/","sessionId":"e7e60d06-62e2-4bfb-8092-5bc0e08d0cf6"}

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "projects": {},
+  "cli": {
+    "packageManager": "npm"
+  },
+  "defaultProject": "api",
+  "generators": {
+    "@nx/nest:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "jest",
+      "strict": true
+    },
+    "@nx/nest:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "strict": true,
+      "buildable": true
+    },
+    "@nx/node:application": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/node:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "buildable": true
+    }
+  }
+}
