@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Lead } from '../../../../apps/crm-service/src/leads/lead.entity';
-import { PaginationParams, PaginatedResult } from '@funnelagents/domain';
+import { Lead, PaginationParams, PaginatedResult } from '@funnelagents/domain';
 
 export interface LeadFilters {
   status?: string;

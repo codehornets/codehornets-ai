@@ -52,7 +52,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Store the token in the request for blacklist checking
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    (req as any).token = token;
+    (req as { token?: string }).token = token;
 
     return user;
   }

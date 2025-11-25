@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Lead } from './lead.entity';
+import { Lead } from '@funnelagents/domain';
 import { LeadsService } from './leads.service';
 import { LeadsController } from './leads.controller';
 

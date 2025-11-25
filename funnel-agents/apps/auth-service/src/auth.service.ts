@@ -341,7 +341,7 @@ export class AuthService {
       success: true,
     });
 
-    const { password, ...userWithoutPassword } = savedUser;
+    const { password: _password, ...userWithoutPassword } = savedUser;
     return userWithoutPassword;
   }
 
@@ -354,7 +354,7 @@ export class AuthService {
     const user = await this.validateUser(userId);
 
     // Extract token expiry from JWT
-    const decoded = this.jwtService.decode(token) as any;
+    const decoded = this.jwtService.decode(token) as { exp: number };
     const expires_at = new Date(decoded.exp * 1000);
 
     // Add token to blacklist

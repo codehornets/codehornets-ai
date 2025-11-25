@@ -32,7 +32,4 @@ module.exports = {
     },
   },
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-  moduleNameMapper: {
-    '^@funnelagents/(.*)$': '<rootDir>/libs/$1/src',
-  },
 };

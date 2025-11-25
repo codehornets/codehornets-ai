@@ -9,7 +9,7 @@ export interface AuditLogParams {
   action: AuditAction;
   ip_address?: string;
   user_agent?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   success?: boolean;
   error_message?: string;
 }

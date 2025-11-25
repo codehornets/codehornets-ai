@@ -1,6 +1,5 @@
 import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 import { TokenBlacklistService } from '../services/token-blacklist.service';
 import { Reflector } from '@nestjs/core';
 
@@ -23,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = (request as any).token;
+    const token = (request as { token?: string }).token;
 
     if (token) {
       const isBlacklisted = await this.tokenBlacklistService.isBlacklisted(token);

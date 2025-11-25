@@ -262,7 +262,7 @@ export class WorkflowProcessor extends BaseQueueProcessor<WorkflowJobData> {
       throw new Error('Workflow has no trigger node');
     }
 
-    let nodesExecuted = 0;
+    const nodesExecuted = 0;
     const progressIncrement = 70 / workflow.nodes.length; // 10-80% for node execution
 
     // Execute nodes starting from trigger

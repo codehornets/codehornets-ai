@@ -98,8 +98,8 @@ export class LeadsController {
     @Query('minScore') minScore?: number,
     @Query('maxScore') maxScore?: number,
     @Query('search') search?: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
   ) {
     const filters = {
       status,
@@ -175,8 +175,8 @@ export class LeadActivitiesController {
   async getAllActivities(
     @Query('lead_id') lead_id?: string,
     @Query('type') type?: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
   ) {
     const filters = {
       lead_id,
@@ -219,8 +219,8 @@ export class DealsController {
     @Query('stage') stage?: string,
     @Query('workspace_id') workspace_id?: string,
     @Query('contact_id') contact_id?: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
   ) {
     const filters = {
       stage,

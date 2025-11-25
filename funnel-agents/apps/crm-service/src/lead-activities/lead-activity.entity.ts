@@ -6,7 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Lead } from '../leads/lead.entity';
+import { Lead } from '@funnelagents/domain';
 
 @Entity('lead_activities')
 export class LeadActivity {

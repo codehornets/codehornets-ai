@@ -15,7 +15,7 @@ export { WorkspacesController } from './workspaces/workspaces.controller';
 export { WorkspacesModule } from './workspaces/workspaces.module';
 
 // Leads
-export { Lead } from './leads/lead.entity';
+export { Lead } from '@funnelagents/domain';
 export { CreateLeadDto } from './leads/dto/create-lead.dto';
 export { UpdateLeadDto } from './leads/dto/update-lead.dto';
 export { FilterLeadDto } from './leads/dto/filter-lead.dto';

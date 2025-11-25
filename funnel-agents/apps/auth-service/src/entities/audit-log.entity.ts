@@ -45,7 +45,7 @@ export class AuditLog {
   user_agent?: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 
   @Column({ default: true })
   success: boolean;
