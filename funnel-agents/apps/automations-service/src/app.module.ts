@@ -14,17 +14,31 @@ import { WorkflowRun } from './workflow-runs/entities/workflow-run.entity';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST', 'localhost'),
-        port: configService.get<number>('DB_PORT', 5432),
-        username: configService.get('DB_USERNAME', 'postgres'),
-        password: configService.get('DB_PASSWORD', 'postgres'),
-        database: configService.get('DB_DATABASE', 'funnelagents'),
-        entities: [Workflow, WorkflowRun],
-        synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
-        logging: configService.get('DB_LOGGING', 'false') === 'true',
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities: [Workflow, WorkflowRun],
+            synchronize: configService.get('NODE_ENV') !== 'production',
+            logging: configService.get('NODE_ENV') === 'development',
+          };
+        }
+
+        return {
+          type: 'postgres',
+          host: configService.get('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get('DB_USERNAME', 'funnel_agents'),
+          password: configService.get('DB_PASSWORD', 'secret'),
+          database: configService.get('DB_DATABASE', 'funnel_agents'),
+          entities: [Workflow, WorkflowRun],
+          synchronize: configService.get('NODE_ENV') !== 'production',
+          logging: configService.get('NODE_ENV') === 'development',
+        };
+      },
       inject: [ConfigService],
     }),
     WorkflowsModule,

@@ -15,7 +15,7 @@ import { BaseRepository } from '../base.repository';
 
 @Injectable()
 export class AgentTuningRepository
-  extends BaseRepository<AgentTuningDbEntity>
+  extends BaseRepository<AgentTuningDbEntity, AgentPerformanceTuning>
   implements IAgentTuningRepository
 {
   constructor(
@@ -25,18 +25,7 @@ export class AgentTuningRepository
     super(repository);
   }
 
-  async findById(id: string): Promise<AgentPerformanceTuning | null> {
-    const entity = await super.findById(id);
-    return entity ? this.toDomain(entity) : null;
-  }
-
-  async findAll(params?: PaginationParams): Promise<PaginatedResult<AgentPerformanceTuning>> {
-    const result = await super.findAll(params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
-  }
+  // findById and findAll now use base class implementations with toDomain mapping
 
   async findByAgentId(
     agentId: string,
@@ -46,11 +35,7 @@ export class AgentTuningRepository
       .createQueryBuilder('tuning')
       .where('tuning.agent_id = :agentId', { agentId });
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
   async findWithFilters(
@@ -73,20 +58,12 @@ export class AgentTuningRepository
       queryBuilder.andWhere('tuning.applied_at IS NOT NULL');
     }
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
-  async save(tuning: AgentPerformanceTuning): Promise<AgentPerformanceTuning> {
-    const entity = this.toDatabase(tuning);
-    const saved = await super.save(entity);
-    return this.toDomain(saved);
-  }
+  // save now uses base class implementation with toDatabase/toDomain mapping
 
-  private toDomain(entity: AgentTuningDbEntity): AgentPerformanceTuning {
+  protected override toDomain(entity: AgentTuningDbEntity): AgentPerformanceTuning {
     return AgentPerformanceTuning.reconstitute(
       {
         agentId: entity.agent_id,
@@ -101,7 +78,7 @@ export class AgentTuningRepository
     );
   }
 
-  private toDatabase(tuning: AgentPerformanceTuning): Partial<AgentTuningDbEntity> {
+  protected override toDatabase(tuning: AgentPerformanceTuning): Partial<AgentTuningDbEntity> {
     return {
       id: tuning.id.value,
       agent_id: tuning.agentId,

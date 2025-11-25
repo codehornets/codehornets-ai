@@ -73,8 +73,9 @@ export class AgentFeedbackController {
         meta: result.meta,
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       throw new HttpException(
-        { success: false, error: { code: 'FETCH_ERROR', message: error.message } },
+        { success: false, error: { code: 'FETCH_ERROR', message } },
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -102,8 +103,9 @@ export class AgentFeedbackController {
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
+      const message = error instanceof Error ? error.message : 'Unknown error';
       throw new HttpException(
-        { success: false, error: { code: 'FETCH_ERROR', message: error.message } },
+        { success: false, error: { code: 'FETCH_ERROR', message } },
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -131,8 +133,9 @@ export class AgentFeedbackController {
         data: this.toResponseDto(feedback),
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       throw new HttpException(
-        { success: false, error: { code: 'CREATE_ERROR', message: error.message } },
+        { success: false, error: { code: 'CREATE_ERROR', message } },
         HttpStatus.BAD_REQUEST
       );
     }
@@ -158,8 +161,9 @@ export class AgentFeedbackController {
         data: this.toResponseDto(feedback),
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       throw new HttpException(
-        { success: false, error: { code: 'UPDATE_ERROR', message: error.message } },
+        { success: false, error: { code: 'UPDATE_ERROR', message } },
         HttpStatus.BAD_REQUEST
       );
     }

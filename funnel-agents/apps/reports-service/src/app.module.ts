@@ -13,15 +13,14 @@ import { AnalyticsModule } from './analytics/analytics.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get<string>('DATABASE_URL');
-        const url = new URL(databaseUrl || 'postgresql://user:password@localhost:5432/funnel_agents');
+
+        if (!databaseUrl) {
+          throw new Error('DATABASE_URL is not defined in environment variables');
+        }
 
         return {
           type: 'postgres',
-          host: url.hostname,
-          port: parseInt(url.port, 10) || 5432,
-          username: url.username,
-          password: url.password,
-          database: url.pathname.substring(1),
+          url: databaseUrl,
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: configService.get('NODE_ENV') !== 'production',
           logging: configService.get('NODE_ENV') === 'development',

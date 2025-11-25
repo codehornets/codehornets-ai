@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -13,6 +14,7 @@ describe('AuthController', () => {
     register: jest.fn(),
     login: jest.fn(),
     refreshToken: jest.fn(),
+    updateProfile: jest.fn(),
   };
 
   const mockAuthResponse: AuthResponseDto = {
@@ -133,6 +135,79 @@ describe('AuthController', () => {
       const result = await controller.logout(req);
 
       expect(result).toEqual({ message: 'Logged out successfully' });
+    });
+  });
+
+  describe('updateProfile', () => {
+    it('should update user profile', async () => {
+      const mockUser = {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        password: 'hashedpassword',
+        role: 'user' as const,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+
+      const updatedUser = {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Updated Name',
+        role: 'user' as const,
+        company_name: 'New Company',
+        created_at: mockUser.created_at,
+        updated_at: new Date(),
+      };
+
+      const updateDto: UpdateProfileDto = {
+        name: 'Updated Name',
+        company_name: 'New Company',
+      };
+
+      mockAuthService.updateProfile.mockResolvedValue(updatedUser);
+
+      const req = { user: mockUser };
+      const result = await controller.updateProfile(req, updateDto);
+
+      expect(result).not.toHaveProperty('password');
+      expect(result.name).toBe('Updated Name');
+      expect(result.company_name).toBe('New Company');
+      expect(authService.updateProfile).toHaveBeenCalledWith(mockUser.id, updateDto);
+    });
+
+    it('should update onboarding status', async () => {
+      const mockUser = {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        password: 'hashedpassword',
+        role: 'user' as const,
+        onboarding_completed: false,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+
+      const updatedUser = {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: 'user' as const,
+        onboarding_completed: true,
+        created_at: mockUser.created_at,
+        updated_at: new Date(),
+      };
+
+      const updateDto: UpdateProfileDto = {
+        onboarding_completed: true,
+      };
+
+      mockAuthService.updateProfile.mockResolvedValue(updatedUser);
+
+      const req = { user: mockUser };
+      const result = await controller.updateProfile(req, updateDto);
+
+      expect(result.onboarding_completed).toBe(true);
     });
   });
 });

@@ -15,7 +15,7 @@ import { BaseRepository } from '../base.repository';
 
 @Injectable()
 export class AgentFeedbackRepository
-  extends BaseRepository<AgentFeedbackDbEntity>
+  extends BaseRepository<AgentFeedbackDbEntity, AgentFeedback>
   implements IAgentFeedbackRepository
 {
   constructor(
@@ -25,18 +25,7 @@ export class AgentFeedbackRepository
     super(repository);
   }
 
-  async findById(id: string): Promise<AgentFeedback | null> {
-    const entity = await super.findById(id);
-    return entity ? this.toDomain(entity) : null;
-  }
-
-  async findAll(params?: PaginationParams): Promise<PaginatedResult<AgentFeedback>> {
-    const result = await super.findAll(params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
-  }
+  // findById and findAll now use base class implementations with toDomain mapping
 
   async findByAgentId(
     agentId: string,
@@ -46,11 +35,7 @@ export class AgentFeedbackRepository
       .createQueryBuilder('feedback')
       .where('feedback.agent_id = :agentId', { agentId });
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
   async findWithFilters(
@@ -81,20 +66,12 @@ export class AgentFeedbackRepository
       queryBuilder.andWhere('feedback.rating <= :maxRating', { maxRating: filters.maxRating });
     }
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
-  async save(feedback: AgentFeedback): Promise<AgentFeedback> {
-    const entity = this.toDatabase(feedback);
-    const saved = await super.save(entity);
-    return this.toDomain(saved);
-  }
+  // save now uses base class implementation with toDatabase/toDomain mapping
 
-  private toDomain(entity: AgentFeedbackDbEntity): AgentFeedback {
+  protected override toDomain(entity: AgentFeedbackDbEntity): AgentFeedback {
     return AgentFeedback.reconstitute(
       {
         agentId: entity.agent_id,
@@ -108,7 +85,7 @@ export class AgentFeedbackRepository
     );
   }
 
-  private toDatabase(feedback: AgentFeedback): Partial<AgentFeedbackDbEntity> {
+  protected override toDatabase(feedback: AgentFeedback): Partial<AgentFeedbackDbEntity> {
     return {
       id: feedback.id.value,
       agent_id: feedback.agentId,

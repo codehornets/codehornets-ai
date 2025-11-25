@@ -2,10 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
 import { User } from './entities/user.entity';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
+
+// Mock bcrypt at module level
+jest.mock('bcrypt', () => ({
+  hash: jest.fn(),
+  compare: jest.fn(),
+}));
+
+import * as bcrypt from 'bcrypt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -83,7 +90,7 @@ describe('AuthService', () => {
       mockUserRepository.save.mockResolvedValue(mockUser);
       mockJwtService.sign.mockReturnValue('token');
 
-      jest.spyOn(bcrypt, 'hash').mockImplementation(() => Promise.resolve('hashedpassword'));
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
 
       const result = await service.register(registerDto);
 
@@ -115,7 +122,7 @@ describe('AuthService', () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       mockJwtService.sign.mockReturnValue('token');
 
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true));
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const result = await service.login(loginDto);
 
@@ -135,7 +142,7 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException if password is invalid', async () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
 
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false));
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
@@ -181,6 +188,75 @@ describe('AuthService', () => {
       await expect(service.refreshToken('invalid-token')).rejects.toThrow(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe('updateProfile', () => {
+    it('should update user profile successfully', async () => {
+      const updatedUser = {
+        ...mockUser,
+        name: 'Updated Name',
+        company_name: 'New Company',
+      };
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockUserRepository.save.mockResolvedValue(updatedUser);
+
+      const result = await service.updateProfile('1', {
+        name: 'Updated Name',
+        company_name: 'New Company',
+      });
+
+      expect(result).not.toHaveProperty('password');
+      expect(result.name).toBe('Updated Name');
+      expect(mockUserRepository.save).toHaveBeenCalled();
+    });
+
+    it('should update onboarding_completed flag', async () => {
+      const updatedUser = {
+        ...mockUser,
+        onboarding_completed: true,
+      };
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockUserRepository.save.mockResolvedValue(updatedUser);
+
+      const result = await service.updateProfile('1', {
+        onboarding_completed: true,
+      });
+
+      expect(result.onboarding_completed).toBe(true);
+    });
+
+    it('should throw UnauthorizedException if user not found', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.updateProfile('nonexistent', { name: 'Test' }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should update multiple profile fields at once', async () => {
+      const updatedUser = {
+        ...mockUser,
+        name: 'New Name',
+        avatar: 'https://example.com/new-avatar.jpg',
+        company_name: 'Tech Corp',
+        team_size: '10-50',
+        industry: 'Technology',
+      };
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockUserRepository.save.mockResolvedValue(updatedUser);
+
+      const result = await service.updateProfile('1', {
+        name: 'New Name',
+        avatar: 'https://example.com/new-avatar.jpg',
+        company_name: 'Tech Corp',
+        team_size: '10-50',
+        industry: 'Technology',
+      });
+
+      expect(result.name).toBe('New Name');
+      expect(result.avatar).toBe('https://example.com/new-avatar.jpg');
+      expect(result.company_name).toBe('Tech Corp');
     });
   });
 });

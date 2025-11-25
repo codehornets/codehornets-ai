@@ -138,6 +138,7 @@ export class AgentRepository implements IAgentRepository {
       {
         name: entity.name,
         type: entity.domain as any,
+        domain: entity.domain as any,
         description: entity.description,
         status: entity.status as any,
         capabilities: entity.skills.map((skill) => ({

@@ -5,7 +5,7 @@
  * with the API Gateway using NestJS microservices.
  */
 
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, Inject, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -386,7 +386,8 @@ export class ErrorHandlingExample {
       );
     } catch (error) {
       // Handle microservice errors
-      if (error.message.includes('not found')) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('not found')) {
         throw new NotFoundException(`Lead with ID ${id} not found`);
       }
       throw error;

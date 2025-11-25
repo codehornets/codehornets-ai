@@ -3,11 +3,12 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export interface DatabaseModuleOptions {
   type: 'postgres' | 'mysql' | 'sqlite';
+  url?: string;
   host?: string;
   port?: number;
   username?: string;
   password?: string;
-  database: string;
+  database?: string;
   synchronize?: boolean;
   logging?: boolean;
   entities?: any[];
@@ -49,17 +50,28 @@ export class DatabaseModule {
           imports: optionsFactory.imports,
           useFactory: async (...args: any[]) => {
             const options = await optionsFactory.useFactory(...args);
-            return {
+            const baseOptions: TypeOrmModuleOptions = {
               type: options.type,
+              synchronize: options.synchronize ?? false,
+              logging: options.logging ?? false,
+              entities: options.entities ?? [],
+              autoLoadEntities: true,
+            };
+
+            if (options.url) {
+              return {
+                ...baseOptions,
+                url: options.url,
+              };
+            }
+
+            return {
+              ...baseOptions,
               host: options.host,
               port: options.port,
               username: options.username,
               password: options.password,
               database: options.database,
-              synchronize: options.synchronize ?? false,
-              logging: options.logging ?? false,
-              entities: options.entities ?? [],
-              autoLoadEntities: true,
             };
           },
           inject: optionsFactory.inject,

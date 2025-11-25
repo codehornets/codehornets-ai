@@ -14,7 +14,7 @@ import { BaseRepository } from '../base.repository';
 
 @Injectable()
 export class AgentTemplateRepository
-  extends BaseRepository<AgentTemplateDbEntity>
+  extends BaseRepository<AgentTemplateDbEntity, AgentTemplate>
   implements IAgentTemplateRepository
 {
   constructor(
@@ -24,29 +24,14 @@ export class AgentTemplateRepository
     super(repository);
   }
 
-  async findById(id: string): Promise<AgentTemplate | null> {
-    const entity = await super.findById(id);
-    return entity ? this.toDomain(entity) : null;
-  }
-
-  async findAll(params?: PaginationParams): Promise<PaginatedResult<AgentTemplate>> {
-    const result = await super.findAll(params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
-  }
+  // findById and findAll now use base class implementations with toDomain mapping
 
   async findPublic(params?: PaginationParams): Promise<PaginatedResult<AgentTemplate>> {
     const queryBuilder = this.repository
       .createQueryBuilder('template')
       .where('template.is_public = :isPublic', { isPublic: true });
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
   async findWithFilters(
@@ -72,20 +57,12 @@ export class AgentTemplateRepository
       queryBuilder.andWhere('template.skills && ARRAY[:...skills]', { skills: filters.skills });
     }
 
-    const result = await this.paginate(queryBuilder, params);
-    return {
-      data: result.data.map((e) => this.toDomain(e)),
-      meta: result.meta,
-    };
+    return this.paginate(queryBuilder, params);
   }
 
-  async save(template: AgentTemplate): Promise<AgentTemplate> {
-    const entity = this.toDatabase(template);
-    const saved = await super.save(entity);
-    return this.toDomain(saved);
-  }
+  // save now uses base class implementation with toDatabase/toDomain mapping
 
-  private toDomain(entity: AgentTemplateDbEntity): AgentTemplate {
+  protected override toDomain(entity: AgentTemplateDbEntity): AgentTemplate {
     return AgentTemplate.reconstitute(
       {
         name: entity.name,
@@ -101,7 +78,7 @@ export class AgentTemplateRepository
     );
   }
 
-  private toDatabase(template: AgentTemplate): Partial<AgentTemplateDbEntity> {
+  protected override toDatabase(template: AgentTemplate): Partial<AgentTemplateDbEntity> {
     return {
       id: template.id.value,
       name: template.name,

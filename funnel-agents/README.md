@@ -123,16 +123,41 @@ The digital-agency/ directory contains Python-based AI agents organized by busin
 
 ---
 
+## Quick Start
+
+The fastest way to get FunnelAgents running locally:
+
+```bash
+# 1. Install dependencies
+make install
+
+# 2. Copy environment config
+cp .env.example .env
+
+# 3. Start everything (Docker infra + NestJS services + Web UI)
+make up
+```
+
+Access points:
+- **Web UI:** http://localhost:5173
+- **API Gateway:** http://localhost:3000
+- **n8n Workflows:** http://localhost:5678
+- **API Docs:** http://localhost:3000/api/docs
+
+Default test user credentials:
+- Email: `admin@funnelagents.com`
+- Password: `admin123`
+
+---
+
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 8+ (recommended) or npm
-- Python 3.11+
+- npm 10+ (or pnpm 8+)
 - Docker and Docker Compose
-- PostgreSQL 15+ (or use Docker)
-- Redis 7+ (or use Docker)
+- Python 3.11+ (for AI agents, optional)
 
 ### Installation
 
@@ -143,66 +168,108 @@ The digital-agency/ directory contains Python-based AI agents organized by busin
    cd funnel-agents
    ```
 
-2. **Install Node.js dependencies**
+2. **Install dependencies**
 
    ```bash
-   pnpm install
+   make install
+   # Or manually:
+   npm install
+   cd apps/web-ui && npm install
    ```
 
-3. **Set up Python environment for agents**
-
-   ```bash
-   cd digital-agency
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   cd ..
-   ```
-
-4. **Configure environment variables**
+3. **Configure environment variables**
 
    ```bash
    cp .env.example .env
-   # Edit .env with your database, Redis, and API credentials
+   cp apps/web-ui/.env.example apps/web-ui/.env
    ```
 
-5. **Start infrastructure services**
+   Key variables in `.env`:
+   ```env
+   # Database (matches Docker PostgreSQL)
+   DATABASE_URL=postgresql://funnel_agents:secret@localhost:5432/funnel_agents
+   DB_USERNAME=funnel_agents
+   DB_PASSWORD=secret
 
-   ```bash
-   docker compose up -d postgres redis
+   # Redis (Docker uses 6380 externally to avoid conflicts)
+   REDIS_HOST=localhost
+   REDIS_PORT=6380
+
+   # JWT
+   JWT_SECRET=your-super-secret-jwt-key
    ```
 
-6. **Run database migrations**
+4. **Start infrastructure (PostgreSQL + Redis)**
 
    ```bash
-   pnpm nx run api-gateway:migrate
+   make docker-infra
+   # Or: cd infrastructure/docker && docker compose up -d postgres redis
+   ```
+
+5. **Seed the database (optional)**
+
+   ```bash
+   make db-seed-users  # Creates test users
    ```
 
 ### Running Services
 
-**Development mode (all services):**
+**Start everything (recommended):**
 
 ```bash
-pnpm nx run-many -t serve -p api-gateway,auth,crm,campaigns,content,agents,tasks,automations,reports,worker-runner,scheduler
+make up
 ```
 
-**Individual service:**
+This starts:
+- PostgreSQL & Redis (Docker)
+- All NestJS microservices
+- Web UI (Vite dev server)
+- n8n workflow automation
+
+**Start only what you need:**
 
 ```bash
-pnpm nx serve api-gateway
+# Infrastructure only
+make up-infra
+
+# Backend services only (requires infra)
+make up-services
+
+# Web UI only
+make up-web
+
+# Minimal setup (gateway + auth + tasks)
+make up-minimal
 ```
 
-**Frontend:**
+**Individual services:**
 
 ```bash
-pnpm nx serve web
+make dev-gateway    # API Gateway (port 3000)
+make dev-auth       # Auth Service (port 3001)
+make dev-crm        # CRM Service (port 3002)
+make dev-web        # Web UI (port 5173)
 ```
 
-**Docker Compose (full stack):**
+**Docker Compose (full containerized stack):**
 
 ```bash
-docker compose up
+make up-services-docker
+# Or: cd infrastructure/docker && docker compose up -d
 ```
+
+### Backend Toggle (Base44 vs NestJS)
+
+The web-ui can connect to either backend:
+
+```bash
+# In apps/web-ui/.env
+VITE_BACKEND_MODE=nestjs  # Use local NestJS microservices
+# or
+VITE_BACKEND_MODE=base44  # Use Base44 external platform
+```
+
+See [Dual-Backend Architecture](docs/architecture/dual-backend-architecture.md) for details.
 
 ### Development Workflow
 
@@ -642,13 +709,90 @@ Key endpoints:
 
 | Method | Endpoint                  | Description              |
 |--------|---------------------------|--------------------------|
-| GET    | /api/v1/clients           | List all clients         |
-| POST   | /api/v1/campaigns         | Create a campaign        |
-| GET    | /api/v1/tasks             | List tasks               |
-| POST   | /api/v1/tasks/execute     | Execute a task           |
-| GET    | /api/v1/agents            | List available agents    |
-| POST   | /api/v1/automations       | Create an automation     |
-| GET    | /api/v1/reports/summary   | Get performance summary  |
+| POST   | /api/auth/register        | Register new user        |
+| POST   | /api/auth/login           | Authenticate user        |
+| GET    | /api/auth/me              | Get current user profile |
+| GET    | /api/agents               | List available agents    |
+| GET    | /api/tasks                | List tasks               |
+| POST   | /api/tasks/:id/execute    | Execute a task           |
+| GET    | /api/leads                | List CRM leads           |
+| GET    | /api/campaigns            | List campaigns           |
+| GET    | /api/workflows            | List automations         |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Auth Service API](docs/api/auth-service-api.md) | Complete authentication API reference |
+| [Dual-Backend Architecture](docs/architecture/dual-backend-architecture.md) | How the Base44/NestJS toggle works |
+| [Docker Setup](infrastructure/docker/README.md) | Container orchestration guide |
+
+---
+
+## Testing
+
+```bash
+# Run all tests
+make test
+
+# Test specific service
+npx nx test auth-service
+
+# Run with coverage
+make test-coverage
+
+# Run affected tests only
+make test-affected
+```
+
+---
+
+## Troubleshooting
+
+### Database Connection Failed
+
+If you see `password authentication failed for user`:
+
+1. Check your `.env` matches Docker credentials:
+   ```env
+   DB_USERNAME=funnel_agents
+   DB_PASSWORD=secret
+   ```
+
+2. Restart the PostgreSQL container:
+   ```bash
+   cd infrastructure/docker && docker compose restart postgres
+   ```
+
+### Port Already in Use
+
+Services use these default ports:
+
+| Service | Port |
+|---------|------|
+| API Gateway | 3000 |
+| Auth Service | 3001 |
+| CRM Service | 3002 |
+| Web UI | 5173 |
+| PostgreSQL | 5432 |
+| Redis | 6380 |
+
+Kill conflicting processes:
+```bash
+lsof -i :3000 | awk 'NR>1 {print $2}' | xargs kill -9
+```
+
+### TypeScript Errors
+
+```bash
+# Reset Nx cache
+make reset
+
+# Rebuild all
+make clean && make build
+```
 
 ---
 
