@@ -1,12 +1,103 @@
-# HandyMate - Railway Configuration
+# =============================================================================
+# FunnelAgents - Railway Configuration
 # https://docs.railway.app/deploy/config-as-code
+# =============================================================================
+#
+# Note: Railway supports deploying multiple services from a single repo.
+# Each service requires its own railway.toml or you can configure via Dashboard.
+#
+# For multi-service deployment, use the Railway Dashboard to:
+# 1. Create a project
+# 2. Add each service with environment-specific configurations
+# 3. Link services to shared PostgreSQL and Redis instances
+#
+# This file provides the base configuration template.
+# =============================================================================
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "infrastructure/docker/Dockerfile"
+
+[build.args]
+SERVICE = "${RAILWAY_SERVICE_NAME}"
 
 [deploy]
 numReplicas = 1
 sleepApplication = false
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+
+[deploy.healthcheck]
+path = "/health"
+timeout = 30
+interval = 15
+
+# =============================================================================
+# Service-specific configurations (use via Dashboard or CLI)
+# =============================================================================
+#
+# api-gateway:
+#   SERVICE=api-gateway
+#   PORT=3000
+#
+# auth-service:
+#   SERVICE=auth-service
+#   PORT=3001
+#
+# crm-service:
+#   SERVICE=crm-service
+#   PORT=3002
+#
+# campaigns-service:
+#   SERVICE=campaigns-service
+#   PORT=3003
+#
+# content-service:
+#   SERVICE=content-service
+#   PORT=3004
+#
+# agents-service:
+#   SERVICE=agents-service
+#   PORT=3005
+#
+# tasks-service:
+#   SERVICE=tasks-service
+#   PORT=3006
+#
+# automations-service:
+#   SERVICE=automations-service
+#   PORT=3007
+#
+# reports-service:
+#   SERVICE=reports-service
+#   PORT=3008
+#
+# worker-runner:
+#   SERVICE=worker-runner
+#   PORT=3009
+#
+# scheduler:
+#   SERVICE=scheduler
+#   PORT=3010
+#
+# =============================================================================
+# Environment Variables (set via Railway Dashboard)
+# =============================================================================
+#
+# Required for all services:
+# - NODE_ENV=production
+# - SERVICE=<service-name>
+# - PORT=<service-port>
+# - DATABASE_URL=${{Postgres.DATABASE_URL}}
+# - REDIS_URL=${{Redis.REDIS_URL}}
+# - JWT_SECRET=<generated>
+#
+# Required for AI services:
+# - OPENAI_API_KEY=<your-key>
+#
+# Required for n8n:
+# - N8N_ENCRYPTION_KEY=<generated>
+#
+# =============================================================================

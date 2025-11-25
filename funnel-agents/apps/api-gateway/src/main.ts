@@ -34,13 +34,33 @@ async function bootstrap() {
   );
 
   // CORS configuration
-  const corsOrigins = process.env.CORS_ORIGINS?.split(',') || [
+  const corsOrigins = process.env.CORS_ORIGINS?.split(',').map(o => o.trim()) || [
     'http://localhost:5173',
     'http://localhost:4200',
   ];
 
+  logger.log('CORS origins configured: ' + JSON.stringify(corsOrigins));
+
   app.enableCors({
-    origin: corsOrigins,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (corsOrigins.includes(origin)) {
+        return callback(null, origin);
+      }
+
+      // In development, allow localhost origins
+      if (origin.startsWith('http://localhost:')) {
+        logger.warn(`Allowing unlisted localhost origin: ${origin}`);
+        return callback(null, origin);
+      }
+
+      logger.warn(`Blocked CORS request from origin: ${origin}`);
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

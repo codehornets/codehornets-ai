@@ -435,3 +435,6 @@ restart-infra: ## Restart infrastructure only
 
 update-web-ui:
 	cd apps/web-ui && npm i baseline-browser-mapping@latest -D
+
+start-backend:
+	npx nx run-many --target=serve --projects=api-gateway,auth-service --parallel

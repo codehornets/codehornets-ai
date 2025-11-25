@@ -6,13 +6,14 @@ import { HealthModule } from './health/health.module';
 import { AuthGuard } from './bootstrap/guards/auth.guard';
 
 // Define clients configuration separately so we can reuse it
+// TCP ports are HTTP port + 10 (e.g., 3001 HTTP -> 3011 TCP)
 const clientsConfig = [
   {
     name: 'AUTH_SERVICE',
     transport: Transport.TCP,
     options: {
       host: process.env.AUTH_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.AUTH_SERVICE_PORT || '', 10) || 3001,
+      port: parseInt(process.env.AUTH_SERVICE_TCP_PORT || '', 10) || 3011,
     },
   },
   {
@@ -20,7 +21,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.CRM_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.CRM_SERVICE_PORT || '', 10) || 3002,
+      port: parseInt(process.env.CRM_SERVICE_TCP_PORT || '', 10) || 3012,
     },
   },
   {
@@ -28,7 +29,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.CAMPAIGNS_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.CAMPAIGNS_SERVICE_PORT || '', 10) || 3003,
+      port: parseInt(process.env.CAMPAIGNS_SERVICE_TCP_PORT || '', 10) || 3013,
     },
   },
   {
@@ -36,7 +37,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.CONTENT_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.CONTENT_SERVICE_PORT || '', 10) || 3004,
+      port: parseInt(process.env.CONTENT_SERVICE_TCP_PORT || '', 10) || 3014,
     },
   },
   {
@@ -44,7 +45,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.AGENTS_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.AGENTS_SERVICE_PORT || '', 10) || 3005,
+      port: parseInt(process.env.AGENTS_SERVICE_TCP_PORT || '', 10) || 3015,
     },
   },
   {
@@ -52,7 +53,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.TASKS_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.TASKS_SERVICE_PORT || '', 10) || 3006,
+      port: parseInt(process.env.TASKS_SERVICE_TCP_PORT || '', 10) || 3016,
     },
   },
   {
@@ -60,7 +61,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.AUTOMATIONS_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.AUTOMATIONS_SERVICE_PORT || '', 10) || 3007,
+      port: parseInt(process.env.AUTOMATIONS_SERVICE_TCP_PORT || '', 10) || 3017,
     },
   },
   {
@@ -68,7 +69,7 @@ const clientsConfig = [
     transport: Transport.TCP,
     options: {
       host: process.env.REPORTS_SERVICE_HOST || 'localhost',
-      port: parseInt(process.env.REPORTS_SERVICE_PORT || '', 10) || 3008,
+      port: parseInt(process.env.REPORTS_SERVICE_TCP_PORT || '', 10) || 3018,
     },
   },
 ];

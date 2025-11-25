@@ -1,5 +1,7 @@
-# HandyMate - AWS ECS Infrastructure
-# Multi-module CRM deployment using ECS Fargate
+# =============================================================================
+# FunnelAgents - AWS ECS Infrastructure
+# Multi-service deployment using ECS Fargate
+# =============================================================================
 
 terraform {
   required_version = ">= 1.5.0"
@@ -17,10 +19,10 @@ terraform {
 
   # Remote state storage (required for production)
   backend "s3" {
-    bucket         = "handymate-terraform-state"
+    bucket         = "funnelagents-terraform-state"
     key            = "aws/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "handymate-terraform-lock"
+    dynamodb_table = "funnelagents-terraform-lock"
     encrypt        = true
   }
 }
@@ -40,14 +42,20 @@ provider "aws" {
   }
 }
 
-# Data sources
+# =============================================================================
+# Data Sources
+# =============================================================================
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 data "aws_caller_identity" "current" {}
 
+# =============================================================================
 # VPC Module
+# =============================================================================
+
 module "vpc" {
   source = "./modules/vpc"
 
@@ -60,9 +68,13 @@ module "vpc" {
   tags = var.common_tags
 }
 
-# ECR Repositories for each CRM module
-resource "aws_ecr_repository" "app_modules" {
-  for_each = toset(var.app_modules)
+# =============================================================================
+# ECR Repositories
+# =============================================================================
+
+# ECR for backend services
+resource "aws_ecr_repository" "backend_services" {
+  for_each = toset(var.backend_services)
 
   name                 = "${var.project_name}-${each.key}"
   image_tag_mutability = "MUTABLE"
@@ -78,12 +90,30 @@ resource "aws_ecr_repository" "app_modules" {
   tags = merge(
     var.common_tags,
     {
-      Module = each.key
+      Service = each.key
     }
   )
 }
 
-# ECR Repository for n8n
+# ECR for web-ui
+resource "aws_ecr_repository" "web_ui" {
+  count = var.enable_web_ui ? 1 : 0
+
+  name                 = "${var.project_name}-web-ui"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  encryption_configuration {
+    encryption_type = "AES256"
+  }
+
+  tags = var.common_tags
+}
+
+# ECR for n8n
 resource "aws_ecr_repository" "n8n" {
   name                 = "${var.project_name}-n8n"
   image_tag_mutability = "MUTABLE"
@@ -99,30 +129,33 @@ resource "aws_ecr_repository" "n8n" {
   tags = var.common_tags
 }
 
-# ===================================================================
-# AWS Secrets Manager - Secure credential storage
-# ===================================================================
+# =============================================================================
+# Secrets Manager - Secure credential storage
+# =============================================================================
 
-# Generate random password for RDS if not provided
+# Generate random passwords
 resource "random_password" "db_password" {
+  count   = var.db_password == "" ? 1 : 0
   length  = 32
   special = true
 }
 
-resource "random_password" "redis_auth_token" {
-  length  = 32
+resource "random_password" "jwt_secret" {
+  count   = var.jwt_secret == "" ? 1 : 0
+  length  = 64
   special = false
 }
 
 resource "random_password" "n8n_encryption_key" {
+  count   = var.n8n_encryption_key == "" ? 1 : 0
   length  = 32
   special = false
 }
 
-# Store database credentials in Secrets Manager
+# Store database credentials
 resource "aws_secretsmanager_secret" "db_credentials" {
   name_prefix             = "${var.project_name}-${var.environment}-db-"
-  description             = "RDS MySQL credentials for HandyMate ${var.environment}"
+  description             = "PostgreSQL credentials for FunnelAgents ${var.environment}"
   recovery_window_in_days = var.environment == "production" ? 30 : 7
 
   tags = merge(
@@ -137,74 +170,53 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
   secret_id = aws_secretsmanager_secret.db_credentials.id
   secret_string = jsonencode({
     username = var.db_username
-    password = random_password.db_password.result
-    engine   = "mysql"
+    password = var.db_password != "" ? var.db_password : random_password.db_password[0].result
+    engine   = "postgres"
     host     = module.rds.db_instance_endpoint
-    port     = 3306
+    port     = 5432
     dbname   = var.db_name
   })
 
   depends_on = [module.rds]
 }
 
-# Store Redis auth token
-resource "aws_secretsmanager_secret" "redis_auth" {
-  name_prefix             = "${var.project_name}-${var.environment}-redis-"
-  description             = "Redis auth token for HandyMate ${var.environment}"
+# Store JWT secret
+resource "aws_secretsmanager_secret" "jwt_secret" {
+  name_prefix             = "${var.project_name}-${var.environment}-jwt-"
+  description             = "JWT secret for FunnelAgents ${var.environment}"
   recovery_window_in_days = var.environment == "production" ? 30 : 7
 
   tags = var.common_tags
 }
 
-resource "aws_secretsmanager_secret_version" "redis_auth" {
-  secret_id     = aws_secretsmanager_secret.redis_auth.id
+resource "aws_secretsmanager_secret_version" "jwt_secret" {
+  secret_id = aws_secretsmanager_secret.jwt_secret.id
   secret_string = jsonencode({
-    auth_token = random_password.redis_auth_token.result
+    secret     = var.jwt_secret != "" ? var.jwt_secret : random_password.jwt_secret[0].result
+    expiration = var.jwt_expiration
   })
 }
 
 # Store n8n encryption key
 resource "aws_secretsmanager_secret" "n8n_encryption_key" {
   name_prefix             = "${var.project_name}-${var.environment}-n8n-"
-  description             = "n8n encryption key for HandyMate ${var.environment}"
+  description             = "n8n encryption key for FunnelAgents ${var.environment}"
   recovery_window_in_days = var.environment == "production" ? 30 : 7
 
   tags = var.common_tags
 }
 
 resource "aws_secretsmanager_secret_version" "n8n_encryption_key" {
-  secret_id     = aws_secretsmanager_secret.n8n_encryption_key.id
+  secret_id = aws_secretsmanager_secret.n8n_encryption_key.id
   secret_string = jsonencode({
-    encryption_key = random_password.n8n_encryption_key.result
+    encryption_key = var.n8n_encryption_key != "" ? var.n8n_encryption_key : random_password.n8n_encryption_key[0].result
   })
 }
 
-# Store app key for each module
-resource "aws_secretsmanager_secret" "app_keys" {
-  for_each = toset(var.app_modules)
+# =============================================================================
+# RDS PostgreSQL Database
+# =============================================================================
 
-  name_prefix             = "${var.project_name}-${var.environment}-${each.key}-"
-  description             = "Application key for ${each.key} module"
-  recovery_window_in_days = var.environment == "production" ? 30 : 7
-
-  tags = merge(
-    var.common_tags,
-    {
-      Module = each.key
-    }
-  )
-}
-
-resource "aws_secretsmanager_secret_version" "app_keys" {
-  for_each = toset(var.app_modules)
-
-  secret_id = aws_secretsmanager_secret.app_keys[each.key].id
-  secret_string = jsonencode({
-    app_key = "base64:${base64encode(random_password.db_password.result)}"
-  })
-}
-
-# RDS MySQL Database (shared by all modules)
 module "rds" {
   source = "./modules/rds"
 
@@ -213,10 +225,10 @@ module "rds" {
   instance_class        = var.db_instance_class
   allocated_storage     = var.db_allocated_storage
   max_allocated_storage = var.db_max_allocated_storage
-  engine_version        = "8.0.35"
+  engine_version        = var.db_engine_version
   database_name         = var.db_name
   master_username       = var.db_username
-  master_password       = random_password.db_password.result
+  master_password       = var.db_password != "" ? var.db_password : random_password.db_password[0].result
   vpc_id                = module.vpc.vpc_id
   subnet_ids            = module.vpc.private_subnet_ids
   allowed_cidr_blocks   = module.vpc.private_subnet_cidrs
@@ -225,18 +237,13 @@ module "rds" {
   multi_az                = var.environment == "production" ? true : false
   skip_final_snapshot     = var.environment != "production"
 
-  # Production validation: Force Multi-AZ
-  lifecycle {
-    precondition {
-      condition     = var.environment != "production" || var.environment == "production"
-      error_message = "Production environment must use Multi-AZ RDS deployment."
-    }
-  }
-
   tags = var.common_tags
 }
 
-# ElastiCache Redis Cluster (shared cache and queue)
+# =============================================================================
+# ElastiCache Redis Cluster
+# =============================================================================
+
 module "elasticache" {
   source = "./modules/elasticache"
 
@@ -252,7 +259,10 @@ module "elasticache" {
   tags = var.common_tags
 }
 
+# =============================================================================
 # ECS Cluster
+# =============================================================================
+
 resource "aws_ecs_cluster" "main" {
   name = "${var.project_name}-${var.environment}"
 
@@ -276,9 +286,13 @@ resource "aws_ecs_cluster_capacity_providers" "main" {
   }
 }
 
-# CloudWatch Log Group for all services
-resource "aws_cloudwatch_log_group" "app_modules" {
-  for_each = toset(var.app_modules)
+# =============================================================================
+# CloudWatch Log Groups
+# =============================================================================
+
+# Log groups for backend services
+resource "aws_cloudwatch_log_group" "backend_services" {
+  for_each = toset(var.backend_services)
 
   name              = "/ecs/${var.project_name}/${each.key}"
   retention_in_days = var.environment == "production" ? 30 : 7
@@ -286,11 +300,22 @@ resource "aws_cloudwatch_log_group" "app_modules" {
   tags = merge(
     var.common_tags,
     {
-      Module = each.key
+      Service = each.key
     }
   )
 }
 
+# Log group for web-ui
+resource "aws_cloudwatch_log_group" "web_ui" {
+  count = var.enable_web_ui ? 1 : 0
+
+  name              = "/ecs/${var.project_name}/web-ui"
+  retention_in_days = var.environment == "production" ? 30 : 7
+
+  tags = var.common_tags
+}
+
+# Log group for n8n
 resource "aws_cloudwatch_log_group" "n8n" {
   name              = "/ecs/${var.project_name}/n8n"
   retention_in_days = var.environment == "production" ? 30 : 7
@@ -298,8 +323,9 @@ resource "aws_cloudwatch_log_group" "n8n" {
   tags = var.common_tags
 }
 
+# Log groups for n8n workers
 resource "aws_cloudwatch_log_group" "n8n_workers" {
-  for_each = toset(var.app_modules)
+  for_each = toset(var.n8n_workers)
 
   name              = "/ecs/${var.project_name}/n8n-worker-${each.key}"
   retention_in_days = var.environment == "production" ? 30 : 7
@@ -307,13 +333,17 @@ resource "aws_cloudwatch_log_group" "n8n_workers" {
   tags = merge(
     var.common_tags,
     {
-      Module = each.key
+      Worker = each.key
       Type   = "n8n-worker"
     }
   )
 }
 
-# IAM Role for ECS Task Execution
+# =============================================================================
+# IAM Roles
+# =============================================================================
+
+# ECS Task Execution Role
 resource "aws_iam_role" "ecs_task_execution" {
   name = "${var.project_name}-${var.environment}-ecs-execution"
 
@@ -338,7 +368,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-# IAM Policy for ECR access
+# ECR access policy
 resource "aws_iam_role_policy" "ecs_task_execution_ecr" {
   name = "ecr-access"
   role = aws_iam_role.ecs_task_execution.id
@@ -360,7 +390,30 @@ resource "aws_iam_role_policy" "ecs_task_execution_ecr" {
   })
 }
 
-# IAM Role for ECS Tasks
+# Secrets Manager access policy
+resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
+  name = "secrets-access"
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = [
+          aws_secretsmanager_secret.db_credentials.arn,
+          aws_secretsmanager_secret.jwt_secret.arn,
+          aws_secretsmanager_secret.n8n_encryption_key.arn
+        ]
+      }
+    ]
+  })
+}
+
+# ECS Task Role
 resource "aws_iam_role" "ecs_task" {
   name = "${var.project_name}-${var.environment}-ecs-task"
 
@@ -380,7 +433,11 @@ resource "aws_iam_role" "ecs_task" {
   tags = var.common_tags
 }
 
-# Security Group for ALB
+# =============================================================================
+# Security Groups
+# =============================================================================
+
+# ALB Security Group
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-alb"
   description = "Security group for Application Load Balancer"
@@ -418,7 +475,7 @@ resource "aws_security_group" "alb" {
   )
 }
 
-# Security Group for ECS Tasks
+# ECS Tasks Security Group
 resource "aws_security_group" "ecs_tasks" {
   name        = "${var.project_name}-${var.environment}-ecs-tasks"
   description = "Security group for ECS tasks"
@@ -456,7 +513,10 @@ resource "aws_security_group" "ecs_tasks" {
   )
 }
 
+# =============================================================================
 # Application Load Balancer
+# =============================================================================
+
 resource "aws_lb" "main" {
   name               = "${var.project_name}-${var.environment}"
   internal           = false
@@ -471,12 +531,12 @@ resource "aws_lb" "main" {
   tags = var.common_tags
 }
 
-# Target Groups for each CRM module
-resource "aws_lb_target_group" "app_modules" {
-  for_each = toset(var.app_modules)
+# Target Groups for backend services
+resource "aws_lb_target_group" "backend_services" {
+  for_each = toset(var.backend_services)
 
-  name        = "${var.project_name}-${each.key}-${var.environment}"
-  port        = 80
+  name        = "${substr(var.project_name, 0, 8)}-${substr(each.key, 0, 12)}-${substr(var.environment, 0, 4)}"
+  port        = var.service_ports[each.key]
   protocol    = "HTTP"
   vpc_id      = module.vpc.vpc_id
   target_type = "ip"
@@ -498,15 +558,42 @@ resource "aws_lb_target_group" "app_modules" {
   tags = merge(
     var.common_tags,
     {
-      Module = each.key
+      Service = each.key
     }
   )
+}
+
+# Target Group for web-ui
+resource "aws_lb_target_group" "web_ui" {
+  count = var.enable_web_ui ? 1 : 0
+
+  name        = "${var.project_name}-web-ui-${var.environment}"
+  port        = var.service_ports["web-ui"]
+  protocol    = "HTTP"
+  vpc_id      = module.vpc.vpc_id
+  target_type = "ip"
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    interval            = 30
+    matcher             = "200-399"
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 3
+  }
+
+  deregistration_delay = 30
+
+  tags = var.common_tags
 }
 
 # Target Group for n8n
 resource "aws_lb_target_group" "n8n" {
   name        = "${var.project_name}-n8n-${var.environment}"
-  port        = 5678
+  port        = var.service_ports["n8n"]
   protocol    = "HTTP"
   vpc_id      = module.vpc.vpc_id
   target_type = "ip"
@@ -535,47 +622,17 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "HandyMate - Invalid Route"
-      status_code  = "404"
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend_services["api-gateway"].arn
   }
 
   tags = var.common_tags
 }
 
-# Listener Rules for each module
-resource "aws_lb_listener_rule" "app_modules" {
-  for_each = toset(var.app_modules)
-
-  listener_arn = aws_lb_listener.http.arn
-  priority     = 100 + index(var.app_modules, each.key)
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.app_modules[each.key].arn
-  }
-
-  condition {
-    host_header {
-      values = ["${each.key}.${var.domain_name}"]
-    }
-  }
-
-  tags = merge(
-    var.common_tags,
-    {
-      Module = each.key
-    }
-  )
-}
-
-# Listener Rule for n8n
+# Listener Rules for n8n
 resource "aws_lb_listener_rule" "n8n" {
   listener_arn = aws_lb_listener.http.arn
-  priority     = 200
+  priority     = 100
 
   action {
     type             = "forward"
@@ -583,43 +640,18 @@ resource "aws_lb_listener_rule" "n8n" {
   }
 
   condition {
-    host_header {
-      values = ["n8n.${var.domain_name}", "workflow.${var.domain_name}"]
+    path_pattern {
+      values = ["/n8n/*", "/webhook/*"]
     }
   }
 
   tags = var.common_tags
 }
 
-# Secrets Manager for sensitive configuration
-resource "aws_secretsmanager_secret" "db_password" {
-  name = "${var.project_name}/${var.environment}/db-password"
-
-  tags = var.common_tags
-}
-
-resource "aws_secretsmanager_secret_version" "db_password" {
-  secret_id     = aws_secretsmanager_secret.db_password.id
-  secret_string = var.db_password
-}
-
-resource "aws_secretsmanager_secret" "n8n_encryption_key" {
-  name = "${var.project_name}/${var.environment}/n8n-encryption-key"
-
-  tags = var.common_tags
-}
-
-resource "aws_secretsmanager_secret_version" "n8n_encryption_key" {
-  secret_id     = aws_secretsmanager_secret.n8n_encryption_key.id
-  secret_string = var.n8n_encryption_key != "" ? var.n8n_encryption_key : random_password.n8n_encryption_key.result
-}
-
-resource "random_password" "n8n_encryption_key" {
-  length  = 32
-  special = true
-}
-
+# =============================================================================
 # S3 Bucket for file storage
+# =============================================================================
+
 resource "aws_s3_bucket" "storage" {
   bucket = "${var.project_name}-${var.environment}-storage"
 
@@ -653,7 +685,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "storage" {
   }
 }
 
+# =============================================================================
 # Outputs
+# =============================================================================
+
 output "vpc_id" {
   description = "VPC ID"
   value       = module.vpc.vpc_id
@@ -680,7 +715,7 @@ output "alb_zone_id" {
 }
 
 output "db_endpoint" {
-  description = "RDS MySQL endpoint"
+  description = "RDS PostgreSQL endpoint"
   value       = module.rds.db_endpoint
   sensitive   = true
 }
@@ -694,11 +729,14 @@ output "ecr_repositories" {
   description = "ECR repository URLs"
   value = merge(
     {
-      for k, v in aws_ecr_repository.app_modules : k => v.repository_url
+      for k, v in aws_ecr_repository.backend_services : k => v.repository_url
     },
     {
       n8n = aws_ecr_repository.n8n.repository_url
-    }
+    },
+    var.enable_web_ui ? {
+      web-ui = aws_ecr_repository.web_ui[0].repository_url
+    } : {}
   )
 }
 
@@ -709,6 +747,11 @@ output "s3_bucket_name" {
 
 output "ecs_task_execution_role_arn" {
   description = "ECS task execution role ARN"
+  value       = aws_iam_role.ecs_task_execution.arn
+}
+
+output "ecs_task_role_arn" {
+  description = "ECS task role ARN"
   value       = aws_iam_role.ecs_task.arn
 }
 
@@ -720,4 +763,11 @@ output "ecs_security_group_id" {
 output "private_subnet_ids" {
   description = "Private subnet IDs for ECS tasks"
   value       = module.vpc.private_subnet_ids
+}
+
+output "service_target_groups" {
+  description = "Target group ARNs for each service"
+  value = {
+    for k, v in aws_lb_target_group.backend_services : k => v.arn
+  }
 }
