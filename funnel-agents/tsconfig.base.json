@@ -27,6 +27,7 @@
     "isolatedModules": true,
     "incremental": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
       "@funnelagents/agents": ["libs/agents/src/index.ts"],
       "@funnelagents/agents/*": ["libs/agents/src/*"],
