@@ -332,13 +332,20 @@ Log out the current user. The client should remove stored tokens.
 
 ### Environment Variables
 
-| Variable           | Description                    | Default                      |
-|--------------------|--------------------------------|------------------------------|
-| JWT_SECRET         | Secret for signing access JWTs | `your-secret-key`            |
-| JWT_REFRESH_SECRET | Secret for signing refresh JWTs| `your-refresh-secret-key`    |
-| JWT_EXPIRATION     | Access token expiration        | `1d` (configured as 15m in code) |
-| AUTH_SERVICE_HOST  | Service host                   | `localhost`                  |
-| AUTH_SERVICE_PORT  | Service port                   | `3001`                       |
+| Variable           | Description                    | Required | Default                      |
+|--------------------|--------------------------------|----------|------------------------------|
+| JWT_SECRET         | Secret for signing access JWTs | **YES** | **NONE** - Service will fail to start without this |
+| JWT_REFRESH_SECRET | Secret for signing refresh JWTs| **YES** | **NONE** - Service will fail to start without this |
+| JWT_EXPIRATION     | Access token expiration        | No | `15m` |
+| AUTH_SERVICE_HOST  | Service host                   | No | `0.0.0.0`                  |
+| AUTH_SERVICE_PORT  | Service port                   | No | `3001`                       |
+
+**SECURITY NOTICE**:
+- JWT secrets are **REQUIRED** and have **NO FALLBACK VALUES**
+- The service will terminate on startup if JWT_SECRET or JWT_REFRESH_SECRET are not set
+- Generate secure secrets using: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
+- Never commit actual secrets to version control
+- Use different secrets for JWT_SECRET and JWT_REFRESH_SECRET
 
 ---
 

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 import {
   AgentDbEntity,
   AgentFeedbackDbEntity,
@@ -17,6 +19,7 @@ import {
   AgentFeedbackService,
   AgentTuningService,
   AgentTemplateService,
+  AgentExecutionService,
 } from '@funnelagents/application';
 import {
   AGENT_REPOSITORY,
@@ -37,6 +40,11 @@ import { AgentTemplateController } from '../controllers/agent-template.controlle
       AgentTuningDbEntity,
       AgentTemplateDbEntity,
     ]),
+    HttpModule.register({
+      timeout: 300000, // 5 minutes
+      maxRedirects: 5,
+    }),
+    ConfigModule,
   ],
   controllers: [
     AgentsController,
@@ -71,7 +79,14 @@ import { AgentTemplateController } from '../controllers/agent-template.controlle
     AgentFeedbackService,
     AgentTuningService,
     AgentTemplateService,
+    AgentExecutionService,
   ],
-  exports: [AgentsService, AgentFeedbackService, AgentTuningService, AgentTemplateService],
+  exports: [
+    AgentsService,
+    AgentFeedbackService,
+    AgentTuningService,
+    AgentTemplateService,
+    AgentExecutionService,
+  ],
 })
 export class AgentsModule {}

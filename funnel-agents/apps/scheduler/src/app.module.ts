@@ -1,7 +1,18 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { DatabaseModule, DistributedLockModule } from '@funnelagents/infrastructure';
+import { SchedulerController } from './scheduler.controller';
+import { ScheduledTasksModule } from './scheduled-tasks/scheduled-tasks.module';
+import { CronJobsModule } from './cron-jobs/cron-jobs.module';
+import { DispatchersModule } from './dispatchers/dispatchers.module';
+import { HealthModule } from './health/health.module';
+import { ScheduledTask } from './scheduled-tasks/entities/scheduled-task.entity';
+import { TaskExecution } from './scheduled-tasks/entities/task-execution.entity';
+import { CustomThrottlerGuard } from '@funnelagents/shared';
+import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
 @Module({
   imports: [
@@ -11,31 +22,52 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     }),
     // Enable NestJS scheduling
     ScheduleModule.forRoot(),
-    // Connect to tasks-service for scheduling tasks
-    ClientsModule.register([
-      {
-        name: 'TASKS_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: process.env.TASKS_SERVICE_HOST || 'localhost',
-          port: parseInt(process.env.TASKS_SERVICE_PORT || '', 10) || 3006,
-        },
+    // Rate limiting
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const redisUrl = getRedisUrl();
+        const useRedis = !!redisUrl && configService.get('NODE_ENV') !== 'test';
+        return createThrottlerConfig(useRedis, redisUrl);
       },
-      {
-        name: 'AUTOMATIONS_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: process.env.AUTOMATIONS_SERVICE_HOST || 'localhost',
-          port: parseInt(process.env.AUTOMATIONS_SERVICE_PORT || '', 10) || 3007,
-        },
+    }),
+    // Database connection
+    DatabaseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+
+        return {
+          type: 'postgres',
+          host: configService.get('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get('DB_USERNAME', 'postgres'),
+          password: configService.get('DB_PASSWORD', 'postgres'),
+          database: configService.get('DB_DATABASE', 'funnelagents'),
+          synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
+          logging: configService.get('DB_LOGGING', 'false') === 'true',
+          entities: [ScheduledTask, TaskExecution],
+          nodeEnv,
+          enableHealthMonitoring: true,
+        };
       },
-    ]),
-    // Add feature modules here:
-    // CronJobsModule,
-    // ScheduledTasksModule,
-    // RecurringJobsModule,
+      inject: [ConfigService],
+    }),
+    // Distributed locking
+    DistributedLockModule,
+    // Feature modules
+    ScheduledTasksModule,
+    CronJobsModule,
+    DispatchersModule,
+    HealthModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [SchedulerController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

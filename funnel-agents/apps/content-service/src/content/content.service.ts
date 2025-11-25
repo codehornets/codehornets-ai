@@ -2,6 +2,8 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +12,7 @@ import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { QueryContentDto } from './dto/query-content.dto';
+import { VersionService } from './services/version.service';
 
 @Injectable()
 export class ContentService {
@@ -43,11 +46,22 @@ export class ContentService {
   constructor(
     @InjectRepository(Content)
     private readonly contentRepository: Repository<Content>,
+    @Inject(forwardRef(() => VersionService))
+    private readonly versionService: VersionService,
   ) {}
 
   async create(createContentDto: CreateContentDto): Promise<Content> {
     const content = this.contentRepository.create(createContentDto);
-    return this.contentRepository.save(content);
+    const savedContent = await this.contentRepository.save(content);
+
+    // Create initial version
+    await this.versionService.createVersion(
+      savedContent.id,
+      'Initial version',
+      createContentDto.author_id,
+    );
+
+    return savedContent;
   }
 
   async findAll(query: QueryContentDto): Promise<{
@@ -123,7 +137,12 @@ export class ContentService {
   async update(id: string, updateContentDto: UpdateContentDto): Promise<Content> {
     const content = await this.findOne(id);
     Object.assign(content, updateContentDto);
-    return this.contentRepository.save(content);
+    const savedContent = await this.contentRepository.save(content);
+
+    // Create version after update
+    await this.versionService.createVersion(id, 'Content updated');
+
+    return savedContent;
   }
 
   async updateStatus(id: string, updateStatusDto: UpdateStatusDto): Promise<Content> {

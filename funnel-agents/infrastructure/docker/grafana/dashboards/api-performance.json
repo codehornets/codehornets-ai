@@ -1,0 +1,118 @@
+{
+  "dashboard": {
+    "title": "FunnelAgents - API Performance",
+    "uid": "funnelagents-api-performance",
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 1,
+    "refresh": "10s",
+    "time": {
+      "from": "now-30m",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Rate by Method",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [{
+          "expr": "sum(rate(funnelagents_http_requests_total[5m])) by (method)",
+          "legendFormat": "{{ method }}",
+          "refId": "A"
+        }]
+      },
+      {
+        "id": 2,
+        "title": "Request Rate by Status Code",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [{
+          "expr": "sum(rate(funnelagents_http_requests_total[5m])) by (status_code)",
+          "legendFormat": "{{ status_code }}",
+          "refId": "A"
+        }]
+      },
+      {
+        "id": 3,
+        "title": "Response Time Heatmap",
+        "type": "heatmap",
+        "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
+        "targets": [{
+          "expr": "sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (le)",
+          "format": "heatmap",
+          "refId": "A"
+        }]
+      },
+      {
+        "id": 4,
+        "title": "P50/P95/P99 Response Times",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 18},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, le))",
+            "legendFormat": "{{ service }} P50",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, le))",
+            "legendFormat": "{{ service }} P95",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, le))",
+            "legendFormat": "{{ service }} P99",
+            "refId": "C"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Request/Response Size",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 18},
+        "targets": [
+          {
+            "expr": "sum(rate(funnelagents_http_request_size_bytes_sum[5m])) by (service) / sum(rate(funnelagents_http_request_size_bytes_count[5m])) by (service)",
+            "legendFormat": "{{ service }} Request Size",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(funnelagents_http_response_size_bytes_sum[5m])) by (service) / sum(rate(funnelagents_http_response_size_bytes_count[5m])) by (service)",
+            "legendFormat": "{{ service }} Response Size",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {"format": "bytes", "label": "Size"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Top Slowest Endpoints",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 26},
+        "targets": [{
+          "expr": "topk(10, histogram_quantile(0.95, sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, path, le)))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }]
+      },
+      {
+        "id": 7,
+        "title": "Error Rate by Endpoint",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 26},
+        "targets": [{
+          "expr": "topk(10, sum(rate(funnelagents_http_requests_total{status_code=~\"5..\"}[5m])) by (service, path, status_code))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,372 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop, feat-*, fix-*]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npm run format:check
+
+      - name: Run unit tests
+        run: npm run test:unit -- --ci --coverage --maxWorkers=2
+        env:
+          NODE_ENV: test
+
+      - name: Generate coverage report
+        if: matrix.node-version == '20.x'
+        run: npm run test:cov -- --ci --maxWorkers=2
+
+      - name: Upload coverage to Codecov
+        if: matrix.node-version == '20.x'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload coverage artifacts
+        if: matrix.node-version == '20.x'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: funnelagents_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-20.x-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build services
+        run: npm run build
+        env:
+          NODE_ENV: test
+
+      - name: Run database migrations
+        run: |
+          echo "Running database migrations..."
+          # Add migration commands here if available
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/funnelagents_test
+
+      - name: Run integration tests
+        run: npm run test:integration -- --ci --maxWorkers=2
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/funnelagents_test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test-secret-key-for-testing
+          JWT_REFRESH_SECRET: test-refresh-secret-key
+          NODE_ENV: test
+
+      - name: Upload integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: |
+            test-results/
+            coverage/
+          retention-days: 7
+
+  e2e-tests:
+    name: E2E Tests with Docker Compose
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-20.x-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build services
+        run: npm run build
+        env:
+          NODE_ENV: test
+
+      - name: Create test environment file
+        run: |
+          cat > infrastructure/docker/.env.test << EOF
+          NODE_ENV=test
+          POSTGRES_DB=funnelagents_test
+          POSTGRES_USER=test
+          POSTGRES_PASSWORD=test
+          POSTGRES_PORT=5432
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          JWT_SECRET=test-secret-key-for-testing
+          JWT_EXPIRATION=1h
+          EOF
+
+      - name: Start services with Docker Compose
+        run: |
+          cd infrastructure/docker
+          docker-compose -f docker-compose.test.yml up -d
+          sleep 30
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for services to be ready..."
+          timeout 120 bash -c 'until docker exec funnel-agents-postgres pg_isready -U test; do sleep 2; done'
+          timeout 60 bash -c 'until docker exec funnel-agents-redis redis-cli ping; do sleep 2; done'
+          sleep 10
+
+      - name: Check service health
+        run: |
+          docker ps
+          docker logs funnel-agents-postgres --tail=50
+          docker logs funnel-agents-redis --tail=50
+
+      - name: Run database migrations
+        run: |
+          cd infrastructure/docker
+          # Add migration commands if available
+          echo "Migrations would run here"
+
+      - name: Run E2E tests
+        run: npm run test:e2e -- --ci --maxWorkers=2
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/funnelagents_test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test-secret-key-for-testing
+          JWT_REFRESH_SECRET: test-refresh-secret-key
+          NODE_ENV: test
+          API_GATEWAY_PORT: 3000
+
+      - name: Collect Docker logs
+        if: always()
+        run: |
+          mkdir -p test-results/logs
+          cd infrastructure/docker
+          docker-compose -f docker-compose.test.yml logs > ../../test-results/logs/docker-compose.log
+
+      - name: Stop services
+        if: always()
+        run: |
+          cd infrastructure/docker
+          docker-compose -f docker-compose.test.yml down -v
+
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: |
+            test-results/
+            coverage/
+          retention-days: 7
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-20.x-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate coverage
+        run: npm run test:cov -- --ci --maxWorkers=2
+
+      - name: Comment coverage on PR
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: ./coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          delete-old-comments: true
+
+      - name: Coverage summary
+        run: |
+          echo "## Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f coverage/coverage-summary.json ]; then
+            cat coverage/coverage-summary.json >> $GITHUB_STEP_SUMMARY
+          fi
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests, lint]
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          echo "Unit Tests: ${{ needs.unit-tests.result }}"
+          echo "Integration Tests: ${{ needs.integration-tests.result }}"
+          echo "E2E Tests: ${{ needs.e2e-tests.result }}"
+          echo "Lint: ${{ needs.lint.result }}"
+
+      - name: Fail if any test failed
+        if: |
+          needs.unit-tests.result == 'failure' ||
+          needs.integration-tests.result == 'failure' ||
+          needs.e2e-tests.result == 'failure' ||
+          needs.lint.result == 'failure'
+        run: exit 1

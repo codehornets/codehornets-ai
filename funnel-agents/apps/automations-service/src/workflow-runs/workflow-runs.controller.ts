@@ -25,4 +25,22 @@ export class WorkflowRunsController {
   async create(@Body(ValidationPipe) createDto: CreateWorkflowRunDto) {
     return this.workflowRunsService.create(createDto);
   }
+
+  @MessagePattern({ cmd: 'workflowRuns.cancel' })
+  @Post(':id/cancel')
+  async cancel(@Param('id') id: string) {
+    return this.workflowRunsService.cancel(id);
+  }
+
+  @MessagePattern({ cmd: 'workflowRuns.retry' })
+  @Post(':id/retry')
+  async retry(@Param('id') id: string) {
+    return this.workflowRunsService.retry(id);
+  }
+
+  @MessagePattern({ cmd: 'workflowRuns.stats' })
+  @Get(':id/stats')
+  async getStats(@Param('id') id: string) {
+    return this.workflowRunsService.getExecutionStats(id);
+  }
 }

@@ -1,13 +1,17 @@
 # Content Service
 
-The Content Service manages content assets and file uploads for the FunnelAgents platform.
+The Content Service provides comprehensive content management for the FunnelAgents platform with enterprise-grade features.
 
 ## Features
 
-- Content management with status workflow
-- File upload and storage
-- Content filtering and pagination
-- TypeORM with PostgreSQL integration
+- **Content Management** - CRUD operations with status workflow
+- **Content Versioning** - Track revisions, compare versions, rollback changes
+- **Approval Workflows** - Multi-step approval with reviewer assignment
+- **Multi-Channel Publishing** - Schedule and publish to multiple channels
+- **File Upload & Storage** - Support for images, videos, documents with thumbnail generation
+- **Content Templates** - Reusable templates with variable substitution
+- **Analytics Tracking** - Track views, engagement, and performance metrics
+- **TypeORM with PostgreSQL** - Robust data persistence
 
 ## Content Status Workflow
 
@@ -29,6 +33,55 @@ archived (from any status)
 - `PATCH /content/:id` - Update content
 - `PATCH /content/:id/status` - Update content status (enforces workflow)
 - `DELETE /content/:id` - Delete content
+
+### Versioning Endpoints
+
+- `POST /content/:contentId/versions` - Create new version
+- `GET /content/:contentId/versions` - Get version history
+- `GET /content/:contentId/versions/:versionId` - Get specific version
+- `POST /content/:contentId/versions/compare` - Compare two versions
+- `POST /content/:contentId/versions/rollback` - Rollback to a version
+- `DELETE /content/:contentId/versions/:versionId` - Delete version
+
+### Approval Endpoints
+
+- `POST /content/approvals` - Create approval request
+- `POST /content/:contentId/assign-reviewers` - Assign reviewers
+- `PATCH /content/approvals/:approvalId` - Update approval status
+- `GET /content/:contentId/approvals` - Get content approvals
+- `GET /content/:contentId/approval-status` - Check approval status
+- `GET /content/reviewers/:reviewerId/approvals` - Get reviewer's approvals
+- `GET /content/approvals/pending` - Get pending approvals
+- `DELETE /content/approvals/:approvalId` - Delete approval
+
+### Publishing Endpoints
+
+- `POST /content/publishes` - Schedule publish
+- `PATCH /content/publishes/:publishId/status` - Update publish status
+- `POST /content/publishes/:publishId/cancel` - Cancel scheduled publish
+- `GET /content/:contentId/publishes` - Get content publishes
+- `GET /content/publishes/scheduled` - Get ready-to-publish items
+- `GET /content/publishes/upcoming` - Get upcoming publishes
+- `GET /content/publishes/:publishId` - Get publish details
+- `DELETE /content/publishes/:publishId` - Delete publish record
+
+### Template Endpoints
+
+- `POST /templates` - Create template
+- `GET /templates` - List templates (with filters)
+- `GET /templates/categories` - Get unique categories
+- `GET /templates/:id` - Get template by ID
+- `PATCH /templates/:id` - Update template
+- `DELETE /templates/:id` - Delete template
+- `POST /templates/render` - Render template with variables
+
+### Analytics Endpoints
+
+- `POST /analytics/track` - Track analytics event
+- `GET /analytics` - Query analytics events
+- `GET /analytics/content/:contentId/metrics` - Get content metrics
+- `GET /analytics/performance/by-channel` - Channel performance
+- `GET /analytics/performance/top-content` - Top content by engagement
 
 ### File Upload Endpoints
 
@@ -93,6 +146,16 @@ DB_DATABASE=funnel_agents_content
 CONTENT_SERVICE_HOST=0.0.0.0
 CONTENT_SERVICE_PORT=3004
 CONTENT_SERVICE_BASE_URL=http://localhost:3004
+
+# Storage Configuration
+STORAGE_TYPE=local                    # Options: 'local', 's3'
+MAX_FILE_SIZE=10485760               # 10MB in bytes
+
+# AWS S3 Configuration (if STORAGE_TYPE=s3)
+AWS_S3_BUCKET=your-bucket-name
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
 
 # Environment
 NODE_ENV=development

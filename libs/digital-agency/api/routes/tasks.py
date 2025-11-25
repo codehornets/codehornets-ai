@@ -1,259 +1,107 @@
 """
-Task management API routes.
+Celery task status and management API routes.
 """
 
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
-from typing import List, Optional
-from datetime import datetime
+from fastapi import APIRouter, HTTPException, Path
+import logging
 
-from api.schemas.task_schemas import (
-    TaskResponse,
-    TaskCreate,
-    TaskUpdate,
-    TaskStatus,
-    TaskListResponse
-)
+from api.schemas.agent_execution_schemas import TaskStatusResponse
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# In-memory storage for demo (replace with database)
-tasks_db = {}
-
-
-@router.get("/", response_model=TaskListResponse)
-async def list_tasks(
-    agent_id: Optional[str] = Query(None, description="Filter by agent ID"),
-    status: Optional[str] = Query(None, description="Filter by status"),
-    priority: Optional[str] = Query(None, description="Filter by priority"),
-    skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(100, ge=1, le=1000, description="Maximum number of records to return")
+@router.get("/{task_id}/status", response_model=TaskStatusResponse)
+async def get_task_status(
+    task_id: str = Path(..., description="Celery task ID")
 ):
     """
-    List all tasks with optional filtering and pagination.
-    """
-    tasks = list(tasks_db.values())
+    Get the status of an asynchronous task.
 
-    # Apply filters
-    if agent_id:
-        tasks = [t for t in tasks if t.get('agent_id') == agent_id]
+    Returns task status including:
+    - PENDING: Task is waiting to be executed
+    - STARTED: Task has been started
+    - SUCCESS: Task completed successfully
+    - FAILURE: Task failed
+    - RETRY: Task is being retried
 
-    if status:
-        tasks = [t for t in tasks if t.get('status') == status]
+    Example:
+    ```
+    GET /tasks/abc123-def456/status
 
-    if priority:
-        tasks = [t for t in tasks if t.get('priority') == priority]
-
-    # Apply pagination
-    total = len(tasks)
-    tasks = tasks[skip:skip + limit]
-
-    return {
-        "tasks": tasks,
-        "total": total,
-        "skip": skip,
-        "limit": limit
+    Response:
+    {
+      "task_id": "abc123-def456",
+      "status": "SUCCESS",
+      "result": {"success": true, "output": {...}},
+      "error": null
     }
-
-
-@router.get("/{task_id}", response_model=TaskResponse)
-async def get_task(task_id: str):
+    ```
     """
-    Get a specific task by ID.
-    """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
-    return tasks_db[task_id]
-
-
-@router.post("/", response_model=TaskResponse, status_code=201)
-async def create_task(task: TaskCreate, background_tasks: BackgroundTasks):
-    """
-    Create a new task.
-    """
-    task_id = f"task_{len(tasks_db) + 1}_{int(datetime.utcnow().timestamp())}"
-
-    new_task = {
-        "task_id": task_id,
-        "agent_id": task.agent_id,
-        "type": task.type,
-        "description": task.description,
-        "input_data": task.input_data or {},
-        "priority": task.priority or "medium",
-        "status": "pending",
-        "result": None,
-        "error": None,
-        "created_at": datetime.utcnow().isoformat(),
-        "updated_at": datetime.utcnow().isoformat(),
-        "started_at": None,
-        "completed_at": None,
-        "metadata": task.metadata or {}
-    }
-
-    tasks_db[task_id] = new_task
-
-    # Optionally process task in background
-    if task.execute_immediately:
-        background_tasks.add_task(execute_task_async, task_id)
-
-    return new_task
-
-
-async def execute_task_async(task_id: str):
-    """
-    Execute task asynchronously (placeholder implementation).
-    """
-    import asyncio
-
-    if task_id not in tasks_db:
-        return
-
-    task = tasks_db[task_id]
-    task["status"] = "running"
-    task["started_at"] = datetime.utcnow().isoformat()
-    task["updated_at"] = datetime.utcnow().isoformat()
-
     try:
-        # Simulate task execution
-        await asyncio.sleep(2)
+        from celery_app import app as celery_app
+        from celery.result import AsyncResult
 
-        # Mock result
-        task["status"] = "completed"
-        task["result"] = {
-            "success": True,
-            "output": "Task completed successfully",
-            "data": {}
+        task = AsyncResult(task_id, app=celery_app)
+
+        response = {
+            "task_id": task_id,
+            "status": task.state,
+            "result": None,
+            "error": None,
+            "progress": None
         }
-        task["completed_at"] = datetime.utcnow().isoformat()
-        task["updated_at"] = datetime.utcnow().isoformat()
 
+        if task.state == 'PENDING':
+            response["progress"] = {"status": "waiting", "message": "Task is queued"}
+
+        elif task.state == 'STARTED':
+            response["progress"] = task.info if task.info else {"status": "started"}
+
+        elif task.state == 'SUCCESS':
+            response["result"] = task.result
+            response["completed_at"] = task.date_done.timestamp() if task.date_done else None
+
+        elif task.state == 'FAILURE':
+            response["error"] = str(task.info)
+            response["completed_at"] = task.date_done.timestamp() if task.date_done else None
+
+        elif task.state == 'RETRY':
+            response["progress"] = {"status": "retrying", "message": "Task is being retried"}
+
+        return TaskStatusResponse(**response)
+
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="Task status not available (Celery not configured)"
+        )
     except Exception as e:
-        task["status"] = "failed"
-        task["error"] = str(e)
-        task["completed_at"] = datetime.utcnow().isoformat()
-        task["updated_at"] = datetime.utcnow().isoformat()
+        logger.error(f"Error getting task status: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get task status: {str(e)}")
 
 
-@router.put("/{task_id}", response_model=TaskResponse)
-async def update_task(task_id: str, task_update: TaskUpdate):
+@router.post("/{task_id}/cancel", status_code=204)
+async def cancel_task(
+    task_id: str = Path(..., description="Celery task ID")
+):
     """
-    Update an existing task.
+    Cancel a running or pending Celery task.
+
+    Note: This sends a revoke signal. The task may have already started execution.
     """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+    try:
+        from celery_app import app as celery_app
 
-    task = tasks_db[task_id]
+        celery_app.control.revoke(task_id, terminate=True)
+        logger.info(f"Task {task_id} cancellation requested")
+        return None
 
-    # Update fields if provided
-    update_data = task_update.dict(exclude_unset=True)
-    for field, value in update_data.items():
-        if value is not None:
-            task[field] = value
-
-    task["updated_at"] = datetime.utcnow().isoformat()
-    tasks_db[task_id] = task
-
-    return task
-
-
-@router.delete("/{task_id}", status_code=204)
-async def delete_task(task_id: str):
-    """
-    Delete a task.
-    """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
-    # Only allow deletion of completed or failed tasks
-    if tasks_db[task_id]["status"] in ["running", "pending"]:
+    except ImportError:
         raise HTTPException(
-            status_code=400,
-            detail="Cannot delete running or pending task"
+            status_code=503,
+            detail="Task cancellation not available (Celery not configured)"
         )
-
-    del tasks_db[task_id]
-    return None
-
-
-@router.post("/{task_id}/execute", response_model=TaskStatus)
-async def execute_task(task_id: str, background_tasks: BackgroundTasks):
-    """
-    Execute a pending task.
-    """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
-    task = tasks_db[task_id]
-
-    if task["status"] != "pending":
-        raise HTTPException(
-            status_code=400,
-            detail=f"Task is not in pending state (current: {task['status']})"
-        )
-
-    # Execute task in background
-    background_tasks.add_task(execute_task_async, task_id)
-
-    return {
-        "task_id": task_id,
-        "status": "running",
-        "message": "Task execution started"
-    }
-
-
-@router.post("/{task_id}/cancel", response_model=TaskStatus)
-async def cancel_task(task_id: str):
-    """
-    Cancel a running task.
-    """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
-    task = tasks_db[task_id]
-
-    if task["status"] not in ["pending", "running"]:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Cannot cancel task in {task['status']} state"
-        )
-
-    task["status"] = "cancelled"
-    task["updated_at"] = datetime.utcnow().isoformat()
-    task["completed_at"] = datetime.utcnow().isoformat()
-
-    return {
-        "task_id": task_id,
-        "status": "cancelled",
-        "message": "Task cancelled successfully"
-    }
-
-
-@router.post("/{task_id}/retry", response_model=TaskResponse)
-async def retry_task(task_id: str, background_tasks: BackgroundTasks):
-    """
-    Retry a failed task.
-    """
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
-    task = tasks_db[task_id]
-
-    if task["status"] != "failed":
-        raise HTTPException(
-            status_code=400,
-            detail=f"Only failed tasks can be retried (current: {task['status']})"
-        )
-
-    # Reset task state
-    task["status"] = "pending"
-    task["result"] = None
-    task["error"] = None
-    task["started_at"] = None
-    task["completed_at"] = None
-    task["updated_at"] = datetime.utcnow().isoformat()
-
-    # Execute task in background
-    background_tasks.add_task(execute_task_async, task_id)
-
-    return task
+    except Exception as e:
+        logger.error(f"Error cancelling task: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to cancel task: {str(e)}")

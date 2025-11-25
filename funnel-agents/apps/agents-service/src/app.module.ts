@@ -1,13 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AgentsModule } from './modules/agents.module';
+import { HealthModule } from './health/health.module';
 import {
   AgentDbEntity,
   AgentFeedbackDbEntity,
   AgentTuningDbEntity,
   AgentTemplateDbEntity,
 } from '@funnelagents/infrastructure';
+import { CustomThrottlerGuard } from '@funnelagents/shared';
+import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
 @Module({
   imports: [
@@ -15,20 +20,49 @@ import {
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const redisUrl = getRedisUrl();
+        const useRedis = !!redisUrl && configService.get('NODE_ENV') !== 'test';
+        return createThrottlerConfig(useRedis, redisUrl);
+      },
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get<string>('DATABASE_URL');
+        const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+        const isProduction = nodeEnv === 'production';
 
-        // Parse PostgreSQL connection string
-        // Format: postgresql://user:password@host:port/database
+        // Base configuration with pooling
         let config: any = {
           type: 'postgres',
-          synchronize: configService.get<string>('NODE_ENV') !== 'production',
-          logging: configService.get<string>('NODE_ENV') === 'development',
+          synchronize: false,
+          migrationsRun: true,
+          migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+          logging: nodeEnv === 'development',
           entities: [AgentDbEntity, AgentFeedbackDbEntity, AgentTuningDbEntity, AgentTemplateDbEntity],
           autoLoadEntities: true,
+
+          // Query timeout - log slow queries over 10 seconds
+          maxQueryExecutionTime: 10000,
+
+          // Connection pooling configuration
+          extra: {
+            max: configService.get<number>('DB_POOL_MAX', 20),
+            min: configService.get<number>('DB_POOL_MIN', 5),
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 10000,
+            keepAlive: true,
+            keepAliveInitialDelayMillis: 10000,
+            application_name: 'agents-service',
+          },
+
+          // SSL configuration for production
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
         };
 
         if (databaseUrl) {
@@ -56,8 +90,14 @@ import {
       },
     }),
     AgentsModule,
+    HealthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,0 +1,979 @@
+name: funnel-agents-prod
+
+services:
+  # ==========================================================================
+  # Nginx Reverse Proxy & Load Balancer
+  # ==========================================================================
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: funnel-agents-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx-cache:/var/cache/nginx
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - api-gateway
+      - web-ui
+      - n8n
+    networks:
+      - funnel-agents-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.funnelagents.service=nginx"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # Infrastructure Services
+  # ==========================================================================
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: funnel-agents-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.utf8"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-backups:/backups
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=postgres"
+      - "com.funnelagents.environment=production"
+
+  # Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: funnel-agents-redis
+    restart: always
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+      --auto-aof-rewrite-percentage 100
+      --auto-aof-rewrite-min-size 64mb
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.funnelagents.service=redis"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # NestJS Microservices
+  # ==========================================================================
+
+  # API Gateway (port 3000)
+  api-gateway:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: api-gateway
+        NODE_VERSION: "20"
+    image: funnel-agents/api-gateway:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-api-gateway
+    restart: always
+    environment:
+      NODE_ENV: production
+      API_GATEWAY_PORT: 3000
+      AUTH_SERVICE_HOST: auth-service
+      AUTH_SERVICE_PORT: 3001
+      CRM_SERVICE_HOST: crm-service
+      CRM_SERVICE_PORT: 3002
+      CAMPAIGNS_SERVICE_HOST: campaigns-service
+      CAMPAIGNS_SERVICE_PORT: 3003
+      CONTENT_SERVICE_HOST: content-service
+      CONTENT_SERVICE_PORT: 3004
+      AGENTS_SERVICE_HOST: agents-service
+      AGENTS_SERVICE_PORT: 3005
+      TASKS_SERVICE_HOST: tasks-service
+      TASKS_SERVICE_PORT: 3006
+      AUTOMATIONS_SERVICE_HOST: automations-service
+      AUTOMATIONS_SERVICE_PORT: 3007
+      REPORTS_SERVICE_HOST: reports-service
+      REPORTS_SERVICE_PORT: 3008
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=api-gateway"
+      - "com.funnelagents.environment=production"
+
+  # Auth Service (port 3001)
+  auth-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: auth-service
+        NODE_VERSION: "20"
+    image: funnel-agents/auth-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-auth-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      AUTH_SERVICE_HOST: 0.0.0.0
+      AUTH_SERVICE_PORT: 3001
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-1d}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+      - jwt_secret
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=auth-service"
+      - "com.funnelagents.environment=production"
+
+  # CRM Service (port 3002)
+  crm-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: crm-service
+        NODE_VERSION: "20"
+    image: funnel-agents/crm-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-crm-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      CRM_SERVICE_HOST: 0.0.0.0
+      CRM_SERVICE_PORT: 3002
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=crm-service"
+      - "com.funnelagents.environment=production"
+
+  # Campaigns Service (port 3003)
+  campaigns-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: campaigns-service
+        NODE_VERSION: "20"
+    image: funnel-agents/campaigns-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-campaigns-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      CAMPAIGNS_SERVICE_HOST: 0.0.0.0
+      CAMPAIGNS_SERVICE_PORT: 3003
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=campaigns-service"
+      - "com.funnelagents.environment=production"
+
+  # Content Service (port 3004)
+  content-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: content-service
+        NODE_VERSION: "20"
+    image: funnel-agents/content-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-content-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      CONTENT_SERVICE_HOST: 0.0.0.0
+      CONTENT_SERVICE_PORT: 3004
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=content-service"
+      - "com.funnelagents.environment=production"
+
+  # Agents Service (port 3005)
+  agents-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: agents-service
+        NODE_VERSION: "20"
+    image: funnel-agents/agents-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-agents-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      AGENTS_SERVICE_HOST: 0.0.0.0
+      AGENTS_SERVICE_PORT: 3005
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=agents-service"
+      - "com.funnelagents.environment=production"
+
+  # Tasks Service (port 3006)
+  tasks-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: tasks-service
+        NODE_VERSION: "20"
+    image: funnel-agents/tasks-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-tasks-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      TASKS_SERVICE_HOST: 0.0.0.0
+      TASKS_SERVICE_PORT: 3006
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=tasks-service"
+      - "com.funnelagents.environment=production"
+
+  # Automations Service (port 3007)
+  automations-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: automations-service
+        NODE_VERSION: "20"
+    image: funnel-agents/automations-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-automations-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      AUTOMATIONS_SERVICE_HOST: 0.0.0.0
+      AUTOMATIONS_SERVICE_PORT: 3007
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=automations-service"
+      - "com.funnelagents.environment=production"
+
+  # Reports Service (port 3008)
+  reports-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: reports-service
+        NODE_VERSION: "20"
+    image: funnel-agents/reports-service:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-reports-service
+    restart: always
+    environment:
+      NODE_ENV: production
+      REPORTS_SERVICE_HOST: 0.0.0.0
+      REPORTS_SERVICE_PORT: 3008
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=reports-service"
+      - "com.funnelagents.environment=production"
+
+  # Worker Runner (port 3009)
+  worker-runner:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: worker-runner
+        NODE_VERSION: "20"
+    image: funnel-agents/worker-runner:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-worker-runner
+    restart: always
+    environment:
+      NODE_ENV: production
+      WORKER_RUNNER_HOST: 0.0.0.0
+      WORKER_RUNNER_PORT: 3009
+      TASKS_SERVICE_HOST: tasks-service
+      TASKS_SERVICE_PORT: 3006
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      tasks-service:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=worker-runner"
+      - "com.funnelagents.environment=production"
+
+  # Scheduler (port 3010)
+  scheduler:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.prod
+      args:
+        SERVICE: scheduler
+        NODE_VERSION: "20"
+    image: funnel-agents/scheduler:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-scheduler
+    restart: always
+    environment:
+      NODE_ENV: production
+      SCHEDULER_HOST: 0.0.0.0
+      SCHEDULER_PORT: 3010
+      TASKS_SERVICE_HOST: tasks-service
+      TASKS_SERVICE_PORT: 3006
+      AUTOMATIONS_SERVICE_HOST: automations-service
+      AUTOMATIONS_SERVICE_PORT: 3007
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets:
+      - database_url
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      tasks-service:
+        condition: service_healthy
+      automations-service:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=scheduler"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # Frontend
+  # ==========================================================================
+
+  # Web UI (Vite React)
+  web-ui:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web-prod
+      args:
+        NODE_VERSION: "20"
+    image: funnel-agents/web-ui:${IMAGE_TAG:-latest}
+    container_name: funnel-agents-web-ui
+    restart: always
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - api-gateway
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.funnelagents.service=web-ui"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # n8n Workflow Automation (Agent Orchestration)
+  # ==========================================================================
+  n8n:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD_FILE: /run/secrets/postgres_password
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://${N8N_HOST}/webhook
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      N8N_BASIC_AUTH_ACTIVE: "false"
+      N8N_ENCRYPTION_KEY_FILE: /run/secrets/n8n_encryption_key
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-UTC}
+      TZ: ${APP_TIMEZONE:-UTC}
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_PROGRESS: "true"
+      EXECUTIONS_DATA_MAX_AGE: 336
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_PRUNE_MAX_COUNT: 10000
+      WORKFLOWS_DEFAULT_NAME: "FunnelAgents Workflow"
+      N8N_PAYLOAD_SIZE_MAX: 16
+      EXECUTIONS_PROCESS_MAX_TIMEOUT: 3600
+      EXECUTIONS_TIMEOUT: 3600
+      EXECUTIONS_TIMEOUT_MAX: 7200
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_HIRING_BANNER_ENABLED: "false"
+      N8N_LOG_LEVEL: info
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      N8N_LOG_FILE_COUNT_MAX: 10
+      N8N_LOG_FILE_SIZE_MAX: 10
+    secrets:
+      - postgres_password
+      - n8n_encryption_key
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+    networks:
+      - funnel-agents-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      - "com.funnelagents.service=n8n"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # n8n Workers (Agent Task Processing) - Scaled for Production
+  # ==========================================================================
+  n8n-worker:
+    image: n8nio/n8n:1.68.0
+    restart: always
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD_FILE: /run/secrets/postgres_password
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      N8N_ENCRYPTION_KEY_FILE: /run/secrets/n8n_encryption_key
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-UTC}
+      TZ: ${APP_TIMEZONE:-UTC}
+      N8N_LOG_LEVEL: info
+      N8N_LOG_OUTPUT: console
+    secrets:
+      - postgres_password
+      - n8n_encryption_key
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+    networks:
+      - funnel-agents-network
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.environment=production"
+
+  # ==========================================================================
+  # Database Backup Service
+  # ==========================================================================
+  postgres-backup:
+    image: prodrigestivill/postgres-backup-local:16-alpine
+    container_name: funnel-agents-postgres-backup
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-backups:/backups
+    networks:
+      - funnel-agents-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.funnelagents.service=postgres-backup"
+      - "com.funnelagents.environment=production"
+
+# ==========================================================================
+# Docker Secrets (for sensitive data)
+# ==========================================================================
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  database_url:
+    file: ./secrets/database_url.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  n8n_encryption_key:
+    file: ./secrets/n8n_encryption_key.txt
+
+# ==========================================================================
+# Volumes (persistent data)
+# ==========================================================================
+volumes:
+  postgres-data:
+    driver: local
+  postgres-backups:
+    driver: local
+  redis-data:
+    driver: local
+  n8n-data:
+    driver: local
+  n8n-files:
+    driver: local
+  nginx-cache:
+    driver: local
+  nginx-logs:
+    driver: local
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  funnel-agents-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

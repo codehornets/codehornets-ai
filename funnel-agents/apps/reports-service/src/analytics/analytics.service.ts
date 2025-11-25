@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TaskEntity, AgentEntity } from './entities';
+import { TaskEntity, AgentEntity, FeedbackEntity } from './entities';
 import {
   AnalyticsQueryDto,
   TaskAnalyticsDto,
@@ -11,6 +11,7 @@ import {
   AgentMetrics,
   DomainMetrics,
 } from './dto';
+import { CacheService } from './services/cache.service';
 
 @Injectable()
 export class AnalyticsService {
@@ -21,10 +22,26 @@ export class AnalyticsService {
     private readonly taskRepository: Repository<TaskEntity>,
     @InjectRepository(AgentEntity)
     private readonly agentRepository: Repository<AgentEntity>,
+    @InjectRepository(FeedbackEntity)
+    private readonly feedbackRepository: Repository<FeedbackEntity>,
+    private readonly cacheService: CacheService,
   ) {}
 
   async getTaskAnalytics(query: AnalyticsQueryDto): Promise<TaskAnalyticsDto> {
     this.logger.log('Generating task analytics');
+
+    // Check cache first
+    const cacheKey = this.cacheService.generateKey(
+      'task-analytics',
+      query.workspace_id || 'global',
+      query,
+    );
+
+    const cached = await this.cacheService.get<TaskAnalyticsDto>(cacheKey);
+    if (cached) {
+      this.logger.log('Returning cached task analytics');
+      return cached;
+    }
 
     const queryBuilder = this.taskRepository.createQueryBuilder('task');
 
@@ -89,7 +106,7 @@ export class AnalyticsService {
     // Tasks by day
     const tasksByDay = this.aggregateTasksByDay(tasks);
 
-    return new TaskAnalyticsDto({
+    const result = new TaskAnalyticsDto({
       total,
       completed,
       failed,
@@ -100,6 +117,11 @@ export class AnalyticsService {
       tasks_by_status: tasksByStatus,
       tasks_by_day: tasksByDay,
     });
+
+    // Cache result
+    await this.cacheService.set(cacheKey, result);
+
+    return result;
   }
 
   async getAgentAnalytics(query: AnalyticsQueryDto): Promise<AgentAnalyticsDto> {
@@ -250,8 +272,45 @@ export class AnalyticsService {
       tasks_failed: tasksFailed,
       success_rate: Number(successRate.toFixed(2)),
       avg_completion_time: Number(avgCompletionTime.toFixed(2)),
-      avg_feedback_rating: 0, // TODO: Implement feedback system
+      avg_feedback_rating: await this.getAverageFeedbackRating(agent.id, query),
     };
+  }
+
+  /**
+   * Calculate average feedback rating for an agent
+   */
+  private async getAverageFeedbackRating(
+    agentId: string,
+    query: AnalyticsQueryDto,
+  ): Promise<number> {
+    const feedbackQuery = this.feedbackRepository
+      .createQueryBuilder('feedback')
+      .where('feedback.agent_id = :agentId', { agentId });
+
+    if (query.start_date) {
+      feedbackQuery.andWhere('feedback.created_at >= :startDate', {
+        startDate: new Date(query.start_date),
+      });
+    }
+
+    if (query.end_date) {
+      feedbackQuery.andWhere('feedback.created_at <= :endDate', {
+        endDate: new Date(query.end_date),
+      });
+    }
+
+    if (query.workspace_id) {
+      feedbackQuery.andWhere('feedback.workspace_id = :workspaceId', {
+        workspaceId: query.workspace_id,
+      });
+    }
+
+    const feedbacks = await feedbackQuery.getMany();
+
+    if (feedbacks.length === 0) return 0;
+
+    const totalRating = feedbacks.reduce((sum, fb) => sum + fb.rating, 0);
+    return Number((totalRating / feedbacks.length).toFixed(2));
   }
 
   private async getDomainMetrics(

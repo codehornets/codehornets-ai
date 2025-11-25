@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PaginationParams, PaginatedResult } from '@funnelagents/domain';
 import { CampaignRepository, CampaignFilters } from '../repositories/campaign.repository';
 import { CampaignTemplateRepository } from '../repositories/campaign-template.repository';
 import { CampaignEntity } from '../entities/campaign.entity';
 import { CreateCampaignDto, UpdateCampaignDto, CreateFromTemplateDto } from '../dto/campaign.dto';
+import { CampaignTasksService } from './campaign-tasks.service';
 
 @Injectable()
 export class CampaignsService {
+  private readonly logger = new Logger(CampaignsService.name);
+
   constructor(
     private readonly campaignRepository: CampaignRepository,
-    private readonly templateRepository: CampaignTemplateRepository
+    private readonly templateRepository: CampaignTemplateRepository,
+    private readonly tasksService: CampaignTasksService,
   ) {}
 
   async findAll(
@@ -100,17 +104,47 @@ export class CampaignsService {
 
     const savedCampaign = await this.campaignRepository.save(campaign);
 
-    // TODO: If create_default_tasks is true, create tasks from template.default_tasks
-    // This would require integration with the tasks-service
+    // Create tasks from template if requested
     if (data.create_default_tasks && template.default_tasks?.length) {
-      // Emit event or call tasks service to create default tasks
-      // For now, we'll just add a note in the settings
-      savedCampaign.settings = {
-        ...savedCampaign.settings,
-        template_id: template.id,
-        pending_tasks: template.default_tasks,
-      };
-      await this.campaignRepository.save(savedCampaign);
+      try {
+        this.logger.log(
+          `Creating ${template.default_tasks.length} tasks for campaign ${savedCampaign.id}`,
+        );
+
+        const taskResult = await this.tasksService.createTasksFromTemplate({
+          campaign_id: savedCampaign.id,
+          workspace_id: data.workspace_id,
+          tasks: template.default_tasks,
+          delay_between_tasks: 100, // 100ms delay between task creation
+        });
+
+        // Store task creation results in campaign settings
+        savedCampaign.settings = {
+          ...savedCampaign.settings,
+          template_id: template.id,
+          tasks_created: taskResult.created_tasks.length,
+          tasks_failed: taskResult.failed_tasks.length,
+          task_creation_result: taskResult,
+        };
+
+        await this.campaignRepository.save(savedCampaign);
+
+        this.logger.log(
+          `Successfully created ${taskResult.created_tasks.length} tasks for campaign ${savedCampaign.id}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Failed to create tasks for campaign ${savedCampaign.id}`,
+          error instanceof Error ? error.stack : error,
+        );
+        // Don't fail the campaign creation if task creation fails
+        savedCampaign.settings = {
+          ...savedCampaign.settings,
+          template_id: template.id,
+          task_creation_error: error instanceof Error ? error.message : String(error),
+        };
+        await this.campaignRepository.save(savedCampaign);
+      }
     }
 
     return savedCampaign;

@@ -1,0 +1,330 @@
+# Distributed Locking Architecture
+
+## System Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Multi-Instance Scheduler Cluster                  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐         │
+│  │ Scheduler 1  │    │ Scheduler 2  │    │ Scheduler 3  │         │
+│  │              │    │              │    │              │         │
+│  │ CronJobs     │    │ CronJobs     │    │ CronJobs     │         │
+│  │ Dispatchers  │    │ Dispatchers  │    │ Dispatchers  │         │
+│  └──────┬───────┘    └──────┬───────┘    └──────┬───────┘         │
+│         │                   │                   │                   │
+│         └───────────────────┼───────────────────┘                   │
+│                             │                                        │
+└─────────────────────────────┼────────────────────────────────────────┘
+                              │
+                              ▼
+                ┌─────────────────────────┐
+                │   Redis Lock Manager    │
+                │                         │
+                │ ┌─────────────────────┐ │
+                │ │  Lock Storage       │ │
+                │ │  - Key/Value pairs  │ │
+                │ │  - TTL management   │ │
+                │ │  - Atomic ops       │ │
+                │ └─────────────────────┘ │
+                └─────────────────────────┘
+```
+
+## Lock Flow Diagram
+
+```
+Request to Execute Task "task-123"
+         │
+         ▼
+┌────────────────────────────────────────┐
+│ 1. Acquire Lock                        │
+│    Key: scheduler:task:task-123        │
+│    TTL: 60000ms                        │
+│    LockId: pid-timestamp-random        │
+└──────────┬─────────────────────────────┘
+           │
+           ▼
+      ┌────────┐     Yes     ┌─────────────────────┐
+      │ Lock   │─────────────→│ 2. Execute Task     │
+      │ Acquired? │           │    - Create exec    │
+      └────────┘              │    - Dispatch       │
+           │                  │    - Update status  │
+           │ No               └──────────┬──────────┘
+           ▼                             │
+      ┌─────────────────┐                │
+      │ 3. Skip Task    │                │
+      │    Log: Already │                │
+      │    executing    │                │
+      └─────────────────┘                │
+                                         ▼
+                              ┌──────────────────────┐
+                              │ 4. Release Lock      │
+                              │    (in finally)      │
+                              └──────────────────────┘
+```
+
+## Component Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Scheduler Service                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                    CronJobsService                        │  │
+│  ├───────────────────────────────────────────────────────────┤  │
+│  │                                                           │  │
+│  │  @Cron('* * * * *')                                      │  │
+│  │  async checkDueTasks() {                                 │  │
+│  │    🔒 Lock: scheduler:check-due-tasks                    │  │
+│  │    if (!acquired) skip                                   │  │
+│  │    ... check and execute tasks                           │  │
+│  │  }                                                        │  │
+│  │                                                           │  │
+│  │  async executeTask(task) {                               │  │
+│  │    🔒 Lock: scheduler:task:{taskId}                      │  │
+│  │    if (!acquired) skip                                   │  │
+│  │    ... dispatch to appropriate service                   │  │
+│  │  }                                                        │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                            │                                     │
+│                            ▼                                     │
+│  ┌────────────────────────────────────────────────────┐         │
+│  │              Dispatchers                           │         │
+│  ├────────────────────────────────────────────────────┤         │
+│  │                                                    │         │
+│  │  WorkflowDispatcher.dispatch()                    │         │
+│  │    🔒 Lock: workflow:dispatch:{id}:{taskId}       │         │
+│  │                                                    │         │
+│  │  ReportDispatcher.dispatch()                      │         │
+│  │    🔒 Lock: report:dispatch:{id}:{taskId}         │         │
+│  │                                                    │         │
+│  │  AgentDispatcher.dispatch()                       │         │
+│  │    🔒 Lock: agent:dispatch:{id}:{taskId}          │         │
+│  │                                                    │         │
+│  │  CustomDispatcher.dispatch()                      │         │
+│  │    🔒 Lock: custom:dispatch:{taskId}              │         │
+│  └────────────────────────────────────────────────────┘         │
+│                            │                                     │
+└────────────────────────────┼─────────────────────────────────────┘
+                             │
+                             ▼
+         ┌───────────────────────────────────────────┐
+         │    DistributedLockService                 │
+         │    (libs/infrastructure)                  │
+         ├───────────────────────────────────────────┤
+         │                                           │
+         │  + acquire(key, options)                  │
+         │  + release(key, lockId)                   │
+         │  + extend(key, lockId, ttl)               │
+         │  + executeWithLock(key, fn)               │
+         │  + isLocked(key)                          │
+         │  + getMetrics()                           │
+         │  + healthCheck()                          │
+         │                                           │
+         └───────────────┬───────────────────────────┘
+                         │
+                         ▼
+              ┌──────────────────┐
+              │      Redis       │
+              │                  │
+              │  SET NX PX       │
+              │  DEL (Lua)       │
+              │  EXPIRE (Lua)    │
+              └──────────────────┘
+```
+
+## Lock State Machine
+
+```
+                    ┌─────────┐
+                    │  Start  │
+                    └────┬────┘
+                         │
+                         ▼
+              ┌──────────────────┐
+              │ Request Lock     │
+              │ SET NX PX        │
+              └────┬────┬────────┘
+                   │    │
+         Success   │    │  Failure
+                   │    │
+         ┌─────────▼    ▼─────────┐
+         │                        │
+    ┌────▼─────┐           ┌──────▼───────┐
+    │ ACQUIRED │           │   REJECTED   │
+    │          │           │              │
+    │ LockId:  │           │ Return null  │
+    │ xyz123   │           └──────────────┘
+    └────┬─────┘                  │
+         │                        │
+         │                        │
+    ┌────▼──────────┐             │
+    │  Do Work      │             │
+    │               │             │
+    │  Auto-extend  │             │
+    │  if needed    │             │
+    └────┬──────────┘             │
+         │                        │
+         ▼                        │
+    ┌────────────┐                │
+    │  Release   │                │
+    │  DEL (Lua) │                │
+    └────┬───────┘                │
+         │                        │
+         └────────┬───────────────┘
+                  │
+                  ▼
+            ┌──────────┐
+            │   Done   │
+            └──────────┘
+```
+
+## Redis Lock Structure
+
+```
+Redis Key: funnel-agents:lock:scheduler:task:123
+Value: 12345-1732547800000-a1b2c3d4e5f6g7h8
+TTL: 60000ms
+
+┌─────────────────────────────────────────────────┐
+│ Redis Memory Layout                             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  Key: funnel-agents:lock:scheduler:task:123    │
+│  ├── Value: 12345-1732547800000-random         │
+│  ├── TTL: 60000 (milliseconds)                 │
+│  └── Expiry: Auto-delete when TTL reaches 0    │
+│                                                 │
+│  Key: funnel-agents:lock:workflow:dispatch:... │
+│  ├── Value: 12346-1732547801000-random         │
+│  ├── TTL: 35000                                │
+│  └── Expiry: Auto-delete                       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+## Concurrent Execution Timeline
+
+```
+Time →
+Instance 1: ─┬─[Acquire]─✓─[Execute Task]─────────[Release]─────
+             │
+Instance 2: ─┼───[Acquire]─✗─[Skip]───────────────────────────
+             │
+Instance 3: ─┼────[Acquire]─✗─[Skip]──────────────────────────
+             │
+             └─ Only Instance 1 gets lock
+```
+
+## Lock Metrics Dashboard
+
+```
+┌────────────────────────────────────────────────────┐
+│         Distributed Lock Metrics                   │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  Total Acquisitions:     1,000                    │
+│  Successful:              950  (95%)              │
+│  Failed:                   50  (5%)               │
+│  Contentions:              30  (3%)               │
+│  Timeouts:                  5  (0.5%)             │
+│  Active Locks:              3                     │
+│                                                    │
+│  Success Rate: ████████████████████░  95%         │
+│  Contention:   ███░░░░░░░░░░░░░░░░░   3%          │
+│                                                    │
+└────────────────────────────────────────────────────┘
+```
+
+## Error Handling Flow
+
+```
+Lock Acquisition
+      │
+      ▼
+┌──────────────┐
+│ Redis Check  │
+└──────┬───────┘
+       │
+       ├─ Available ──→ [Acquire] ──→ [Execute]
+       │
+       ├─ Locked ─────→ [Skip] ──────→ [Log & Return]
+       │
+       └─ Error ──────→ [Log Error] ─→ [Fallback Mode]
+                           │
+                           └─ Continue without locking
+                              (Single instance mode)
+```
+
+## Directory Structure
+
+```
+funnel-agents/
+├── libs/
+│   └── infrastructure/
+│       └── src/
+│           └── lib/
+│               └── locks/
+│                   ├── distributed-lock.service.ts
+│                   ├── distributed-lock.module.ts
+│                   ├── distributed-lock.service.spec.ts
+│                   ├── decorators/
+│                   │   └── with-lock.decorator.ts
+│                   └── index.ts
+│
+└── apps/
+    └── scheduler/
+        ├── src/
+        │   ├── app.module.ts (imports DistributedLockModule)
+        │   ├── cron-jobs/
+        │   │   ├── cron-jobs.service.ts (uses locks)
+        │   │   └── cron-jobs.service.spec.ts
+        │   └── dispatchers/
+        │       ├── workflow-dispatcher.service.ts (uses locks)
+        │       ├── report-dispatcher.service.ts (uses locks)
+        │       ├── agent-dispatcher.service.ts (uses locks)
+        │       └── custom-dispatcher.service.ts (uses locks)
+        │
+        └── docs/
+            ├── DISTRIBUTED_LOCKING_IMPLEMENTATION_REPORT.md
+            ├── DISTRIBUTED_LOCKING_QUICK_REFERENCE.md
+            ├── DISTRIBUTED_LOCKING_SUMMARY.md
+            ├── FILES_SUMMARY.txt
+            └── ARCHITECTURE_DIAGRAM.txt (this file)
+```
+
+## Production Deployment
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                   Load Balancer                         │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+   ┌────▼───┐ ┌───▼────┐ ┌───▼────┐
+   │Instance│ │Instance│ │Instance│
+   │   1    │ │   2    │ │   3    │
+   └────┬───┘ └───┬────┘ └───┬────┘
+        │         │          │
+        └─────────┼──────────┘
+                  │
+                  ▼
+       ┌──────────────────┐
+       │   Redis Cluster  │
+       │                  │
+       │  ┌────┐  ┌────┐ │
+       │  │ M  │  │ S  │ │
+       │  └────┘  └────┘ │
+       └──────────────────┘
+            Master  Slave
+```
+
+Legend:
+🔒 = Lock protected operation
+✓ = Lock acquired
+✗ = Lock rejected
+M = Master
+S = Slave

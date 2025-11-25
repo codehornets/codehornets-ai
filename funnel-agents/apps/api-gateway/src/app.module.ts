@@ -1,9 +1,14 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { ProxyModule } from './proxy/proxy.module';
 import { HealthModule } from './health/health.module';
+import { SecurityModule } from './security/security.module';
 import { AuthGuard } from './bootstrap/guards/auth.guard';
+import { CustomThrottlerGuard } from '@funnelagents/shared';
+import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
 // Define clients configuration separately so we can reuse it
 // TCP ports are HTTP port + 10 (e.g., 3001 HTTP -> 3011 TCP)
@@ -81,12 +86,29 @@ const clientsConfig = [
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
     }),
+    // Rate limiting with Redis support
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const redisUrl = getRedisUrl();
+        const useRedis = !!redisUrl && configService.get('NODE_ENV') !== 'test';
+        return createThrottlerConfig(useRedis, redisUrl);
+      },
+    }),
     // Microservice clients for inter-service communication
     ClientsModule.register(clientsConfig as any),
     ProxyModule,
     HealthModule,
+    SecurityModule,
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
   exports: [AuthGuard, ClientsModule],
 })
 export class AppModule {}

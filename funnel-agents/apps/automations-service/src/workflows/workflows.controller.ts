@@ -52,4 +52,28 @@ export class WorkflowsController {
   ) {
     return this.workflowsService.execute(id, executeDto);
   }
+
+  @MessagePattern({ cmd: 'workflows.validate' })
+  @Get(':id/validate')
+  async validate(@Param('id') id: string) {
+    return this.workflowsService.validate(id);
+  }
+
+  @MessagePattern({ cmd: 'workflows.activate' })
+  @Post(':id/activate')
+  async activate(@Param('id') id: string) {
+    return this.workflowsService.activate(id);
+  }
+
+  @MessagePattern({ cmd: 'workflows.pause' })
+  @Post(':id/pause')
+  async pause(@Param('id') id: string) {
+    return this.workflowsService.pause(id);
+  }
+
+  @MessagePattern({ cmd: 'workflows.archive' })
+  @Post(':id/archive')
+  async archive(@Param('id') id: string) {
+    return this.workflowsService.archive(id);
+  }
 }

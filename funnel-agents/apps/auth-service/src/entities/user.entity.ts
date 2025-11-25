@@ -43,6 +43,15 @@ export class User {
   @Column({ name: 'industry', nullable: true })
   industry?: string;
 
+  @Column({ name: 'failed_login_attempts', default: 0 })
+  failed_login_attempts: number;
+
+  @Column({ name: 'locked_until', nullable: true })
+  locked_until?: Date;
+
+  @Column({ name: 'last_login', nullable: true })
+  last_login?: Date;
+
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 

@@ -1,0 +1,250 @@
+name: funnel-agents-test
+
+services:
+  # ==========================================================================
+  # Infrastructure Services for Testing
+  # ==========================================================================
+
+  # PostgreSQL Database
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: funnel-agents-postgres-test
+    environment:
+      POSTGRES_DB: funnel_agents_test
+      POSTGRES_USER: funnel_agents_test
+      POSTGRES_PASSWORD: test_secret
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U funnel_agents_test"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+  # Redis Cache & Queue
+  redis-test:
+    image: redis:7-alpine
+    container_name: funnel-agents-redis-test
+    ports:
+      - "6381:6379"
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+  # ==========================================================================
+  # Test Services
+  # ==========================================================================
+
+  # Auth Service (port 3001)
+  auth-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=auth-service
+    container_name: funnel-agents-auth-service-test
+    environment:
+      - NODE_ENV=test
+      - AUTH_SERVICE_HOST=0.0.0.0
+      - AUTH_SERVICE_PORT=3001
+      - AUTH_SERVICE_TCP_PORT=3011
+      - JWT_SECRET=test-jwt-secret-key-for-testing-only
+      - JWT_EXPIRATION=1h
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3001:3001"
+      - "3011:3011"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+  # CRM Service (port 3002)
+  crm-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=crm-service
+    container_name: funnel-agents-crm-service-test
+    environment:
+      - NODE_ENV=test
+      - CRM_SERVICE_HOST=0.0.0.0
+      - CRM_SERVICE_PORT=3002
+      - CRM_SERVICE_TCP_PORT=3012
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3002:3002"
+      - "3012:3012"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+  # Campaigns Service (port 3003)
+  campaigns-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=campaigns-service
+    container_name: funnel-agents-campaigns-service-test
+    environment:
+      - NODE_ENV=test
+      - CAMPAIGNS_SERVICE_HOST=0.0.0.0
+      - CAMPAIGNS_SERVICE_PORT=3003
+      - CAMPAIGNS_SERVICE_TCP_PORT=3013
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3003:3003"
+      - "3013:3013"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3003/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+  # Agents Service (port 3005)
+  agents-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=agents-service
+    container_name: funnel-agents-agents-service-test
+    environment:
+      - NODE_ENV=test
+      - AGENTS_SERVICE_HOST=0.0.0.0
+      - AGENTS_SERVICE_PORT=3005
+      - AGENTS_SERVICE_TCP_PORT=3015
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3005:3005"
+      - "3015:3015"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3005/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+  # Tasks Service (port 3006)
+  tasks-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=tasks-service
+    container_name: funnel-agents-tasks-service-test
+    environment:
+      - NODE_ENV=test
+      - TASKS_SERVICE_HOST=0.0.0.0
+      - TASKS_SERVICE_PORT=3006
+      - TASKS_SERVICE_TCP_PORT=3016
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3006:3006"
+      - "3016:3016"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3006/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+  # Automations Service (port 3007)
+  automations-service-test:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=automations-service
+    container_name: funnel-agents-automations-service-test
+    environment:
+      - NODE_ENV=test
+      - AUTOMATIONS_SERVICE_HOST=0.0.0.0
+      - AUTOMATIONS_SERVICE_PORT=3007
+      - AUTOMATIONS_SERVICE_TCP_PORT=3017
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://funnel_agents_test:test_secret@postgres-test:5432/funnel_agents_test
+    ports:
+      - "3007:3007"
+      - "3017:3017"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3007/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

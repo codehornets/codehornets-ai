@@ -1,0 +1,282 @@
+# Prometheus Alerting Rules for FunnelAgents Platform
+groups:
+  - name: service_health
+    interval: 30s
+    rules:
+      # Service Down Alerts
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: 'Service {{ $labels.job }} is down'
+          description: 'Service {{ $labels.job }} on instance {{ $labels.instance }} has been down for more than 1 minute.'
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(funnelagents_http_requests_total{status_code=~"5.."}[5m])) by (service)
+            /
+            sum(rate(funnelagents_http_requests_total[5m])) by (service)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          category: errors
+        annotations:
+          summary: 'High error rate in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} has error rate above 5% (current: {{ $value | humanizePercentage }})'
+
+      # Critical Error Rate
+      - alert: CriticalErrorRate
+        expr: |
+          (
+            sum(rate(funnelagents_http_requests_total{status_code=~"5.."}[5m])) by (service)
+            /
+            sum(rate(funnelagents_http_requests_total[5m])) by (service)
+          ) > 0.15
+        for: 2m
+        labels:
+          severity: critical
+          category: errors
+        annotations:
+          summary: 'Critical error rate in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} has error rate above 15% (current: {{ $value | humanizePercentage }})'
+
+  - name: performance
+    interval: 30s
+    rules:
+      # Slow HTTP Requests
+      - alert: SlowHTTPRequests
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, le)
+          ) > 2
+        for: 10m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: 'Slow HTTP requests in {{ $labels.service }}'
+          description: 'P95 latency in {{ $labels.service }} is above 2 seconds (current: {{ $value }}s)'
+
+      # Very Slow HTTP Requests
+      - alert: VerySlowHTTPRequests
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(funnelagents_http_request_duration_seconds_bucket[5m])) by (service, le)
+          ) > 5
+        for: 5m
+        labels:
+          severity: critical
+          category: performance
+        annotations:
+          summary: 'Very slow HTTP requests in {{ $labels.service }}'
+          description: 'P95 latency in {{ $labels.service }} is above 5 seconds (current: {{ $value }}s)'
+
+      # Slow Database Queries
+      - alert: SlowDatabaseQueries
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(funnelagents_db_query_duration_seconds_bucket[5m])) by (service, operation, le)
+          ) > 1
+        for: 10m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: 'Slow database queries in {{ $labels.service }}'
+          description: 'P95 query duration for {{ $labels.operation }} in {{ $labels.service }} is above 1 second'
+
+  - name: database
+    interval: 30s
+    rules:
+      # Database Connection Pool Exhaustion
+      - alert: DatabaseConnectionPoolHigh
+        expr: funnelagents_db_connections_active > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: 'High database connections in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} has {{ $value }} active database connections'
+
+      # High Database Error Rate
+      - alert: HighDatabaseErrorRate
+        expr: |
+          sum(rate(funnelagents_db_errors_total[5m])) by (service) > 1
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: 'High database error rate in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} has {{ $value }} database errors per second'
+
+  - name: queue
+    interval: 30s
+    rules:
+      # Queue Backlog
+      - alert: QueueBacklog
+        expr: funnelagents_queue_jobs_waiting > 1000
+        for: 10m
+        labels:
+          severity: warning
+          category: queue
+        annotations:
+          summary: 'Queue backlog in {{ $labels.queue }}'
+          description: 'Queue {{ $labels.queue }} has {{ $value }} jobs waiting for more than 10 minutes'
+
+      # Critical Queue Backlog
+      - alert: CriticalQueueBacklog
+        expr: funnelagents_queue_jobs_waiting > 5000
+        for: 5m
+        labels:
+          severity: critical
+          category: queue
+        annotations:
+          summary: 'Critical queue backlog in {{ $labels.queue }}'
+          description: 'Queue {{ $labels.queue }} has {{ $value }} jobs waiting - immediate attention required'
+
+      # High Queue Job Failure Rate
+      - alert: HighQueueJobFailureRate
+        expr: |
+          (
+            sum(rate(funnelagents_queue_jobs_failed_total[5m])) by (queue)
+            /
+            sum(rate(funnelagents_queue_jobs_total[5m])) by (queue)
+          ) > 0.10
+        for: 10m
+        labels:
+          severity: warning
+          category: queue
+        annotations:
+          summary: 'High job failure rate in {{ $labels.queue }}'
+          description: 'Queue {{ $labels.queue }} has job failure rate above 10%'
+
+  - name: business_metrics
+    interval: 30s
+    rules:
+      # Agent Execution Failures
+      - alert: HighAgentFailureRate
+        expr: |
+          (
+            sum(rate(funnelagents_agents_errors_total[10m])) by (agent_type)
+            /
+            sum(rate(funnelagents_agents_executions_total[10m])) by (agent_type)
+          ) > 0.20
+        for: 10m
+        labels:
+          severity: warning
+          category: agents
+        annotations:
+          summary: 'High failure rate for {{ $labels.agent_type }} agents'
+          description: 'Agent type {{ $labels.agent_type }} has failure rate above 20%'
+
+      # Task Failure Spike
+      - alert: TaskFailureSpike
+        expr: |
+          rate(funnelagents_tasks_failed_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          category: tasks
+        annotations:
+          summary: 'Task failure spike in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} is experiencing {{ $value }} task failures per second'
+
+      # Workflow Execution Failures
+      - alert: WorkflowExecutionFailures
+        expr: |
+          (
+            sum(rate(funnelagents_workflow_errors_total[10m])) by (workflow_type)
+            /
+            sum(rate(funnelagents_workflow_executions_total[10m])) by (workflow_type)
+          ) > 0.15
+        for: 10m
+        labels:
+          severity: warning
+          category: workflows
+        annotations:
+          summary: 'High workflow failure rate for {{ $labels.workflow_type }}'
+          description: 'Workflow {{ $labels.workflow_type }} has failure rate above 15%'
+
+  - name: rate_limiting
+    interval: 30s
+    rules:
+      # Excessive Rate Limit Violations
+      - alert: ExcessiveRateLimitViolations
+        expr: |
+          rate(funnelagents_api_rate_limit_exceeded_total[5m]) > 10
+        for: 10m
+        labels:
+          severity: warning
+          category: security
+        annotations:
+          summary: 'Excessive rate limit violations on {{ $labels.endpoint }}'
+          description: 'Endpoint {{ $labels.endpoint }} is experiencing {{ $value }} rate limit violations per second'
+
+  - name: resources
+    interval: 30s
+    rules:
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: |
+          (funnelagents_memory_heap_used_bytes / 1024 / 1024 / 1024) > 1.5
+        for: 10m
+        labels:
+          severity: warning
+          category: resources
+        annotations:
+          summary: 'High memory usage in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} is using {{ $value | humanize }}GB of memory'
+
+      # Critical Memory Usage
+      - alert: CriticalMemoryUsage
+        expr: |
+          (funnelagents_memory_heap_used_bytes / 1024 / 1024 / 1024) > 2.5
+        for: 5m
+        labels:
+          severity: critical
+          category: resources
+        annotations:
+          summary: 'Critical memory usage in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} is using {{ $value | humanize }}GB of memory - potential OOM risk'
+
+      # High CPU Usage
+      - alert: HighCPUUsage
+        expr: funnelagents_cpu_usage_percentage > 80
+        for: 10m
+        labels:
+          severity: warning
+          category: resources
+        annotations:
+          summary: 'High CPU usage in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} CPU usage is above 80%'
+
+  - name: cache
+    interval: 30s
+    rules:
+      # Low Cache Hit Rate
+      - alert: LowCacheHitRate
+        expr: |
+          (
+            sum(rate(funnelagents_cache_hits_total[10m])) by (service)
+            /
+            (
+              sum(rate(funnelagents_cache_hits_total[10m])) by (service)
+              +
+              sum(rate(funnelagents_cache_misses_total[10m])) by (service)
+            )
+          ) < 0.50
+        for: 30m
+        labels:
+          severity: info
+          category: performance
+        annotations:
+          summary: 'Low cache hit rate in {{ $labels.service }}'
+          description: 'Service {{ $labels.service }} cache hit rate is below 50% (current: {{ $value | humanizePercentage }})'

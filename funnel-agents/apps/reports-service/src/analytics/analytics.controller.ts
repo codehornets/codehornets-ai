@@ -1,11 +1,20 @@
-import { Controller, Get, Query, Param, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Query, Param, BadRequestException, Res, HttpStatus } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { Response } from 'express';
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsQueryDto } from './dto';
+import { PdfExportService } from './services/pdf-export.service';
+import { ExcelExportService } from './services/excel-export.service';
+import { CacheService } from './services/cache.service';
 
 @Controller('analytics')
 export class AnalyticsController {
-  constructor(private readonly analyticsService: AnalyticsService) {}
+  constructor(
+    private readonly analyticsService: AnalyticsService,
+    private readonly pdfExportService: PdfExportService,
+    private readonly excelExportService: ExcelExportService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   @Get('tasks')
   @MessagePattern({ cmd: 'get_task_analytics' })
@@ -25,14 +34,31 @@ export class AnalyticsController {
     return this.analyticsService.getDomainAnalytics(query);
   }
 
+  @Get('cache/stats')
+  async getCacheStats() {
+    return this.cacheService.getStats();
+  }
+
+  @Get('cache/clear')
+  async clearCache(@Query('workspace_id') workspaceId?: string) {
+    if (workspaceId) {
+      await this.cacheService.invalidateWorkspace(workspaceId);
+      return { message: `Cache cleared for workspace: ${workspaceId}` };
+    }
+
+    await this.cacheService.clear();
+    return { message: 'All cache cleared' };
+  }
+
   @Get('export/:format')
-  @MessagePattern({ cmd: 'export_analytics' })
   async exportAnalytics(
     @Param('format') format: string,
     @Query() query: AnalyticsQueryDto,
+    @Res() res: Response,
   ) {
-    if (!['csv', 'pdf', 'json'].includes(format.toLowerCase())) {
-      throw new BadRequestException('Supported formats: csv, pdf, json');
+    const supportedFormats = ['csv', 'pdf', 'json', 'excel'];
+    if (!supportedFormats.includes(format.toLowerCase())) {
+      throw new BadRequestException(`Supported formats: ${supportedFormats.join(', ')}`);
     }
 
     const [taskAnalytics, agentAnalytics, domainAnalytics] = await Promise.all([
@@ -49,30 +75,97 @@ export class AnalyticsController {
       filters: query,
     };
 
+    const timestamp = Date.now();
+
     switch (format.toLowerCase()) {
       case 'csv':
-        return {
-          format: 'csv',
-          data: this.convertToCSV(data),
-          contentType: 'text/csv',
-          filename: `analytics-${Date.now()}.csv`,
-        };
+        const csvData = this.convertToCSV(data);
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename=analytics-${timestamp}.csv`);
+        return res.send(csvData);
+
       case 'pdf':
-        // For now, return JSON. Client can generate PDF or implement pdfkit later
-        return {
-          format: 'pdf',
-          data,
-          message: 'PDF generation to be implemented. Use JSON data for client-side generation.',
-        };
+        const pdfBuffer = await this.pdfExportService.generateAnalyticsPDF(data);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=analytics-${timestamp}.pdf`);
+        return res.send(pdfBuffer);
+
+      case 'excel':
+        const excelBuffer = await this.excelExportService.generateAnalyticsExcel(data);
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+        res.setHeader('Content-Disposition', `attachment; filename=analytics-${timestamp}.xlsx`);
+        return res.send(excelBuffer);
+
       case 'json':
       default:
-        return {
-          format: 'json',
-          data,
-          contentType: 'application/json',
-          filename: `analytics-${Date.now()}.json`,
-        };
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Disposition', `attachment; filename=analytics-${timestamp}.json`);
+        return res.send(data);
     }
+  }
+
+  @MessagePattern({ cmd: 'export_analytics' })
+  async exportAnalyticsMicroservice(data: { format: string; query: AnalyticsQueryDto }) {
+    const { format, query } = data;
+
+    if (!['csv', 'pdf', 'json', 'excel'].includes(format.toLowerCase())) {
+      throw new BadRequestException('Supported formats: csv, pdf, json, excel');
+    }
+
+    const [taskAnalytics, agentAnalytics, domainAnalytics] = await Promise.all([
+      this.analyticsService.getTaskAnalytics(query),
+      this.analyticsService.getAgentAnalytics(query),
+      this.analyticsService.getDomainAnalytics(query),
+    ]);
+
+    const reportData = {
+      tasks: taskAnalytics,
+      agents: agentAnalytics,
+      domains: domainAnalytics,
+      generated_at: new Date().toISOString(),
+      filters: query,
+    };
+
+    let buffer: Buffer;
+    let contentType: string;
+    let extension: string;
+
+    switch (format.toLowerCase()) {
+      case 'pdf':
+        buffer = await this.pdfExportService.generateAnalyticsPDF(reportData);
+        contentType = 'application/pdf';
+        extension = 'pdf';
+        break;
+
+      case 'excel':
+        buffer = await this.excelExportService.generateAnalyticsExcel(reportData);
+        contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        extension = 'xlsx';
+        break;
+
+      case 'csv':
+        buffer = Buffer.from(this.convertToCSV(reportData));
+        contentType = 'text/csv';
+        extension = 'csv';
+        break;
+
+      case 'json':
+      default:
+        buffer = Buffer.from(JSON.stringify(reportData, null, 2));
+        contentType = 'application/json';
+        extension = 'json';
+        break;
+    }
+
+    return {
+      format,
+      buffer: buffer.toString('base64'),
+      contentType,
+      filename: `analytics-${Date.now()}.${extension}`,
+    };
   }
 
   private convertToCSV(data: any): string {

@@ -29,6 +29,9 @@ export class File {
   url: string;
 
   @Column({ nullable: true })
+  thumbnail_url?: string;
+
+  @Column({ nullable: true })
   workspace_id?: string;
 
   @Column({ nullable: true })

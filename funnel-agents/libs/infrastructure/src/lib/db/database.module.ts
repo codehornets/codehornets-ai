@@ -1,5 +1,8 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
+import { createDatabaseConfig, PoolConfig } from './database-config.helper';
+import { DatabaseHealthService } from './database-health.service';
 
 export interface DatabaseModuleOptions {
   type: 'postgres' | 'mysql' | 'sqlite';
@@ -12,29 +15,45 @@ export interface DatabaseModuleOptions {
   synchronize?: boolean;
   logging?: boolean;
   entities?: any[];
+  nodeEnv?: string;
+  poolConfig?: PoolConfig;
+  enableHealthMonitoring?: boolean;
 }
 
 @Global()
 @Module({})
 export class DatabaseModule {
   static forRoot(options: DatabaseModuleOptions): DynamicModule {
-    const typeOrmOptions: TypeOrmModuleOptions = {
-      type: options.type,
-      host: options.host,
-      port: options.port,
-      username: options.username,
-      password: options.password,
-      database: options.database,
-      synchronize: options.synchronize ?? false,
-      logging: options.logging ?? false,
-      entities: options.entities ?? [],
-      autoLoadEntities: true,
-    };
+    const typeOrmOptions = createDatabaseConfig(
+      {
+        type: options.type,
+        url: options.url,
+        host: options.host,
+        port: options.port,
+        username: options.username,
+        password: options.password,
+        database: options.database,
+        synchronize: options.synchronize,
+        logging: options.logging,
+        entities: options.entities,
+        nodeEnv: options.nodeEnv,
+      },
+      options.poolConfig
+    );
+
+    const providers = options.enableHealthMonitoring !== false
+      ? [DatabaseHealthService]
+      : [];
+
+    const imports = options.enableHealthMonitoring !== false
+      ? [TypeOrmModule.forRoot(typeOrmOptions), ScheduleModule.forRoot()]
+      : [TypeOrmModule.forRoot(typeOrmOptions)];
 
     return {
       module: DatabaseModule,
-      imports: [TypeOrmModule.forRoot(typeOrmOptions)],
-      exports: [TypeOrmModule],
+      imports,
+      providers,
+      exports: [TypeOrmModule, ...providers],
     };
   }
 
@@ -51,34 +70,29 @@ export class DatabaseModule {
           useFactory: async (...args: any[]): Promise<TypeOrmModuleOptions> => {
             const options = await optionsFactory.useFactory(...args);
 
-            if (options.url) {
-              return {
+            return createDatabaseConfig(
+              {
                 type: options.type,
                 url: options.url,
-                synchronize: options.synchronize ?? false,
-                logging: options.logging ?? false,
-                entities: options.entities ?? [],
-                autoLoadEntities: true,
-              };
-            }
-
-            return {
-              type: options.type,
-              host: options.host,
-              port: options.port,
-              username: options.username,
-              password: options.password,
-              database: options.database,
-              synchronize: options.synchronize ?? false,
-              logging: options.logging ?? false,
-              entities: options.entities ?? [],
-              autoLoadEntities: true,
-            };
+                host: options.host,
+                port: options.port,
+                username: options.username,
+                password: options.password,
+                database: options.database,
+                synchronize: options.synchronize,
+                logging: options.logging,
+                entities: options.entities,
+                nodeEnv: options.nodeEnv,
+              },
+              options.poolConfig
+            );
           },
           inject: optionsFactory.inject,
         }),
+        ScheduleModule.forRoot(),
       ],
-      exports: [TypeOrmModule],
+      providers: [DatabaseHealthService],
+      exports: [TypeOrmModule, DatabaseHealthService],
     };
   }
 }

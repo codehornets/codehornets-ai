@@ -1,0 +1,200 @@
+# Prometheus Configuration for FunnelAgents Microservices
+global:
+  scrape_interval: 15s # Scrape targets every 15 seconds
+  evaluation_interval: 15s # Evaluate rules every 15 seconds
+  external_labels:
+    cluster: 'funnelagents'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            # - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configuration for all NestJS services
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # API Gateway
+  - job_name: 'api-gateway'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['api-gateway:3000']
+        labels:
+          service: 'api-gateway'
+          component: 'gateway'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'api-gateway'
+
+  # Auth Service
+  - job_name: 'auth-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['auth-service:3001']
+        labels:
+          service: 'auth-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'auth-service'
+
+  # CRM Service
+  - job_name: 'crm-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['crm-service:3002']
+        labels:
+          service: 'crm-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'crm-service'
+
+  # Campaigns Service
+  - job_name: 'campaigns-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['campaigns-service:3003']
+        labels:
+          service: 'campaigns-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'campaigns-service'
+
+  # Content Service
+  - job_name: 'content-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['content-service:3004']
+        labels:
+          service: 'content-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'content-service'
+
+  # Agents Service
+  - job_name: 'agents-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['agents-service:3005']
+        labels:
+          service: 'agents-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'agents-service'
+
+  # Tasks Service
+  - job_name: 'tasks-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['tasks-service:3006']
+        labels:
+          service: 'tasks-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'tasks-service'
+
+  # Automations Service
+  - job_name: 'automations-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['automations-service:3007']
+        labels:
+          service: 'automations-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'automations-service'
+
+  # Reports Service
+  - job_name: 'reports-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['reports-service:3008']
+        labels:
+          service: 'reports-service'
+          component: 'backend'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'reports-service'
+
+  # Worker Runner
+  - job_name: 'worker-runner'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['worker-runner:3009']
+        labels:
+          service: 'worker-runner'
+          component: 'worker'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'worker-runner'
+
+  # Scheduler
+  - job_name: 'scheduler'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['scheduler:3010']
+        labels:
+          service: 'scheduler'
+          component: 'scheduler'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'scheduler'
+
+  # PostgreSQL Exporter (optional - requires postgres_exporter)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'postgres'
+          component: 'database'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'postgres'
+
+  # Redis Exporter (optional - requires redis_exporter)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'redis'
+          component: 'cache'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'redis'
+
+  # Node Exporter for system metrics (optional)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+          component: 'system'

@@ -1,0 +1,110 @@
+.PHONY: test-env-up test-env-down test-env-ps test-env-logs test e2e-tests
+
+# Start test environment with all required services
+test-env-up:
+	@echo "Starting test environment..."
+	docker-compose -f docker-compose.test.yml up -d
+	@echo "Waiting for services to be healthy..."
+	@sleep 10
+	@docker-compose -f docker-compose.test.yml ps
+
+# Stop and remove test environment
+test-env-down:
+	@echo "Stopping test environment..."
+	docker-compose -f docker-compose.test.yml down -v
+
+# Show status of test services
+test-env-ps:
+	docker-compose -f docker-compose.test.yml ps
+
+# Show logs from test services
+test-env-logs:
+	docker-compose -f docker-compose.test.yml logs -f
+
+# Run E2E tests (assumes services are running)
+e2e-tests:
+	@echo "Running E2E tests..."
+	cd ../../apps/api-gateway && npm test
+
+# Full test workflow: start services, run tests, cleanup
+test: test-env-up
+	@echo "Waiting for services to be fully ready..."
+	@sleep 20
+	@echo "Running E2E tests..."
+	cd ../../apps/api-gateway && npm test || (cd ../../infrastructure/docker && docker-compose -f docker-compose.test.yml logs && exit 1)
+	@$(MAKE) test-env-down
+
+# Quick test (assumes services are already running)
+test-quick:
+	cd ../../apps/api-gateway && npm test
+
+# Test specific file
+test-app:
+	cd ../../apps/api-gateway && npm test -- test/app.e2e-spec.ts
+
+test-flows:
+	cd ../../apps/api-gateway && npm test -- test/critical-flows.e2e-spec.ts
+
+# Check service health manually
+test-health:
+	@echo "Checking Auth Service..."
+	@curl -s http://localhost:3001/health | jq . || echo "Auth Service not responding"
+	@echo "\nChecking CRM Service..."
+	@curl -s http://localhost:3002/health | jq . || echo "CRM Service not responding"
+	@echo "\nChecking Campaigns Service..."
+	@curl -s http://localhost:3003/health | jq . || echo "Campaigns Service not responding"
+	@echo "\nChecking Agents Service..."
+	@curl -s http://localhost:3005/health | jq . || echo "Agents Service not responding"
+	@echo "\nChecking Tasks Service..."
+	@curl -s http://localhost:3006/health | jq . || echo "Tasks Service not responding"
+	@echo "\nChecking Automations Service..."
+	@curl -s http://localhost:3007/health | jq . || echo "Automations Service not responding"
+
+# Restart a specific test service
+restart-auth-test:
+	docker-compose -f docker-compose.test.yml restart auth-service-test
+
+restart-crm-test:
+	docker-compose -f docker-compose.test.yml restart crm-service-test
+
+restart-campaigns-test:
+	docker-compose -f docker-compose.test.yml restart campaigns-service-test
+
+restart-agents-test:
+	docker-compose -f docker-compose.test.yml restart agents-service-test
+
+restart-tasks-test:
+	docker-compose -f docker-compose.test.yml restart tasks-service-test
+
+restart-automations-test:
+	docker-compose -f docker-compose.test.yml restart automations-service-test
+
+# Database operations for test environment
+test-db-reset:
+	docker-compose -f docker-compose.test.yml exec postgres-test psql -U funnel_agents_test -d funnel_agents_test -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
+test-db-logs:
+	docker-compose -f docker-compose.test.yml logs postgres-test
+
+# Redis operations for test environment
+test-redis-cli:
+	docker-compose -f docker-compose.test.yml exec redis-test redis-cli
+
+test-redis-flush:
+	docker-compose -f docker-compose.test.yml exec redis-test redis-cli FLUSHALL
+
+# Help
+help:
+	@echo "Available targets:"
+	@echo "  test-env-up        - Start test environment"
+	@echo "  test-env-down      - Stop and remove test environment"
+	@echo "  test-env-ps        - Show status of test services"
+	@echo "  test-env-logs      - Show logs from test services"
+	@echo "  test               - Full test workflow (start, test, cleanup)"
+	@echo "  test-quick         - Run tests (assumes services running)"
+	@echo "  test-app           - Run app.e2e-spec.ts tests only"
+	@echo "  test-flows         - Run critical-flows.e2e-spec.ts tests only"
+	@echo "  test-health        - Check health of all services"
+	@echo "  test-db-reset      - Reset test database"
+	@echo "  test-redis-flush   - Flush all Redis data"
+	@echo "  e2e-tests          - Run E2E tests (alias for test-quick)"

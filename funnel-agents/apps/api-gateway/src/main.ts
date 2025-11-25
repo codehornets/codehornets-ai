@@ -4,6 +4,9 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './bootstrap/filters/http-exception.filter';
 import { LoggingInterceptor } from './bootstrap/interceptors/logging.interceptor';
 import { TransformInterceptor } from './bootstrap/interceptors/transform.interceptor';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import csurf from 'csurf';
 
 async function bootstrap() {
   const logger = new Logger('ApiGateway');
@@ -11,6 +14,54 @@ async function bootstrap() {
 
   // Global prefix
   app.setGlobalPrefix('api');
+
+  // Security: Cookie parser (required for CSRF)
+  app.use(cookieParser());
+
+  // Security: Helmet middleware for security headers
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          connectSrc: ["'self'"],
+          fontSrc: ["'self'", 'data:'],
+          objectSrc: ["'none'"],
+          mediaSrc: ["'self'"],
+          frameSrc: ["'none'"],
+        },
+      },
+      crossOriginEmbedderPolicy: false, // Allow embedding if needed
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
+
+  // Security: CSRF Protection
+  // Skip CSRF for certain routes (health checks, webhooks)
+  const csrfProtection = csurf({
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    },
+    ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  });
+
+  // Apply CSRF protection conditionally
+  app.use((req: any, res: any, next: any) => {
+    // Skip CSRF for health checks and certain endpoints
+    if (
+      req.path.includes('/health') ||
+      req.path.includes('/api/security/csrf-token') ||
+      req.path.includes('/webhooks')
+    ) {
+      return next();
+    }
+    return csrfProtection(req, res, next);
+  });
 
   // Global pipes
   app.useGlobalPipes(
@@ -63,13 +114,21 @@ async function bootstrap() {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'X-CSRF-Token',
+      'CSRF-Token',
+    ],
+    exposedHeaders: ['X-CSRF-Token'],
   });
 
   const port = process.env.API_GATEWAY_PORT || 3000;
   await app.listen(port);
   logger.log('API Gateway is running on port ' + port);
   logger.log('CORS enabled for configured origins');
+  logger.log('Security headers and CSRF protection enabled');
 }
 
 bootstrap();

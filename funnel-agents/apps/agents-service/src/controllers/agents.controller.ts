@@ -20,6 +20,10 @@ import {
   AgentFilterDto,
   PaginationDto,
   ApiResponseDto,
+  ExecuteAgentDto,
+  AgentExecutionResultDto,
+  AgentInvocationDto,
+  ExecutionStatus,
 } from '@funnelagents/interfaces';
 
 @Controller('agents')
@@ -201,6 +205,93 @@ export class AgentsController {
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new HttpException(
         { success: false, error: { code: 'DELETE_ERROR', message } },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  @Post(':id/execute')
+  @ApiOperation({ summary: 'Execute agent task' })
+  @ApiResponse({ status: 200, description: 'Agent execution completed' })
+  @ApiResponse({ status: 400, description: 'Invalid execution request' })
+  @ApiResponse({ status: 404, description: 'Agent not found' })
+  @MessagePattern({ cmd: 'agents.execute' })
+  async executeAgent(
+    @Param('id') id: string,
+    @Body() executeDto: ExecuteAgentDto
+  ): Promise<ApiResponseDto<AgentExecutionResultDto>> {
+    try {
+      const result = await this.agentsService.executeAgent(
+        id,
+        executeDto.input,
+        executeDto.timeout
+      );
+
+      return {
+        success: result.success,
+        data: result,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new HttpException(
+        { success: false, error: { code: 'EXECUTION_ERROR', message } },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  @Post(':id/execute/sync')
+  @ApiOperation({ summary: 'Execute agent task synchronously' })
+  @ApiResponse({ status: 200, description: 'Agent execution completed' })
+  @MessagePattern({ cmd: 'agents.executeSync' })
+  async executeAgentSync(
+    @Param('id') id: string,
+    @Body() executeDto: ExecuteAgentDto
+  ): Promise<ApiResponseDto<AgentExecutionResultDto>> {
+    try {
+      const result = await this.agentsService.executeAgentSync(
+        id,
+        executeDto.input,
+        executeDto.timeout
+      );
+
+      return {
+        success: result.success,
+        data: result,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new HttpException(
+        { success: false, error: { code: 'EXECUTION_ERROR', message } },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  @Post(':id/execute/async')
+  @ApiOperation({ summary: 'Queue agent task for async execution' })
+  @ApiResponse({ status: 202, description: 'Agent execution queued' })
+  @MessagePattern({ cmd: 'agents.executeAsync' })
+  async executeAgentAsync(
+    @Param('id') id: string,
+    @Body() body: { input: Record<string, any>; callback_url?: string; timeout?: number }
+  ): Promise<ApiResponseDto<{ execution_id: string; status: ExecutionStatus }>> {
+    try {
+      const result = await this.agentsService.executeAgentAsync(
+        id,
+        body.input,
+        body.callback_url,
+        body.timeout
+      );
+
+      return {
+        success: true,
+        data: result,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new HttpException(
+        { success: false, error: { code: 'EXECUTION_ERROR', message } },
         HttpStatus.BAD_REQUEST
       );
     }
