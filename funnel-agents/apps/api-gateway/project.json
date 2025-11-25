@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "api-gateway:build",
         "watch": true,
-        "inspect": "inspect:9229"
+        "inspect": false
       }
     },
     "test": {

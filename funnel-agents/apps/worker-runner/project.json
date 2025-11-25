@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "worker-runner:build",
         "watch": true,
-        "inspect": "inspect:9238"
+        "inspect": false
       }
     },
     "test": {

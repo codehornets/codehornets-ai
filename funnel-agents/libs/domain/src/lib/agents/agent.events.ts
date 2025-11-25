@@ -1,15 +1,17 @@
 import { BaseDomainEvent } from '../shared-kernel';
-import { AgentType, AgentStatus } from './agent.types';
+import { AgentType, AgentDomain, AgentStatus } from './agent.types';
 
 export class AgentCreatedEvent extends BaseDomainEvent {
   public readonly eventType = 'agent.created';
   public readonly name: string;
   public readonly type: AgentType;
+  public readonly domain: AgentDomain;
 
-  constructor(agentId: string, name: string, type: AgentType) {
+  constructor(agentId: string, name: string, type: AgentType, domain: AgentDomain) {
     super(agentId);
     this.name = name;
     this.type = type;
+    this.domain = domain;
   }
 }
 

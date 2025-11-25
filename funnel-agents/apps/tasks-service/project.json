@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "tasks-service:build",
         "watch": true,
-        "inspect": "inspect:9235"
+        "inspect": false
       }
     },
     "test": {

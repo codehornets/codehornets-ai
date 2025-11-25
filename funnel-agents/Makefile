@@ -1,7 +1,7 @@
 # FunnelAgents Makefile
 # Streamlined development commands for Nx + NestJS monorepo
 
-.PHONY: help install dev start stop build test lint clean docker db web
+.PHONY: help install dev start stop build test lint clean docker db web up
 
 # Colors
 CYAN := \033[36m
@@ -33,6 +33,76 @@ install-root: ## Install root Node dependencies only
 
 install-web: ## Install web-ui dependencies only
 	cd apps/web-ui && npm install
+
+##@ Up Commands (Start Everything)
+
+up: ## Start everything (full infra with n8n workers + all services + web-ui)
+	@echo "$(CYAN)====== Starting Full Stack ======$(RESET)"
+	@echo ""
+	@echo "$(CYAN)[1/3] Starting infrastructure (PostgreSQL, Redis, n8n + workers, Mailhog)...$(RESET)"
+	cd infrastructure/docker && docker compose up -d postgres redis n8n n8n-worker-crm n8n-worker-campaigns n8n-worker-content n8n-worker-reports n8n-worker-automations mailhog
+	@echo "$(GREEN)Infrastructure started!$(RESET)"
+	@echo "$(CYAN)Waiting for services to be healthy...$(RESET)"
+	@sleep 5
+	@echo ""
+	@echo "$(CYAN)[2/3] Starting NestJS backend services...$(RESET)"
+	@echo "$(CYAN)[3/3] Starting web-ui frontend...$(RESET)"
+	@echo ""
+	npx nx run-many --target=serve --projects=api-gateway,auth-service,crm-service,campaigns-service,content-service,agents-service,tasks-service,automations-service,reports-service,worker-runner,scheduler --parallel & \
+	cd apps/web-ui && npm run dev & \
+	sleep 10 && echo "" && \
+	echo "$(GREEN)====== Full Stack Running ======$(RESET)" && \
+	echo "$(CYAN)Access points:$(RESET)" && \
+	echo "  API Gateway:     http://localhost:3000" && \
+	echo "  Web UI:          http://localhost:5173" && \
+	echo "  n8n Workflows:   http://localhost:5678" && \
+	echo "  Mailhog:         http://localhost:8025" && \
+	echo "" && \
+	echo "$(YELLOW)Press Ctrl+C to stop all services$(RESET)" && \
+	wait
+
+up-infra: ## Start infrastructure only (PostgreSQL, Redis, n8n, Mailhog)
+	@echo "$(CYAN)Starting infrastructure services...$(RESET)"
+	cd infrastructure/docker && docker compose up -d postgres redis n8n mailhog
+	@echo "$(GREEN)Infrastructure started!$(RESET)"
+	@sleep 5
+	cd infrastructure/docker && docker compose ps
+
+up-infra-full: ## Start all infrastructure including n8n workers
+	@echo "$(CYAN)Starting all infrastructure with n8n workers...$(RESET)"
+	cd infrastructure/docker && docker compose up -d postgres redis n8n n8n-worker-crm n8n-worker-campaigns n8n-worker-content n8n-worker-reports n8n-worker-automations mailhog
+	@echo "$(GREEN)Full infrastructure started!$(RESET)"
+	@sleep 5
+	cd infrastructure/docker && docker compose ps
+
+up-infra-tools: ## Start infrastructure with dev tools (pgAdmin, Redis Commander)
+	@echo "$(CYAN)Starting infrastructure with dev tools...$(RESET)"
+	cd infrastructure/docker && docker compose --profile dev-tools up -d postgres redis n8n n8n-worker-crm n8n-worker-campaigns n8n-worker-content n8n-worker-reports n8n-worker-automations mailhog
+	@echo "$(GREEN)Infrastructure with dev tools started!$(RESET)"
+	@echo "  pgAdmin:          http://localhost:5050"
+	@echo "  Redis Commander:  http://localhost:8081"
+
+up-services: ## Start all NestJS backend services only (requires infra running)
+	@echo "$(CYAN)Starting all NestJS backend services...$(RESET)"
+	npx nx run-many --target=serve --projects=api-gateway,auth-service,crm-service,campaigns-service,content-service,agents-service,tasks-service,automations-service,reports-service,worker-runner,scheduler --parallel
+
+up-web: ## Start web-ui frontend only (Vite dev server on port 5173)
+	@echo "$(CYAN)Starting web-ui frontend...$(RESET)"
+	cd apps/web-ui && npm run dev
+
+up-services-docker: ## Start all services via Docker (full containerized stack)
+	@echo "$(CYAN)Starting all services in Docker...$(RESET)"
+	cd infrastructure/docker && docker compose up -d
+	@echo "$(GREEN)All Docker services started!$(RESET)"
+	cd infrastructure/docker && docker compose ps
+
+up-backend: up-infra-full ## Start full infra + all backend services (no frontend)
+	@echo "$(CYAN)Starting backend services...$(RESET)"
+	npx nx run-many --target=serve --projects=api-gateway,auth-service,crm-service,campaigns-service,content-service,agents-service,tasks-service,automations-service,reports-service,worker-runner,scheduler --parallel
+
+up-minimal: up-infra ## Start basic infra + core services only (gateway, auth, tasks)
+	@echo "$(CYAN)Starting minimal services...$(RESET)"
+	npx nx run-many --target=serve --projects=api-gateway,auth-service,tasks-service --parallel
 
 ##@ Development
 
@@ -160,6 +230,17 @@ db-migrate: ## Run database migrations
 
 db-seed: ## Seed database with sample data
 	npx nx run infrastructure:seed
+
+db-seed-users: ## Seed test users
+	@echo "$(CYAN)Seeding test users...$(RESET)"
+	npx ts-node apps/auth-service/src/seed.ts
+
+db-seed-templates: ## Seed agent templates
+	@echo "$(CYAN)Seeding agent templates...$(RESET)"
+	npx ts-node apps/agents-service/src/seed-templates.ts
+
+db-seed-all: db-seed-users db-seed-templates ## Seed all data (users + templates)
+	@echo "$(GREEN)All seed data created!$(RESET)"
 
 db-reset: ## Reset database (drop + migrate + seed)
 	npx nx run infrastructure:reset
@@ -324,3 +405,33 @@ t: test ## Alias for test
 b: build ## Alias for build
 l: lint ## Alias for lint
 c: clean ## Alias for clean
+u: up ## Alias for up (start everything)
+d: down ## Alias for down (stop everything)
+
+##@ Down Commands (Stop Everything)
+
+down: ## Stop all Docker containers
+	@echo "$(CYAN)Stopping all containers...$(RESET)"
+	cd infrastructure/docker && docker compose down
+	@echo "$(GREEN)All containers stopped!$(RESET)"
+
+down-v: ## Stop all containers and remove volumes (WARNING: data loss)
+	@echo "$(RED)Stopping all containers and removing volumes...$(RESET)"
+	cd infrastructure/docker && docker compose down -v
+	@echo "$(GREEN)All containers and volumes removed!$(RESET)"
+
+down-clean: ## Stop containers, remove volumes, and prune Docker
+	@echo "$(RED)Full Docker cleanup...$(RESET)"
+	cd infrastructure/docker && docker compose down -v --remove-orphans
+	docker system prune -f
+	@echo "$(GREEN)Docker cleanup complete!$(RESET)"
+
+restart: down up ## Restart everything (down + up)
+
+restart-infra: ## Restart infrastructure only
+	@echo "$(CYAN)Restarting infrastructure...$(RESET)"
+	cd infrastructure/docker && docker compose restart postgres redis n8n mailhog
+	@echo "$(GREEN)Infrastructure restarted!$(RESET)"
+
+update-web-ui:
+	cd apps/web-ui && npm i baseline-browser-mapping@latest -D

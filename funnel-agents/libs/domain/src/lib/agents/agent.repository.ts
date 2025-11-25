@@ -3,8 +3,10 @@ import { Agent } from './agent.entity';
 import { AgentType, AgentStatus } from './agent.types';
 
 export interface AgentFilters {
-  type?: AgentType;
+  domain?: string;
   status?: AgentStatus;
+  skills?: string[];
+  minSuccessRate?: number;
   search?: string;
 }
 

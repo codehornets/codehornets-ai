@@ -1,0 +1,24 @@
+{
+  "instance": "instance-5-agents",
+  "service": "agents-service",
+  "port": 3005,
+  "status": "not_started",
+  "current_task": null,
+  "files_created": [],
+  "files_modified": [],
+  "blockers": [],
+  "completed": [],
+  "pending": [
+    "Agent entity in libs/domain",
+    "AgentTemplate entity",
+    "AgentFeedback entity",
+    "AgentPerformanceTuning entity",
+    "CRUD /agents",
+    "CRUD /agent-templates",
+    "POST /agents/:id/feedback",
+    "GET /agents/:id/feedback",
+    "PATCH /agents/:id/tuning",
+    "Agent status machine (active/inactive/error/maintenance)"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

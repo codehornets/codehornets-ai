@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "reports-service:build",
         "watch": true,
-        "inspect": "inspect:9237"
+        "inspect": false
       }
     },
     "test": {

@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "content-service:build",
         "watch": true,
-        "inspect": "inspect:9233"
+        "inspect": false
       }
     },
     "test": {

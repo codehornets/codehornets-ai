@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "agents-service:build",
         "watch": true,
-        "inspect": "inspect:9234"
+        "inspect": false
       }
     },
     "test": {

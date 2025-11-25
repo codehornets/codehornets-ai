@@ -1,15 +1,17 @@
 import { AggregateRoot, UniqueId } from '../shared-kernel';
-import { AgentType, AgentStatus, AgentCapability, AgentConfig, AgentMetrics } from './agent.types';
+import { AgentType, AgentDomain, AgentStatus, AgentCapability, AgentConfig, AgentMetrics } from './agent.types';
 import { AgentCreatedEvent, AgentStatusChangedEvent } from './agent.events';
 
 export interface AgentProps {
   name: string;
   type: AgentType;
+  domain: AgentDomain;
   description?: string;
   status: AgentStatus;
   capabilities: AgentCapability[];
   config: AgentConfig;
   metrics?: AgentMetrics;
+  tools?: string[];
 }
 
 export class Agent extends AggregateRoot<AgentProps> {
@@ -25,8 +27,16 @@ export class Agent extends AggregateRoot<AgentProps> {
     return this.props.type;
   }
 
+  get domain(): AgentDomain {
+    return this.props.domain;
+  }
+
   get description(): string | undefined {
     return this.props.description;
+  }
+
+  get tools(): string[] {
+    return this.props.tools || [];
   }
 
   get status(): AgentStatus {
@@ -53,6 +63,7 @@ export class Agent extends AggregateRoot<AgentProps> {
       {
         ...props,
         status: AgentStatus.OFFLINE,
+        tools: props.tools || [],
         metrics: {
           tasksCompleted: 0,
           averageExecutionTime: 0,
@@ -61,8 +72,30 @@ export class Agent extends AggregateRoot<AgentProps> {
       },
       id
     );
-    agent.addDomainEvent(new AgentCreatedEvent(agent.id.value, agent.name, agent.type));
+    agent.addDomainEvent(new AgentCreatedEvent(agent.id.value, agent.name, agent.type, agent.domain));
     return agent;
+  }
+
+  public updateTools(tools: string[]): void {
+    this.props.tools = tools;
+    this.touch();
+  }
+
+  public addTool(tool: string): void {
+    if (!this.props.tools) {
+      this.props.tools = [];
+    }
+    if (!this.props.tools.includes(tool)) {
+      this.props.tools.push(tool);
+      this.touch();
+    }
+  }
+
+  public removeTool(tool: string): void {
+    if (this.props.tools) {
+      this.props.tools = this.props.tools.filter((t) => t !== tool);
+      this.touch();
+    }
   }
 
   public static reconstitute(props: AgentProps, id: UniqueId): Agent {

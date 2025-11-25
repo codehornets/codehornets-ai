@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth.module';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -7,10 +10,22 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
     }),
-    // Add feature modules here:
-    // UsersModule,
-    // SessionsModule,
-    // WorkspacesModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST') || 'localhost',
+        port: configService.get<number>('DB_PORT') || 5432,
+        username: configService.get<string>('DB_USERNAME') || 'postgres',
+        password: configService.get<string>('DB_PASSWORD') || 'postgres',
+        database: configService.get<string>('DB_DATABASE') || 'funnelagents_auth',
+        entities: [User],
+        synchronize: configService.get<boolean>('DB_SYNCHRONIZE') !== false, // Default to true for development
+        logging: configService.get<boolean>('DB_LOGGING') === true,
+      }),
+    }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],

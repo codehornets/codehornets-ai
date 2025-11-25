@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global prefix
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api');
 
   // Global pipes
   app.useGlobalPipes(
@@ -33,15 +33,23 @@ async function bootstrap() {
     new TransformInterceptor(),
   );
 
-  // CORS
+  // CORS configuration
+  const corsOrigins = process.env.CORS_ORIGINS?.split(',') || [
+    'http://localhost:5173',
+    'http://localhost:4200',
+  ];
+
   app.enableCors({
-    origin: process.env.CORS_ORIGINS?.split(',') || '*',
+    origin: corsOrigins,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   });
 
   const port = process.env.API_GATEWAY_PORT || 3000;
   await app.listen(port);
-  logger.log(`API Gateway is running on port ${port}`);
+  logger.log('API Gateway is running on port ' + port);
+  logger.log('CORS enabled for configured origins');
 }
 
 bootstrap();

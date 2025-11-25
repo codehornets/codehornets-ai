@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "campaigns-service:build",
         "watch": true,
-        "inspect": "inspect:9232"
+        "inspect": false
       }
     },
     "test": {

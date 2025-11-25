@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "auth-service:build",
         "watch": true,
-        "inspect": "inspect:9230"
+        "inspect": false
       }
     },
     "test": {

@@ -81,7 +81,9 @@
       "Bash(dir \"C:\\workspace\\@codehornets-ai\\funnel-agents\")",
       "Bash(test:*)",
       "Bash(printf:*)",
-      "Bash(\"C:/workspace/@codehornets-ai/funnel-agents/README.md\")"
+      "Bash(\"C:/workspace/@codehornets-ai/funnel-agents/README.md\")",
+      "Bash(npm install)",
+      "Bash(npx nx g:*)"
     ],
     "deny": [
       "Read(*.csv)",

@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "crm-service:build",
         "watch": true,
-        "inspect": "inspect:9231"
+        "inspect": false
       }
     },
     "test": {

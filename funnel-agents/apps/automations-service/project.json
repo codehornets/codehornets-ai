@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "automations-service:build",
         "watch": true,
-        "inspect": "inspect:9236"
+        "inspect": false
       }
     },
     "test": {

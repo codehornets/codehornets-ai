@@ -17,7 +17,21 @@
       "Bash(docker exec:*)",
       "Bash(docker compose:*)",
       "Bash(docker compose ps:*)",
-      "Bash(make docker-infra-full:*)"
+      "Bash(make docker-infra-full:*)",
+      "Bash(timeout 15 npm run dev:*)",
+      "Bash(npx vite --version)",
+      "Bash(npm run test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(nx build:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm test:*)",
+      "Bash(npx jest:*)",
+      "Bash(tree:*)",
+      "Bash(npm run lint:*)",
+      "Bash(find:*)",
+      "Bash(lsof:*)",
+      "Bash(curl:*)",
+      "Bash(docker-compose ps:*)"
     ],
     "deny": [],
     "ask": []

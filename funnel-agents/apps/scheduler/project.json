@@ -19,7 +19,7 @@
       "options": {
         "buildTarget": "scheduler:build",
         "watch": true,
-        "inspect": "inspect:9239"
+        "inspect": false
       }
     },
     "test": {
