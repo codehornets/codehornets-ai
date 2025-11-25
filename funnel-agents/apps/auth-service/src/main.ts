@@ -50,12 +50,38 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS for web-ui
+  // Enable CORS - allow API gateway and configured origins
+  const corsOrigins = process.env.CORS_ORIGINS?.split(',').map(o => o.trim()) || [
+    'http://localhost:3000', // API Gateway
+    'http://localhost:5173', // Web UI (Vite dev server)
+    'http://localhost:4200', // Alternative dev server
+  ];
+
+  logger.log('Auth Service CORS origins: ' + JSON.stringify(corsOrigins));
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like server-to-server calls)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (corsOrigins.includes(origin)) {
+        return callback(null, origin);
+      }
+
+      // In development, allow localhost origins
+      if (origin.startsWith('http://localhost:')) {
+        logger.warn(`Allowing unlisted localhost origin: ${origin}`);
+        return callback(null, origin);
+      }
+
+      logger.warn(`Blocked CORS request from origin: ${origin}`);
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Forwarded-For', 'User-Agent'],
   });
 
   // Enable global validation pipe

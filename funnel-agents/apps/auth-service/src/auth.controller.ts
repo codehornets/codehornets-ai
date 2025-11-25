@@ -52,6 +52,19 @@ export class AuthController {
     return this.authService.register(registerDto, ip_address, user_agent);
   }
 
+  // Alias for /register to support frontend calling /signup
+  @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
+  @Throttle({ default: RATE_LIMITS.AUTH_REGISTER })
+  async signup(
+    @Body() registerDto: RegisterDto,
+    @IpAddress() ip_address: string,
+    @UserAgent() user_agent: string,
+  ): Promise<AuthResponseDto> {
+    this.logger.log(`Signup endpoint called for email: ${registerDto.email}`);
+    return this.authService.register(registerDto, ip_address, user_agent);
+  }
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: RATE_LIMITS.AUTH_LOGIN })

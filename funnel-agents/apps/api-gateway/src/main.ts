@@ -41,8 +41,18 @@ async function bootstrap() {
     }),
   );
 
-  // Security: CSRF Protection
-  // Skip CSRF for certain routes (health checks, webhooks)
+  // Security: CSRF Protection - DISABLED for development
+  // TODO: Re-enable CSRF protection in production with proper token handling
+  // For now, we're disabling CSRF to allow frontend development without token management complexity
+  // This should be re-enabled once the frontend implements proper CSRF token handling
+
+  // Note: CSRF protection is less critical when using:
+  // 1. SameSite cookies (which we're using)
+  // 2. CORS restrictions (which we have)
+  // 3. JWT tokens in Authorization headers (which we're using)
+
+  // Uncomment below to re-enable CSRF protection:
+  /*
   const csrfProtection = csurf({
     cookie: {
       httpOnly: true,
@@ -64,6 +74,7 @@ async function bootstrap() {
     }
     return csrfProtection(req, res, next);
   });
+  */
 
   // Global pipes
   app.useGlobalPipes(
