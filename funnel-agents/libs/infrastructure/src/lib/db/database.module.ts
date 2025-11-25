@@ -48,30 +48,31 @@ export class DatabaseModule {
       imports: [
         TypeOrmModule.forRootAsync({
           imports: optionsFactory.imports,
-          useFactory: async (...args: any[]) => {
+          useFactory: async (...args: any[]): Promise<TypeOrmModuleOptions> => {
             const options = await optionsFactory.useFactory(...args);
-            const baseOptions: TypeOrmModuleOptions = {
-              type: options.type,
-              synchronize: options.synchronize ?? false,
-              logging: options.logging ?? false,
-              entities: options.entities ?? [],
-              autoLoadEntities: true,
-            };
 
             if (options.url) {
               return {
-                ...baseOptions,
+                type: options.type,
                 url: options.url,
+                synchronize: options.synchronize ?? false,
+                logging: options.logging ?? false,
+                entities: options.entities ?? [],
+                autoLoadEntities: true,
               };
             }
 
             return {
-              ...baseOptions,
+              type: options.type,
               host: options.host,
               port: options.port,
               username: options.username,
               password: options.password,
               database: options.database,
+              synchronize: options.synchronize ?? false,
+              logging: options.logging ?? false,
+              entities: options.entities ?? [],
+              autoLoadEntities: true,
             };
           },
           inject: optionsFactory.inject,

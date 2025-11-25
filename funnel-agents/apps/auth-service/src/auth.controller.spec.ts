@@ -25,6 +25,7 @@ describe('AuthController', () => {
       email: 'test@example.com',
       name: 'Test User',
       role: 'user',
+      onboarding_completed: false,
     },
   };
 
@@ -104,6 +105,7 @@ describe('AuthController', () => {
         name: 'Test User',
         password: 'hashedpassword',
         role: 'user' as const,
+        onboarding_completed: false,
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -126,6 +128,7 @@ describe('AuthController', () => {
         name: 'Test User',
         password: 'hashedpassword',
         role: 'user' as const,
+        onboarding_completed: false,
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -146,6 +149,7 @@ describe('AuthController', () => {
         name: 'Test User',
         password: 'hashedpassword',
         role: 'user' as const,
+        onboarding_completed: false,
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -155,6 +159,7 @@ describe('AuthController', () => {
         email: 'test@example.com',
         name: 'Updated Name',
         role: 'user' as const,
+        onboarding_completed: false,
         company_name: 'New Company',
         created_at: mockUser.created_at,
         updated_at: new Date(),

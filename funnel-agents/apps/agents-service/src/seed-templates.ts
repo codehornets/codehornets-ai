@@ -408,12 +408,12 @@ async function seedTemplates() {
       });
 
       if (!existing) {
-        const newTemplate = templateRepository.create(template);
+        const newTemplate = templateRepository.create(template as any);
         await templateRepository.save(newTemplate);
         console.log(`Created template: ${template.name}`);
       } else {
         // Update existing template
-        await templateRepository.update(existing.id, template);
+        await templateRepository.update(existing.id, template as any);
         console.log(`Updated template: ${template.name}`);
       }
     }

@@ -23,6 +23,7 @@ describe('AuthService', () => {
     password: 'hashedpassword',
     name: 'Test User',
     role: 'user',
+    onboarding_completed: false,
     created_at: new Date(),
     updated_at: new Date(),
   };
@@ -40,7 +41,7 @@ describe('AuthService', () => {
 
   const mockConfigService = {
     get: jest.fn((key: string) => {
-      const config = {
+      const config: Record<string, string> = {
         JWT_SECRET: 'test-secret',
         JWT_EXPIRATION: '15m',
         JWT_REFRESH_SECRET: 'test-refresh-secret',

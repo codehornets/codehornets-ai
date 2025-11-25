@@ -14,6 +14,7 @@ export enum AgentType {
 }
 
 export enum AgentDomain {
+  GENERAL = 'General',
   OFFER = 'Offer',
   MARKETING = 'Marketing',
   SALES = 'Sales',

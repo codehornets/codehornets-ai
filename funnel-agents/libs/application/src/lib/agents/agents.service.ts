@@ -4,6 +4,7 @@ import {
   IAgentRepository,
   AgentFilters,
   AgentType,
+  AgentDomain,
   AgentStatus,
   AgentCapability,
   AgentConfig,
@@ -36,16 +37,20 @@ export class AgentsService {
   async create(data: {
     name: string;
     type: AgentType;
+    domain?: AgentDomain;
     description?: string;
     capabilities: AgentCapability[];
     config: AgentConfig;
+    tools?: string[];
   }): Promise<Agent> {
     const agent = Agent.create({
       name: data.name,
       type: data.type,
+      domain: data.domain || AgentDomain.GENERAL,
       description: data.description,
       capabilities: data.capabilities,
       config: data.config,
+      tools: data.tools,
     });
 
     return this.agentRepository.save(agent);

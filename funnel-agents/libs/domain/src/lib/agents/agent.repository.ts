@@ -16,3 +16,5 @@ export interface IAgentRepository extends IRepository<Agent> {
   findAvailableAgents(type?: AgentType): Promise<Agent[]>;
   findWithFilters(filters: AgentFilters, params?: PaginationParams): Promise<PaginatedResult<Agent>>;
 }
+
+export const AGENT_REPOSITORY = Symbol('IAgentRepository');
