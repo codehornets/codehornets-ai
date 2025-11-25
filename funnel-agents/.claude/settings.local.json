@@ -64,7 +64,8 @@
       "Bash(for file in apps/agents-service/project.json apps/api-gateway/project.json apps/auth-service/project.json apps/automations-service/project.json apps/campaigns-service/project.json apps/content-service/project.json apps/crm-service/project.json apps/reports-service/project.json apps/scheduler/project.json apps/tasks-service/project.json apps/worker-runner/project.json)",
       "Bash(do)",
       "Bash(git restore:*)",
-      "Bash(for file in apps/agents-service apps/api-gateway apps/auth-service apps/automations-service apps/campaigns-service apps/content-service apps/crm-service apps/reports-service apps/scheduler apps/tasks-service apps/worker-runner)"
+      "Bash(for file in apps/agents-service apps/api-gateway apps/auth-service apps/automations-service apps/campaigns-service apps/content-service apps/crm-service apps/reports-service apps/scheduler apps/tasks-service apps/worker-runner)",
+      "Bash(grep -v \"did not match\" echo \"Restored all tsconfig files to their original state\" npx nx run-many --target=build --all)"
     ],
     "deny": [],
     "ask": []

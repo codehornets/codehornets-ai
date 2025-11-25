@@ -18,10 +18,12 @@
     "src/**/*.test.ts",
     "../../libs/**/*.spec.ts",
     "../../libs/**/*.test.ts",
-    "../../libs/**/jest.config.ts"
+    "../../libs/**/jest.config.ts",
+    "../../node_modules",
+    "../../dist",
+    "../../apps/web-ui"
   ],
   "include": [
-    "src/**/*.ts",
-    "../../libs/**/*.ts"
+    "../../**/*.ts"
   ]
 }
