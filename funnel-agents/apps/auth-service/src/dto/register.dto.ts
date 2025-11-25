@@ -23,6 +23,10 @@ export class RegisterDto {
 
   @IsOptional()
   @IsString()
+  company_name?: string;
+
+  @IsOptional()
+  @IsString()
   avatar?: string;
 
   @IsOptional()

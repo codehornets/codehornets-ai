@@ -30,7 +30,11 @@
       "Bash(xargs kill -9)",
       "Bash(timeout 120 npm run build:*)",
       "Bash(docker exec:*)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(echo:*)",
+      "Bash(timeout 60 npm run build:*)",
+      "Bash(npx eslint:*)",
+      "Bash(jobs:*)"
     ],
     "deny": [],
     "ask": []
