@@ -13,8 +13,8 @@ export class LeadActivity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  lead_id: string;
+  @Column({ name: 'lead_id' })
+  leadId: string;
 
   @ManyToOne(() => Lead, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'lead_id' })
@@ -32,6 +32,6 @@ export class LeadActivity {
   @Column('jsonb', { nullable: true })
   metadata?: Record<string, any>;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }

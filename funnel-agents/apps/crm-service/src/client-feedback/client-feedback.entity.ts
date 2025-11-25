@@ -11,11 +11,11 @@ export class ClientFeedback {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  workspace_id: string;
+  @Column({ name: 'workspace_id' })
+  workspaceId: string;
 
-  @Column({ nullable: true })
-  contact_id?: string;
+  @Column({ name: 'contact_id', nullable: true })
+  contactId?: string;
 
   @Column()
   subject: string;
@@ -46,9 +46,9 @@ export class ClientFeedback {
   @Column('jsonb', { nullable: true })
   metadata?: Record<string, any>;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

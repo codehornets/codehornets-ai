@@ -5,13 +5,23 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/crm-service",
         "main": "apps/crm-service/src/main.ts",
-        "tsConfig": "apps/crm-service/tsconfig.app.json",
-        "assets": ["apps/crm-service/src/assets"]
+        "tsConfig": "apps/crm-service/tsconfig.build.json",
+        "assets": ["apps/crm-service/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/crm-service/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
       }
     },
     "serve": {
@@ -24,7 +34,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/crm-service"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/crm-service"
+      ],
       "options": {
         "jestConfig": "apps/crm-service/jest.config.ts",
         "passWithNoTests": true
@@ -33,9 +45,14 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/crm-service/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/crm-service/**/*.ts"
+        ]
       }
     }
   },
-  "tags": ["scope:crm", "type:microservice"]
+  "tags": [
+    "scope:crm",
+    "type:microservice"
+  ]
 }

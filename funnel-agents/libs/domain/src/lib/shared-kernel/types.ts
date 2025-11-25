@@ -1,6 +1,7 @@
 /**
  * Common domain types
  */
+import { DomainEvent } from './base-entity';
 
 /**
  * Generic result type for operations that can fail
@@ -109,6 +110,6 @@ export interface IUnitOfWork {
  * Event publisher interface
  */
 export interface IEventPublisher {
-  publish<T>(event: T): Promise<void>;
-  publishAll<T>(events: T[]): Promise<void>;
+  publish<T extends DomainEvent>(event: T): Promise<void>;
+  publishAll<T extends DomainEvent>(events: T[]): Promise<void>;
 }

@@ -7,23 +7,19 @@
       "node"
     ],
     "emitDecoratorMetadata": true,
-    "target": "ES2021"
+    "target": "ES2021",
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true
   },
   "exclude": [
     "jest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "jest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "../../libs/**/*.spec.ts",
-    "../../libs/**/*.test.ts",
-    "../../libs/**/jest.config.ts",
-    "../../node_modules",
-    "../../dist",
-    "../../apps/web-ui"
+    "../../node_modules"
   ],
   "include": [
-    "../../**/*.ts"
+    "src/**/*.ts"
   ]
 }

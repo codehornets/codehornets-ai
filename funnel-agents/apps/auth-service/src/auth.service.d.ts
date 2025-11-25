@@ -1,0 +1,36 @@
+import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { ConfigService } from '@nestjs/config';
+import { AuditLogService } from './services/audit-log.service';
+import { TokenBlacklistService } from './services/token-blacklist.service';
+import { EmailService } from './services/email.service';
+import { PasswordResetService } from './services/password-reset.service';
+import { AccountLockoutService } from './services/account-lockout.service';
+export declare class AuthService {
+    private userRepository;
+    private jwtService;
+    private configService;
+    private auditLogService;
+    private tokenBlacklistService;
+    private emailService;
+    private passwordResetService;
+    private accountLockoutService;
+    private readonly logger;
+    private readonly SALT_ROUNDS;
+    constructor(userRepository: Repository<User>, jwtService: JwtService, configService: ConfigService, auditLogService: AuditLogService, tokenBlacklistService: TokenBlacklistService, emailService: EmailService, passwordResetService: PasswordResetService, accountLockoutService: AccountLockoutService);
+    register(registerDto: RegisterDto, ip_address?: string, user_agent?: string): Promise<AuthResponseDto>;
+    login(loginDto: LoginDto, ip_address?: string, user_agent?: string): Promise<AuthResponseDto>;
+    validateUser(userId: string): Promise<User>;
+    refreshToken(refreshToken: string, ip_address?: string, user_agent?: string): Promise<AuthResponseDto>;
+    private generateTokens;
+    updateProfile(userId: string, updates: Partial<Pick<User, 'name' | 'avatar' | 'onboarding_completed' | 'company_name' | 'team_size' | 'industry'>>, ip_address?: string, user_agent?: string): Promise<Omit<User, 'password'>>;
+    logout(userId: string, token: string, ip_address?: string, user_agent?: string): Promise<void>;
+    forgotPassword(email: string, ip_address?: string, user_agent?: string): Promise<void>;
+    resetPassword(token: string, newPassword: string, ip_address?: string, user_agent?: string): Promise<void>;
+    changePassword(userId: string, currentPassword: string, newPassword: string, ip_address?: string, user_agent?: string): Promise<void>;
+    unlockAccount(email: string): Promise<void>;
+}

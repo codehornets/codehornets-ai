@@ -12,8 +12,10 @@ async function bootstrap() {
   const logger = new Logger('ApiGateway');
   const app = await NestFactory.create(AppModule);
 
-  // Global prefix
-  app.setGlobalPrefix('api');
+  // Global prefix - exclude root path for API info endpoint
+  app.setGlobalPrefix('api', {
+    exclude: ['/'],
+  });
 
   // Security: Cookie parser (required for CSRF)
   app.use(cookieParser());

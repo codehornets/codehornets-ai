@@ -6,13 +6,14 @@
   "tags": ["scope:shared", "type:domain"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain",
         "main": "libs/domain/src/index.ts",
         "tsConfig": "libs/domain/tsconfig.lib.json",
-        "assets": []
+        "assets": [],
+        "skipTypeCheck": true
       }
     },
     "lint": {

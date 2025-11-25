@@ -299,7 +299,7 @@ export class ExcelExportService {
     };
   }
 
-  private addDailyTrendsSheet(workbook: ExcelJS.Workbook, tasksBy Day: any[]): void {
+  private addDailyTrendsSheet(workbook: ExcelJS.Workbook, tasksByDay: any[]): void {
     const sheet = workbook.addWorksheet('Daily Trends');
 
     // Headers

@@ -9,6 +9,7 @@ import { SecurityModule } from './security/security.module';
 import { AuthGuard } from './bootstrap/guards/auth.guard';
 import { CustomThrottlerGuard } from '@funnelagents/shared';
 import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
+import { AppController } from './app.controller';
 
 // Define clients configuration separately so we can reuse it
 // TCP ports are HTTP port + 10 (e.g., 3001 HTTP -> 3011 TCP)
@@ -102,6 +103,7 @@ const clientsConfig = [
     HealthModule,
     SecurityModule,
   ],
+  controllers: [AppController],
   providers: [
     AuthGuard,
     {

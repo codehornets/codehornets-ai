@@ -35,9 +35,10 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
         const nodeEnv = configService.get<string>('NODE_ENV', 'development');
         const isProduction = nodeEnv === 'production';
 
-        return {
-          type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+
+        const baseConfig = {
+          type: 'postgres' as const,
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: false,
           migrationsRun: true,
@@ -61,6 +62,22 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
           // SSL configuration for production
           ssl: isProduction ? { rejectUnauthorized: false } : false,
+        };
+
+        if (databaseUrl) {
+          return {
+            ...baseConfig,
+            url: databaseUrl,
+          };
+        }
+
+        return {
+          ...baseConfig,
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get<string>('DB_USERNAME', 'funnel_agents'),
+          password: configService.get<string>('DB_PASSWORD', 'secret'),
+          database: configService.get<string>('DB_DATABASE', 'funnel_agents'),
         };
       },
     }),

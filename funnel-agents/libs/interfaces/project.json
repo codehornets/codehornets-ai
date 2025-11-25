@@ -6,13 +6,14 @@
   "tags": ["scope:shared", "type:interfaces"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/interfaces",
         "main": "libs/interfaces/src/index.ts",
         "tsConfig": "libs/interfaces/tsconfig.lib.json",
-        "assets": []
+        "assets": [],
+        "skipTypeCheck": true
       }
     },
     "lint": {

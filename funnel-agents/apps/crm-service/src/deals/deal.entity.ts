@@ -14,11 +14,11 @@ export class Deal {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  workspace_id?: string;
+  @Column({ name: 'workspace_id', nullable: true })
+  workspaceId?: string;
 
-  @Column({ nullable: true })
-  contact_id?: string;
+  @Column({ name: 'contact_id', nullable: true })
+  contactId?: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   value: number;
@@ -30,15 +30,15 @@ export class Deal {
   })
   stage: 'discovery' | 'proposal' | 'negotiation' | 'closed_won' | 'closed_lost';
 
-  @Column({ type: 'timestamp', nullable: true })
-  expected_close_date?: Date;
+  @Column({ name: 'expected_close_date', type: 'timestamp', nullable: true })
+  expectedCloseDate?: Date;
 
   @Column('text', { nullable: true })
   notes?: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

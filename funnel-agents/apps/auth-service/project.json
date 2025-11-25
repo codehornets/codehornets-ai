@@ -5,13 +5,23 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/auth-service",
         "main": "apps/auth-service/src/main.ts",
-        "tsConfig": "apps/auth-service/tsconfig.app.json",
-        "assets": ["apps/auth-service/src/assets"]
+        "tsConfig": "apps/auth-service/tsconfig.build.json",
+        "assets": ["apps/auth-service/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/auth-service/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
       }
     },
     "serve": {
@@ -24,7 +34,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/auth-service"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/auth-service"
+      ],
       "options": {
         "jestConfig": "apps/auth-service/jest.config.ts",
         "passWithNoTests": true
@@ -33,9 +45,14 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/auth-service/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/auth-service/**/*.ts"
+        ]
       }
     }
   },
-  "tags": ["scope:auth", "type:microservice"]
+  "tags": [
+    "scope:auth",
+    "type:microservice"
+  ]
 }

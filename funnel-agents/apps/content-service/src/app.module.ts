@@ -31,12 +31,12 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
         const isProduction = nodeEnv === 'production';
 
         return {
-          type: 'postgres',
-          host: configService.get('DB_HOST', 'localhost'),
-          port: configService.get('DB_PORT', 5432),
-          username: configService.get('DB_USERNAME', 'postgres'),
-          password: configService.get('DB_PASSWORD', 'postgres'),
-          database: configService.get('DB_DATABASE', 'funnel_agents_content'),
+          type: 'postgres' as const,
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get<string>('DB_USERNAME', 'postgres'),
+          password: configService.get<string>('DB_PASSWORD', 'postgres'),
+          database: configService.get<string>('DB_DATABASE', 'funnel_agents_content'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: !isProduction,
           logging: nodeEnv === 'development',

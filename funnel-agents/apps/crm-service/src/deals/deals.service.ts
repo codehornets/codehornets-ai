@@ -31,19 +31,19 @@ export class DealsService {
     }
 
     if (filters?.workspace_id) {
-      queryBuilder.andWhere('deal.workspace_id = :workspace_id', {
-        workspace_id: filters.workspace_id,
+      queryBuilder.andWhere('deal.workspaceId = :workspaceId', {
+        workspaceId: filters.workspace_id,
       });
     }
 
     if (filters?.contact_id) {
-      queryBuilder.andWhere('deal.contact_id = :contact_id', {
-        contact_id: filters.contact_id,
+      queryBuilder.andWhere('deal.contactId = :contactId', {
+        contactId: filters.contact_id,
       });
     }
 
     const [data, total] = await queryBuilder
-      .orderBy('deal.created_at', 'DESC')
+      .orderBy('deal.createdAt', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();

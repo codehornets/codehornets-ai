@@ -54,11 +54,11 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
         return {
           type: 'postgres',
-          host: configService.get('DB_HOST', 'localhost'),
+          host: configService.get<string>('DB_HOST', 'localhost'),
           port: configService.get<number>('DB_PORT', 5432),
-          username: configService.get('DB_USERNAME', 'funnel_agents'),
-          password: configService.get('DB_PASSWORD', 'secret'),
-          database: configService.get('DB_DATABASE', 'funnel_agents'),
+          username: configService.get<string>('DB_USERNAME', 'funnel_agents'),
+          password: configService.get<string>('DB_PASSWORD', 'secret'),
+          database: configService.get<string>('DB_DATABASE', 'funnel_agents'),
           entities: [
             CampaignEntity,
             CampaignTemplateEntity,

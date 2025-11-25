@@ -27,14 +27,14 @@ export class ClientFeedbackService {
       this.clientFeedbackRepository.createQueryBuilder('feedback');
 
     if (filters?.workspace_id) {
-      queryBuilder.andWhere('feedback.workspace_id = :workspace_id', {
-        workspace_id: filters.workspace_id,
+      queryBuilder.andWhere('feedback.workspaceId = :workspaceId', {
+        workspaceId: filters.workspace_id,
       });
     }
 
     if (filters?.contact_id) {
-      queryBuilder.andWhere('feedback.contact_id = :contact_id', {
-        contact_id: filters.contact_id,
+      queryBuilder.andWhere('feedback.contactId = :contactId', {
+        contactId: filters.contact_id,
       });
     }
 
@@ -51,7 +51,7 @@ export class ClientFeedbackService {
     }
 
     const [data, total] = await queryBuilder
-      .orderBy('feedback.created_at', 'DESC')
+      .orderBy('feedback.createdAt', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();

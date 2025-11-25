@@ -35,11 +35,11 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
         }
 
         return {
-          type: 'postgres',
+          type: 'postgres' as const,
           url: databaseUrl,
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: false,
-          migrationsRun: true,
+          synchronize: !isProduction, // Auto-create tables in development
+          migrationsRun: isProduction, // Only run migrations in production
           migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
           logging: nodeEnv === 'development',
           autoLoadEntities: true,

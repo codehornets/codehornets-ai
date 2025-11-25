@@ -26,8 +26,8 @@ export class LeadActivitiesService {
       this.leadActivitiesRepository.createQueryBuilder('activity');
 
     if (filters?.lead_id) {
-      queryBuilder.andWhere('activity.lead_id = :lead_id', {
-        lead_id: filters.lead_id,
+      queryBuilder.andWhere('activity.leadId = :leadId', {
+        leadId: filters.lead_id,
       });
     }
 
@@ -36,7 +36,7 @@ export class LeadActivitiesService {
     }
 
     const [data, total] = await queryBuilder
-      .orderBy('activity.created_at', 'DESC')
+      .orderBy('activity.createdAt', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();
@@ -68,8 +68,8 @@ export class LeadActivitiesService {
 
   async findByLeadId(leadId: string): Promise<LeadActivity[]> {
     return this.leadActivitiesRepository.find({
-      where: { lead_id: leadId },
-      order: { created_at: 'DESC' },
+      where: { leadId },
+      order: { createdAt: 'DESC' },
     });
   }
 }

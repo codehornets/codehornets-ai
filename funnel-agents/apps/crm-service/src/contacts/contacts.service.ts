@@ -30,8 +30,8 @@ export class ContactsService {
     }
 
     if (filters?.workspace_id) {
-      queryBuilder.andWhere('contact.workspace_id = :workspace_id', {
-        workspace_id: filters.workspace_id,
+      queryBuilder.andWhere('contact.workspaceId = :workspaceId', {
+        workspaceId: filters.workspace_id,
       });
     }
 
@@ -43,7 +43,7 @@ export class ContactsService {
     }
 
     const [data, total] = await queryBuilder
-      .orderBy('contact.created_at', 'DESC')
+      .orderBy('contact.createdAt', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();

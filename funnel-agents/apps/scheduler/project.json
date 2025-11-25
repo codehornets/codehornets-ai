@@ -5,13 +5,23 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/scheduler",
         "main": "apps/scheduler/src/main.ts",
-        "tsConfig": "apps/scheduler/tsconfig.app.json",
-        "assets": ["apps/scheduler/src/assets"]
+        "tsConfig": "apps/scheduler/tsconfig.build.json",
+        "assets": ["apps/scheduler/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/scheduler/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
       }
     },
     "serve": {
@@ -24,7 +34,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/scheduler"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/scheduler"
+      ],
       "options": {
         "jestConfig": "apps/scheduler/jest.config.ts",
         "passWithNoTests": true
@@ -33,9 +45,14 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/scheduler/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/scheduler/**/*.ts"
+        ]
       }
     }
   },
-  "tags": ["scope:scheduler", "type:background"]
+  "tags": [
+    "scope:scheduler",
+    "type:background"
+  ]
 }

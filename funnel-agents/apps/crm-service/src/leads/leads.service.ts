@@ -44,7 +44,7 @@ export class LeadsService {
     }
 
     const [data, total] = await queryBuilder
-      .orderBy('lead.created_at', 'DESC')
+      .orderBy('lead.createdAt', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();

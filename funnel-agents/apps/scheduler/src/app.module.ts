@@ -40,11 +40,11 @@ import { createThrottlerConfig, getRedisUrl } from '@funnelagents/shared';
 
         return {
           type: 'postgres',
-          host: configService.get('DB_HOST', 'localhost'),
+          host: configService.get<string>('DB_HOST', 'localhost'),
           port: configService.get<number>('DB_PORT', 5432),
-          username: configService.get('DB_USERNAME', 'postgres'),
-          password: configService.get('DB_PASSWORD', 'postgres'),
-          database: configService.get('DB_DATABASE', 'funnelagents'),
+          username: configService.get<string>('DB_USERNAME', 'postgres'),
+          password: configService.get<string>('DB_PASSWORD', 'postgres'),
+          database: configService.get<string>('DB_DATABASE', 'funnelagents'),
           synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
           logging: configService.get('DB_LOGGING', 'false') === 'true',
           entities: [ScheduledTask, TaskExecution],

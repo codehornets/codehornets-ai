@@ -317,6 +317,76 @@ version: ## Show version information
 	@echo "Git commit: $$(git rev-parse --short HEAD 2>/dev/null || echo 'N/A')"
 	@echo "Git branch: $$(git branch --show-current 2>/dev/null || echo 'N/A')"
 
+##@ NX Build System
+
+build: ## Build all services with NX (parallel)
+	@echo "$(BLUE)Building all services with SWC...$(NC)"
+	cd ../.. && npx nx run-many --target=build --all --parallel=3
+	@echo "$(GREEN)All services built successfully!$(NC)"
+
+build-service: ## Build a specific service (usage: make build-service SERVICE=api-gateway)
+	@if [ -z "$(SERVICE)" ]; then \
+		echo "$(RED)Error: SERVICE must be specified$(NC)"; \
+		echo "Usage: make build-service SERVICE=api-gateway"; \
+		exit 1; \
+	fi
+	@echo "$(BLUE)Building $(SERVICE)...$(NC)"
+	cd ../.. && npx nx build $(SERVICE)
+	@echo "$(GREEN)$(SERVICE) built successfully!$(NC)"
+
+build-clean: ## Clean dist and rebuild all services
+	@echo "$(YELLOW)Cleaning dist directory...$(NC)"
+	cd ../.. && rm -rf dist
+	@echo "$(BLUE)Rebuilding all services...$(NC)"
+	cd ../.. && npx nx run-many --target=build --all --parallel=3
+	@echo "$(GREEN)Clean build complete!$(NC)"
+
+build-verify: ## Verify build output for all services
+	@echo "$(BLUE)Verifying build outputs...$(NC)"
+	@cd ../.. && for service in api-gateway auth-service crm-service campaigns-service content-service agents-service tasks-service automations-service reports-service worker-runner scheduler; do \
+		if [ -d "dist/apps/$$service" ]; then \
+			file_count=$$(find dist/apps/$$service -type f | wc -l); \
+			echo "$(GREEN)✓$(NC) $$service: $$file_count files"; \
+		else \
+			echo "$(RED)✗$(NC) $$service: build output missing"; \
+		fi \
+	done
+	@echo "$(GREEN)Verification complete!$(NC)"
+
+build-list: ## List all buildable projects
+	@echo "$(BLUE)Buildable NX Projects:$(NC)"
+	@cd ../.. && npx nx show projects --with-target=build
+
+build-graph: ## Show build dependency graph
+	@echo "$(BLUE)Opening NX project graph...$(NC)"
+	@cd ../.. && npx nx graph
+
+build-help: ## Show build system quick reference
+	@echo "$(BLUE)NX Build System Quick Reference$(NC)"
+	@echo ""
+	@echo "$(GREEN)Build Commands:$(NC)"
+	@echo "  make build                    - Build all services in parallel"
+	@echo "  make build-service SERVICE=X  - Build specific service"
+	@echo "  make build-clean              - Clean and rebuild all"
+	@echo "  make build-verify             - Verify build outputs"
+	@echo ""
+	@echo "$(GREEN)NX Tools:$(NC)"
+	@echo "  make build-list               - List buildable projects"
+	@echo "  make build-graph              - Show dependency graph"
+	@echo ""
+	@echo "$(GREEN)Individual Services:$(NC)"
+	@echo "  api-gateway, auth-service, crm-service"
+	@echo "  campaigns-service, content-service, agents-service"
+	@echo "  tasks-service, automations-service, reports-service"
+	@echo "  worker-runner, scheduler"
+	@echo ""
+	@echo "$(YELLOW)Migration Documentation:$(NC)"
+	@echo "  infrastructure/docker/BUILD_EXECUTOR_MIGRATION.md"
+	@echo "  infrastructure/docker/SWC_MIGRATION_IMPLEMENTATION_REPORT.md"
+	@echo ""
+	@echo "$(GREEN)Executor:$(NC) @nx/js:swc (SWC Compiler)"
+	@echo "$(GREEN)Performance:$(NC) 2-5x faster than TypeScript compiler"
+
 ##@ CI/CD Operations
 
 ci-build: ## Build Docker images for CI (all services)

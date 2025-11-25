@@ -6,13 +6,14 @@
   "tags": ["scope:shared", "type:util"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/shared",
         "main": "libs/shared/src/index.ts",
         "tsConfig": "libs/shared/tsconfig.lib.json",
-        "assets": []
+        "assets": [],
+        "skipTypeCheck": true
       }
     },
     "lint": {

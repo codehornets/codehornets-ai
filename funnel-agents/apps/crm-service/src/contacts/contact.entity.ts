@@ -30,18 +30,18 @@ export class Contact {
   })
   type: 'lead' | 'client' | 'partner' | 'other';
 
-  @Column({ nullable: true })
-  workspace_id?: string;
+  @Column({ name: 'workspace_id', nullable: true })
+  workspaceId?: string;
 
-  @Column({ nullable: true })
-  linkedin_url?: string;
+  @Column({ name: 'linkedin_url', nullable: true })
+  linkedinUrl?: string;
 
   @Column('text', { nullable: true })
   notes?: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

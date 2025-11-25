@@ -4,9 +4,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity('leads')
+@Index(['workspaceId', 'status'])
+@Index(['campaignId'])
 export class Lead {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,6 +25,9 @@ export class Lead {
 
   @Column({ nullable: true })
   company?: string;
+
+  @Column({ name: 'job_title', nullable: true })
+  jobTitle?: string;
 
   @Column({
     type: 'enum',
@@ -47,7 +53,7 @@ export class Lead {
     | 'won'
     | 'lost';
 
-  @Column({ type: 'float', nullable: true })
+  @Column({ type: 'float', nullable: true, default: 0 })
   score?: number;
 
   @Column('jsonb', { nullable: true })
@@ -64,9 +70,24 @@ export class Lead {
   @Column('text', { nullable: true })
   notes?: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @Column('simple-array', { nullable: true })
+  tags?: string[];
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column('jsonb', { nullable: true })
+  metadata?: Record<string, any>;
+
+  @Column({ name: 'workspace_id', nullable: true })
+  workspaceId?: string;
+
+  @Column({ name: 'campaign_id', nullable: true })
+  campaignId?: string;
+
+  @Column({ name: 'agent_id', nullable: true })
+  agentId?: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

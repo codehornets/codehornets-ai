@@ -5,13 +5,23 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/content-service",
         "main": "apps/content-service/src/main.ts",
-        "tsConfig": "apps/content-service/tsconfig.app.json",
-        "assets": ["apps/content-service/src/assets"]
+        "tsConfig": "apps/content-service/tsconfig.build.json",
+        "assets": ["apps/content-service/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/content-service/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
       }
     },
     "serve": {
@@ -24,7 +34,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/content-service"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/content-service"
+      ],
       "options": {
         "jestConfig": "apps/content-service/jest.config.ts",
         "passWithNoTests": true
@@ -33,9 +45,14 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["apps/content-service/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/content-service/**/*.ts"
+        ]
       }
     }
   },
-  "tags": ["scope:content", "type:microservice"]
+  "tags": [
+    "scope:content",
+    "type:microservice"
+  ]
 }
