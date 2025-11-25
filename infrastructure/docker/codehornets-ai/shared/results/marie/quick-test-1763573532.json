@@ -1,0 +1,10 @@
+{
+  "task_id": "quick-test-1763573532",
+  "worker": "marie",
+  "status": "failed",
+  "stdout": "",
+  "stderr": "Error: Input must be provided either through stdin or as a prompt argument when using --print\n",
+  "exit_code": 1,
+  "duration_seconds": 11.865750312805176,
+  "timestamp": "2025-11-19T17:32:24.394567"
+}

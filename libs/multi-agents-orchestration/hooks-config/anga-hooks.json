@@ -1,0 +1,65 @@
+{
+  "hooks": [
+    {
+      "name": "anga-task-notification",
+      "description": "Notify when Anga receives a new coding task",
+      "event": "UserPromptSubmit",
+      "condition": {
+        "type": "pattern",
+        "pattern": "code|review|refactor|debug|implement"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/anga/prompt-submitted.trigger",
+        "payload": {
+          "worker": "anga",
+          "event": "prompt_submit",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "anga-tool-use-logger",
+      "description": "Log all tool usage for debugging",
+      "event": "PreToolUse",
+      "action": {
+        "type": "log",
+        "path": "/var/log/anga-tool-use.log",
+        "format": "${timestamp} [${tool_name}] ${tool_args}"
+      }
+    },
+    {
+      "name": "anga-result-complete",
+      "description": "Notify when Anga completes a task",
+      "event": "PostToolUse",
+      "condition": {
+        "type": "tool_name",
+        "value": "Edit"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/anga-result-ready.trigger",
+        "payload": {
+          "worker": "anga",
+          "event": "result_ready",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "anga-error-notification",
+      "description": "Notify orchestrator on errors",
+      "event": "OnError",
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/anga-error.trigger",
+        "payload": {
+          "worker": "anga",
+          "event": "error",
+          "error_message": "${error}",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ]
+}

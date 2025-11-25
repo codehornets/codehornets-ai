@@ -1,0 +1,22 @@
+{
+  "instance": "instance-4-tasks",
+  "service": "tasks-service",
+  "port": 3006,
+  "status": "not_started",
+  "current_task": null,
+  "files_created": [],
+  "files_modified": [],
+  "blockers": [],
+  "completed": [],
+  "pending": [
+    "Task entity in libs/domain",
+    "TaskExecution entity",
+    "CRUD /tasks",
+    "POST /tasks/:id/execute",
+    "GET /tasks/:id/executions",
+    "PATCH /tasks/:id/status",
+    "BullMQ job creation",
+    "Task status machine (pending/queued/running/completed/failed)"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

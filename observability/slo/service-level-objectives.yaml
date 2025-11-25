@@ -1,0 +1,391 @@
+# Service Level Objectives (SLOs) for Agent Orchestration System
+# Defines measurable reliability targets and error budgets
+
+---
+# =============================================================================
+# Task Processing Service SLOs
+# =============================================================================
+
+task_processing_service:
+  description: "Core task processing capabilities across all workers"
+
+  # Service Level Indicators (SLIs)
+  slis:
+    availability:
+      description: "Percentage of time the task processing service is operational"
+      measurement: |
+        sum(rate(task_completed_total[5m])) > 0
+        AND
+        avg(up{component="worker"}) > 0.9
+      good_events: "task_completed_total{status='success'}"
+      total_events: "task_completed_total"
+
+    latency:
+      description: "Task processing latency at P95"
+      measurement: |
+        histogram_quantile(0.95,
+          sum(rate(task_processing_duration_seconds_bucket[5m])) by (le)
+        )
+      threshold_seconds: 30
+
+    error_rate:
+      description: "Percentage of tasks that fail"
+      measurement: |
+        sum(rate(task_failed_total[5m])) /
+        sum(rate(task_completed_total[5m]))
+      threshold_percent: 1
+
+    throughput:
+      description: "Tasks processed per second"
+      measurement: "sum(rate(task_completed_total[5m]))"
+      minimum_rate: 0.1
+
+  # Service Level Objectives
+  slos:
+    - name: "Task Processing Availability"
+      sli: availability
+      target: 99.9
+      window: 30d
+      error_budget_burn_rate_threshold: 2
+      alert_configurations:
+        - window: 1h
+          burn_rate: 14.4  # Burns 36% of monthly budget in 1h
+          severity: critical
+        - window: 6h
+          burn_rate: 6     # Burns 45% of monthly budget in 6h
+          severity: warning
+
+    - name: "Task Processing Latency"
+      sli: latency
+      target: 95  # 95% of tasks complete within threshold
+      window: 7d
+      alert_configurations:
+        - threshold: 30s
+          percentile: 95
+          severity: warning
+        - threshold: 60s
+          percentile: 99
+          severity: critical
+
+    - name: "Task Success Rate"
+      sli: error_rate
+      target: 99  # Less than 1% error rate
+      window: 30d
+      alert_configurations:
+        - error_rate: 0.01
+          window: 5m
+          severity: warning
+        - error_rate: 0.05
+          window: 5m
+          severity: critical
+
+---
+# =============================================================================
+# Worker Health SLOs
+# =============================================================================
+
+worker_health:
+  description: "Individual worker reliability and performance"
+
+  slis:
+    worker_availability:
+      description: "Worker process uptime"
+      measurement: "up{component='worker'}"
+      per_worker: true
+
+    heartbeat_freshness:
+      description: "Time since last worker heartbeat"
+      measurement: "time() - watcher_heartbeat_timestamp"
+      threshold_seconds: 60
+
+    queue_saturation:
+      description: "Task queue depth relative to processing capacity"
+      measurement: |
+        task_queue_depth{status='pending'} /
+        (sum(rate(task_completed_total[5m])) by (worker) * 300)
+      threshold_ratio: 10
+
+    memory_utilization:
+      description: "Worker memory usage"
+      measurement: |
+        system_memory_usage_bytes{memory_type='used'} /
+        system_memory_usage_bytes{memory_type='available'}
+      threshold_percent: 85
+
+  slos:
+    - name: "Worker Uptime"
+      sli: worker_availability
+      target: 99.5
+      window: 7d
+      per_worker_targets:
+        marie: 99.9  # Higher SLO for critical worker
+        anga: 99.5
+        fabien: 99.0
+
+    - name: "Worker Responsiveness"
+      sli: heartbeat_freshness
+      target: 99.9
+      window: 24h
+      alert_configurations:
+        - threshold: 60s
+          severity: warning
+        - threshold: 300s
+          severity: critical
+
+    - name: "Queue Health"
+      sli: queue_saturation
+      target: 95  # Queue depth reasonable 95% of time
+      window: 24h
+
+---
+# =============================================================================
+# Communication Pipeline SLOs
+# =============================================================================
+
+communication_pipeline:
+  description: "Named pipe and file-based communication reliability"
+
+  slis:
+    pipe_reliability:
+      description: "Successful named pipe operations"
+      measurement: |
+        1 - (
+          sum(rate(pipe_connection_errors_total[5m])) /
+          sum(rate(pipe_messages_sent_total[5m]))
+        )
+
+    pipe_latency:
+      description: "Named pipe write latency"
+      measurement: |
+        histogram_quantile(0.99,
+          sum(rate(pipe_write_latency_seconds_bucket[5m])) by (le)
+        )
+      threshold_ms: 10
+
+    trigger_latency:
+      description: "File detection to trigger creation time"
+      measurement: |
+        histogram_quantile(0.95,
+          sum(rate(watcher_trigger_latency_seconds_bucket[5m])) by (le)
+        )
+      threshold_ms: 100
+
+  slos:
+    - name: "Communication Reliability"
+      sli: pipe_reliability
+      target: 99.99
+      window: 30d
+
+    - name: "Communication Latency"
+      sli: pipe_latency
+      target: 99
+      window: 24h
+
+---
+# =============================================================================
+# Claude Integration SLOs
+# =============================================================================
+
+claude_integration:
+  description: "Claude process invocation and API reliability"
+
+  slis:
+    api_success_rate:
+      description: "Claude API call success rate"
+      measurement: |
+        1 - (
+          sum(rate(claude_api_errors_total[5m])) /
+          sum(rate(claude_invocations_total[5m]))
+        )
+
+    processing_time:
+      description: "Claude task processing duration"
+      measurement: |
+        histogram_quantile(0.95,
+          sum(rate(claude_processing_time_seconds_bucket[5m])) by (le)
+        )
+      threshold_seconds: 120
+
+    memory_efficiency:
+      description: "Claude process memory usage"
+      measurement: "avg(claude_memory_usage_bytes) by (worker)"
+      threshold_mb: 2048
+
+  slos:
+    - name: "Claude API Reliability"
+      sli: api_success_rate
+      target: 99.5
+      window: 30d
+
+    - name: "Claude Processing Speed"
+      sli: processing_time
+      target: 90  # 90% complete within 2 minutes
+      window: 7d
+
+---
+# =============================================================================
+# End-to-End SLOs
+# =============================================================================
+
+end_to_end:
+  description: "Complete task lifecycle from creation to completion"
+
+  slis:
+    task_completion_rate:
+      description: "Tasks successfully completed end-to-end"
+      measurement: |
+        sum(rate(task_completed_total{status='success'}[1h])) /
+        sum(rate(task_created_total[1h]))
+
+    task_latency_e2e:
+      description: "Total time from task creation to completion"
+      measurement: |
+        histogram_quantile(0.95,
+          sum(rate(task_processing_duration_seconds_bucket[5m]) +
+              rate(task_queue_wait_seconds_bucket[5m])) by (le)
+        )
+      threshold_seconds: 180
+
+    task_retry_rate:
+      description: "Percentage of tasks requiring retry"
+      measurement: |
+        sum(rate(task_retried_total[5m])) /
+        sum(rate(task_created_total[5m]))
+      threshold_percent: 5
+
+  slos:
+    - name: "End-to-End Success Rate"
+      sli: task_completion_rate
+      target: 99
+      window: 30d
+      business_impact: "Direct impact on user experience and system reliability"
+
+    - name: "End-to-End Latency"
+      sli: task_latency_e2e
+      target: 95
+      window: 7d
+      business_impact: "User-perceived performance"
+
+---
+# =============================================================================
+# Error Budget Policies
+# =============================================================================
+
+error_budget_policies:
+  - name: "Feature Freeze Policy"
+    description: "Freeze new features when error budget is exhausted"
+    conditions:
+      - error_budget_remaining_percent: 20
+        action: "Warn team, prioritize reliability work"
+      - error_budget_remaining_percent: 10
+        action: "Freeze non-critical deployments"
+      - error_budget_remaining_percent: 0
+        action: "All hands on reliability, no new features"
+
+  - name: "Automatic Scaling Policy"
+    description: "Scale resources when approaching SLO breach"
+    conditions:
+      - slo: "Task Processing Latency"
+        threshold_proximity_percent: 80
+        action: "Auto-scale worker instances"
+      - slo: "Queue Health"
+        threshold_proximity_percent: 70
+        action: "Increase batch processing size"
+
+  - name: "Incident Response Policy"
+    description: "Escalation based on error budget burn rate"
+    conditions:
+      - burn_rate: 2
+        window: 1h
+        action: "Page on-call engineer"
+      - burn_rate: 1.5
+        window: 6h
+        action: "Alert team channel"
+      - burn_rate: 1.2
+        window: 24h
+        action: "Schedule review meeting"
+
+---
+# =============================================================================
+# Monitoring and Reporting
+# =============================================================================
+
+monitoring:
+  dashboards:
+    - name: "SLO Overview Dashboard"
+      url: "http://grafana:3000/d/slo-overview"
+      refresh_interval: 1m
+
+    - name: "Error Budget Dashboard"
+      url: "http://grafana:3000/d/error-budget"
+      refresh_interval: 5m
+
+  reports:
+    - name: "Weekly SLO Report"
+      frequency: weekly
+      recipients: ["engineering-team@company.com"]
+      includes:
+        - slo_adherence_summary
+        - error_budget_consumption
+        - incident_summary
+        - improvement_recommendations
+
+    - name: "Monthly Executive Report"
+      frequency: monthly
+      recipients: ["executives@company.com"]
+      includes:
+        - high_level_availability
+        - business_impact_summary
+        - trend_analysis
+        - capacity_planning
+
+  alerts:
+    - name: "SLO Breach Alert"
+      condition: "SLO target missed"
+      channels: ["slack:#slo-alerts", "pagerduty:slo-team"]
+
+    - name: "Error Budget Warning"
+      condition: "Error budget < 25%"
+      channels: ["slack:#engineering", "email:team-lead@company.com"]
+
+---
+# =============================================================================
+# SLO Review and Adjustment Process
+# =============================================================================
+
+review_process:
+  frequency: quarterly
+  participants:
+    - role: "Engineering Manager"
+    - role: "SRE Lead"
+    - role: "Product Manager"
+    - role: "Customer Success Representative"
+
+  review_criteria:
+    - name: "Target Achievability"
+      description: "Are SLO targets too aggressive or too lenient?"
+      metrics:
+        - historical_achievement_rate
+        - customer_satisfaction_correlation
+
+    - name: "Business Alignment"
+      description: "Do SLOs reflect business priorities?"
+      metrics:
+        - customer_impact_incidents
+        - revenue_impact_analysis
+
+    - name: "Measurement Accuracy"
+      description: "Are SLIs accurately measuring user experience?"
+      metrics:
+        - false_positive_rate
+        - measurement_gaps
+
+  adjustment_triggers:
+    - condition: "SLO consistently overachieved (>99.99%) for 2 quarters"
+      action: "Consider tightening target"
+
+    - condition: "SLO consistently missed (<95% achievement) for 1 quarter"
+      action: "Review target feasibility or increase investment"
+
+    - condition: "Customer complaints despite meeting SLO"
+      action: "Review SLI definition accuracy"

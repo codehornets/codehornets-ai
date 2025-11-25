@@ -1,0 +1,109 @@
+/**
+ * HTTP-related constants
+ */
+
+/**
+ * HTTP status codes
+ */
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  ACCEPTED: 202,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  METHOD_NOT_ALLOWED: 405,
+  CONFLICT: 409,
+  UNPROCESSABLE_ENTITY: 422,
+  TOO_MANY_REQUESTS: 429,
+  INTERNAL_SERVER_ERROR: 500,
+  BAD_GATEWAY: 502,
+  SERVICE_UNAVAILABLE: 503,
+  GATEWAY_TIMEOUT: 504,
+} as const;
+
+/**
+ * HTTP methods
+ */
+export const HTTP_METHOD = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+  OPTIONS: 'OPTIONS',
+  HEAD: 'HEAD',
+} as const;
+
+/**
+ * Common HTTP headers
+ */
+export const HTTP_HEADERS = {
+  CONTENT_TYPE: 'Content-Type',
+  AUTHORIZATION: 'Authorization',
+  ACCEPT: 'Accept',
+  CORRELATION_ID: 'X-Correlation-ID',
+  REQUEST_ID: 'X-Request-ID',
+  RATE_LIMIT_REMAINING: 'X-RateLimit-Remaining',
+  RATE_LIMIT_RESET: 'X-RateLimit-Reset',
+  CACHE_CONTROL: 'Cache-Control',
+  USER_AGENT: 'User-Agent',
+  ORIGIN: 'Origin',
+  REFERER: 'Referer',
+} as const;
+
+/**
+ * Content types
+ */
+export const CONTENT_TYPE = {
+  JSON: 'application/json',
+  FORM_URLENCODED: 'application/x-www-form-urlencoded',
+  FORM_DATA: 'multipart/form-data',
+  TEXT_PLAIN: 'text/plain',
+  TEXT_HTML: 'text/html',
+  TEXT_CSV: 'text/csv',
+  XML: 'application/xml',
+  PDF: 'application/pdf',
+  OCTET_STREAM: 'application/octet-stream',
+} as const;
+
+/**
+ * Error codes
+ */
+export const ERROR_CODES = {
+  // Authentication
+  AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS',
+  AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED',
+  AUTH_TOKEN_INVALID: 'AUTH_TOKEN_INVALID',
+  AUTH_TOKEN_MISSING: 'AUTH_TOKEN_MISSING',
+  AUTH_REFRESH_TOKEN_EXPIRED: 'AUTH_REFRESH_TOKEN_EXPIRED',
+
+  // Authorization
+  FORBIDDEN: 'FORBIDDEN',
+  INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+
+  // Validation
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  INVALID_INPUT: 'INVALID_INPUT',
+  MISSING_REQUIRED_FIELD: 'MISSING_REQUIRED_FIELD',
+
+  // Resources
+  ENTITY_NOT_FOUND: 'ENTITY_NOT_FOUND',
+  ENTITY_ALREADY_EXISTS: 'ENTITY_ALREADY_EXISTS',
+  CONFLICT: 'CONFLICT',
+
+  // Rate limiting
+  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
+
+  // Server errors
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+  EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
+  DATABASE_ERROR: 'DATABASE_ERROR',
+
+  // Business logic
+  BUSINESS_RULE_VIOLATION: 'BUSINESS_RULE_VIOLATION',
+  OPERATION_NOT_ALLOWED: 'OPERATION_NOT_ALLOWED',
+} as const;

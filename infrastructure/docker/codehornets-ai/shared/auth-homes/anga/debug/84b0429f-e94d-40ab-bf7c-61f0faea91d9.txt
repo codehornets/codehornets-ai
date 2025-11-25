@@ -1,0 +1,44 @@
+[DEBUG] Watching for changes in setting files /home/agent/.claude/settings.json...
+[DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+[DEBUG] >>>>> getSkillsIfEnabled() CALLED <<<<<
+[DEBUG] ENABLE_SKILLS value: false, type: boolean
+[DEBUG] ENABLE_SKILLS check failed, returning empty
+[DEBUG] Creating shell snapshot for bash (/bin/bash)
+[DEBUG] Looking for shell config file: /home/agent/.bashrc
+[DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+[DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1763486089038-1d75du.sh
+[DEBUG] Shell binary exists: true
+[DEBUG] Execution timeout: 10000ms
+[DEBUG] Writing to temp file: /home/agent/.claude/todos/84b0429f-e94d-40ab-bf7c-61f0faea91d9-agent-84b0429f-e94d-40ab-bf7c-61f0faea91d9.json.tmp.1.1763486089107
+[DEBUG] Temp file written successfully, size: 2 bytes
+[DEBUG] Renaming /home/agent/.claude/todos/84b0429f-e94d-40ab-bf7c-61f0faea91d9-agent-84b0429f-e94d-40ab-bf7c-61f0faea91d9.json.tmp.1.1763486089107 to /home/agent/.claude/todos/84b0429f-e94d-40ab-bf7c-61f0faea91d9-agent-84b0429f-e94d-40ab-bf7c-61f0faea91d9.json
+[DEBUG] File /home/agent/.claude/todos/84b0429f-e94d-40ab-bf7c-61f0faea91d9-agent-84b0429f-e94d-40ab-bf7c-61f0faea91d9.json written atomically
+[DEBUG] Total plugin commands loaded: 0
+[DEBUG] Registered 0 hooks from 0 plugins
+[DEBUG] Shell snapshot created successfully (1740 bytes)
+[DEBUG] Summarizing all 2 messages (~509 tokens)
+[DEBUG] Total plugin agents loaded: 0
+[DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg)
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486090081
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486090081 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486090111
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486090111 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1763486090286
+[DEBUG] Preserving file permissions: 100600
+[DEBUG] Temp file written successfully, size: 39224 bytes
+[DEBUG] Applied original permissions to temp file
+[DEBUG] Renaming /home/agent/.claude.json.tmp.1.1763486090286 to /home/agent/.claude.json
+[DEBUG] File /home/agent/.claude.json written atomically
+[DEBUG] Stream started - received first chunk
+[DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+[DEBUG] Found 0 hook matchers in settings
+[DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+[DEBUG] Cleaned up session snapshot: /home/agent/.claude/shell-snapshots/snapshot-bash-1763486089038-1d75du.sh

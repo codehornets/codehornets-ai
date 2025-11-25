@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '✅ Agent Manager Plugin Ready\\n' >&2; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

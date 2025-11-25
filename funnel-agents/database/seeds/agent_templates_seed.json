@@ -1,0 +1,322 @@
+[
+  {
+    "id": "tpl_market_researcher",
+    "name": "Market Researcher",
+    "description": "Analyze competitors and surface insights for new offers",
+    "domain": "Marketing",
+    "persona": {
+      "firstName": "Sarah",
+      "lastName": "Chen",
+      "title": "Market Analyst",
+      "initials": "SC"
+    },
+    "useCase": ["Research", "Top-of-funnel", "B2B"],
+    "typicalTasks": [
+      "Audience research",
+      "Competitor scan",
+      "Offer comparison"
+    ],
+    "popularityLabel": "Popular",
+    "overview": [
+      "Researches target audiences and identifies key pain points",
+      "Analyzes competitor positioning and messaging",
+      "Provides data-driven recommendations for positioning"
+    ],
+    "exampleTasks": [
+      "Research audience pains for a new offer",
+      "Summarize top 5 competitors' positioning",
+      "Suggest angles for landing page copy"
+    ],
+    "defaultConfig": {
+      "tools": ["Web search", "Notion docs", "CRM notes"],
+      "tone": "Professional & concise",
+      "audience": "B2B SaaS",
+      "dataAccess": ["Client docs", "Past campaigns"],
+      "requiresApproval": false
+    },
+    "commonlyUsedWith": ["Content Creator", "SEO Specialist"],
+    "is_active": true,
+    "activation_count": 127,
+    "usage_count": 89
+  },
+  {
+    "id": "tpl_content_creator",
+    "name": "Content Creator",
+    "description": "Write engaging content for social media, blogs, and email",
+    "domain": "Marketing",
+    "persona": {
+      "firstName": "Marcus",
+      "lastName": "Rivera",
+      "title": "Content Strategist",
+      "initials": "MR"
+    },
+    "useCase": ["Content", "Mid-funnel", "B2B"],
+    "typicalTasks": [
+      "LinkedIn posts",
+      "Blog outlines",
+      "Email copy"
+    ],
+    "popularityLabel": "Top-rated",
+    "overview": [
+      "Creates compelling content for multiple channels",
+      "Adapts tone and style to match brand voice",
+      "Generates content ideas based on trends and data"
+    ],
+    "exampleTasks": [
+      "Write a LinkedIn post about our latest feature",
+      "Draft 5 email subject lines for product launch",
+      "Create blog outline for SEO keywords"
+    ],
+    "defaultConfig": {
+      "tools": ["Web search", "Brand guidelines", "Past content"],
+      "tone": "Conversational & engaging",
+      "audience": "B2B & B2C",
+      "dataAccess": ["Brand docs", "Client content"],
+      "requiresApproval": true
+    },
+    "commonlyUsedWith": ["SEO Specialist", "Social Media Manager"],
+    "is_active": true,
+    "activation_count": 203,
+    "usage_count": 156
+  },
+  {
+    "id": "tpl_lead_qualifier",
+    "name": "Lead Qualifier",
+    "description": "Score and qualify inbound leads based on BANT criteria",
+    "domain": "Sales",
+    "persona": {
+      "firstName": "David",
+      "lastName": "Kim",
+      "title": "Lead Specialist",
+      "initials": "DK"
+    },
+    "useCase": ["Lead Gen", "Sales", "B2B"],
+    "typicalTasks": [
+      "Lead scoring",
+      "BANT qualification",
+      "Next-step recommendations"
+    ],
+    "popularityLabel": "Recommended",
+    "overview": [
+      "Evaluates leads based on budget, authority, need, and timeline",
+      "Prioritizes high-value prospects for sales team",
+      "Provides context and next-step recommendations"
+    ],
+    "exampleTasks": [
+      "Score new leads from website form",
+      "Identify decision-makers in prospect companies",
+      "Recommend follow-up approach for each lead"
+    ],
+    "defaultConfig": {
+      "tools": ["CRM", "LinkedIn", "Company database"],
+      "tone": "Professional & analytical",
+      "audience": "B2B",
+      "dataAccess": ["CRM records", "Lead data"],
+      "requiresApproval": false
+    },
+    "commonlyUsedWith": ["Sales Agent", "Account Manager"],
+    "is_active": true,
+    "activation_count": 145,
+    "usage_count": 98
+  },
+  {
+    "id": "tpl_seo_specialist",
+    "name": "SEO Specialist",
+    "description": "Optimize content for search engines and track rankings",
+    "domain": "Marketing",
+    "persona": {
+      "firstName": "Emily",
+      "lastName": "Foster",
+      "title": "SEO Expert",
+      "initials": "EF"
+    },
+    "useCase": ["SEO", "Content", "Growth"],
+    "typicalTasks": [
+      "Keyword research",
+      "On-page optimization",
+      "Content audits"
+    ],
+    "popularityLabel": "Popular",
+    "overview": [
+      "Identifies high-value keywords for content",
+      "Optimizes existing content for better rankings",
+      "Provides technical SEO recommendations"
+    ],
+    "exampleTasks": [
+      "Find 20 long-tail keywords for our niche",
+      "Audit blog post and suggest SEO improvements",
+      "Analyze competitor content strategy"
+    ],
+    "defaultConfig": {
+      "tools": ["Web search", "SEO tools", "Analytics"],
+      "tone": "Technical & data-driven",
+      "audience": "B2B & B2C",
+      "dataAccess": ["Website data", "Analytics"],
+      "requiresApproval": false
+    },
+    "commonlyUsedWith": ["Content Creator", "Market Researcher"],
+    "is_active": true,
+    "activation_count": 178,
+    "usage_count": 134
+  },
+  {
+    "id": "tpl_email_marketer",
+    "name": "Email Marketer",
+    "description": "Design email campaigns and optimize for conversions",
+    "domain": "Marketing",
+    "persona": {
+      "firstName": "Jessica",
+      "lastName": "Wells",
+      "title": "Email Strategist",
+      "initials": "JW"
+    },
+    "useCase": ["Email", "Conversion", "Nurture"],
+    "typicalTasks": [
+      "Email sequences",
+      "Subject lines",
+      "A/B test ideas"
+    ],
+    "popularityLabel": "Recommended",
+    "overview": [
+      "Creates engaging email campaigns and sequences",
+      "Optimizes subject lines and CTAs for higher open rates",
+      "Designs automated nurture flows"
+    ],
+    "exampleTasks": [
+      "Write a 5-email welcome sequence",
+      "Generate 10 subject line variations",
+      "Suggest improvements for abandoned cart emails"
+    ],
+    "defaultConfig": {
+      "tools": ["Email platform", "Past campaigns", "Analytics"],
+      "tone": "Friendly & persuasive",
+      "audience": "B2B & B2C",
+      "dataAccess": ["Email history", "Subscriber data"],
+      "requiresApproval": true
+    },
+    "commonlyUsedWith": ["Content Creator", "Marketing Analyst"],
+    "is_active": true,
+    "activation_count": 156,
+    "usage_count": 112
+  },
+  {
+    "id": "tpl_reporting_analyst",
+    "name": "Reporting Analyst",
+    "description": "Generate reports and insights from campaign performance",
+    "domain": "Operations",
+    "persona": {
+      "firstName": "Alex",
+      "lastName": "Turner",
+      "title": "Analytics Lead",
+      "initials": "AT"
+    },
+    "useCase": ["Reporting", "Analytics", "Insights"],
+    "typicalTasks": [
+      "Performance reports",
+      "Trend analysis",
+      "Executive summaries"
+    ],
+    "popularityLabel": null,
+    "overview": [
+      "Compiles data from multiple sources into clear reports",
+      "Identifies trends and actionable insights",
+      "Creates executive-friendly summaries"
+    ],
+    "exampleTasks": [
+      "Create weekly campaign performance report",
+      "Analyze month-over-month growth trends",
+      "Summarize key metrics for client presentation"
+    ],
+    "defaultConfig": {
+      "tools": ["Analytics", "CRM", "Ad platforms"],
+      "tone": "Professional & clear",
+      "audience": "Internal & Clients",
+      "dataAccess": ["All campaign data", "Client accounts"],
+      "requiresApproval": false
+    },
+    "commonlyUsedWith": ["Campaign Manager", "Account Manager"],
+    "is_active": true,
+    "activation_count": 89,
+    "usage_count": 67
+  },
+  {
+    "id": "tpl_social_media_manager",
+    "name": "Social Media Manager",
+    "description": "Plan and create social media content across platforms",
+    "domain": "Marketing",
+    "persona": {
+      "firstName": "Chris",
+      "lastName": "Morgan",
+      "title": "Social Media Lead",
+      "initials": "CM"
+    },
+    "useCase": ["Social", "Content", "Engagement"],
+    "typicalTasks": [
+      "Post ideas",
+      "Caption writing",
+      "Content calendar"
+    ],
+    "popularityLabel": "Top-rated",
+    "overview": [
+      "Generates engaging social media content",
+      "Plans content calendars and posting schedules",
+      "Adapts content for different platforms"
+    ],
+    "exampleTasks": [
+      "Create 10 LinkedIn post ideas for this month",
+      "Write Instagram captions for product launch",
+      "Plan 2-week social media calendar"
+    ],
+    "defaultConfig": {
+      "tools": ["Social platforms", "Brand guidelines", "Trends"],
+      "tone": "Engaging & on-brand",
+      "audience": "B2B & B2C",
+      "dataAccess": ["Brand assets", "Past posts"],
+      "requiresApproval": true
+    },
+    "commonlyUsedWith": ["Content Creator", "Brand Designer"],
+    "is_active": true,
+    "activation_count": 192,
+    "usage_count": 145
+  },
+  {
+    "id": "tpl_competitor_analyst",
+    "name": "Competitor Analyst",
+    "description": "Track competitors and identify market opportunities",
+    "domain": "Offer",
+    "persona": {
+      "firstName": "Michael",
+      "lastName": "Brooks",
+      "title": "Competitive Intel",
+      "initials": "MB"
+    },
+    "useCase": ["Research", "Strategy", "Intelligence"],
+    "typicalTasks": [
+      "Competitor monitoring",
+      "Feature comparison",
+      "Market gaps"
+    ],
+    "popularityLabel": null,
+    "overview": [
+      "Monitors competitor activities and changes",
+      "Compares features, pricing, and positioning",
+      "Identifies market gaps and opportunities"
+    ],
+    "exampleTasks": [
+      "Analyze competitor pricing changes this quarter",
+      "Compare our features vs top 3 competitors",
+      "Identify unmet needs in the market"
+    ],
+    "defaultConfig": {
+      "tools": ["Web search", "News feeds", "Market data"],
+      "tone": "Analytical & objective",
+      "audience": "Internal team",
+      "dataAccess": ["Market research", "Product data"],
+      "requiresApproval": false
+    },
+    "commonlyUsedWith": ["Market Researcher", "Product Manager"],
+    "is_active": true,
+    "activation_count": 76,
+    "usage_count": 54
+  }
+]

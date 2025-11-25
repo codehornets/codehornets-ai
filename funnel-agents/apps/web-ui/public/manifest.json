@@ -1,0 +1,10 @@
+{
+  "name": "FunnelAgents",
+  "short_name": "FunnelAgents",
+  "description": "AI-powered multi-agent orchestration platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary"
+}

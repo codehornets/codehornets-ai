@@ -1,0 +1,130 @@
+{
+  "name": "Daily Sales Report",
+  "description": "Generate and email daily sales report every weekday at 9 AM",
+  "status": "active",
+  "trigger_type": "scheduled",
+  "trigger_config": {
+    "schedule": "0 9 * * 1-5",
+    "timezone": "America/New_York",
+    "description": "Every weekday at 9 AM EST"
+  },
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger",
+      "position": { "x": 100, "y": 100 },
+      "data": {
+        "triggerType": "scheduled",
+        "schedule": "0 9 * * 1-5"
+      }
+    },
+    {
+      "id": "webhook-fetch-data",
+      "type": "webhook",
+      "position": { "x": 300, "y": 100 },
+      "data": {
+        "url": "https://api.analytics.com/reports/daily-sales",
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "token": "${env.ANALYTICS_API_TOKEN}"
+        },
+        "params": {
+          "date": "${trigger.scheduledTime}",
+          "format": "json"
+        },
+        "timeout": 15000
+      }
+    },
+    {
+      "id": "agent-analyze",
+      "type": "agent",
+      "position": { "x": 500, "y": 100 },
+      "data": {
+        "agentName": "sales-analyst-agent",
+        "input": {
+          "salesData": "${node.webhook-fetch-data.data}",
+          "task": "Analyze daily sales performance and provide insights"
+        },
+        "parameters": {
+          "temperature": 0.5,
+          "maxTokens": 1000
+        }
+      }
+    },
+    {
+      "id": "email-report",
+      "type": "email",
+      "position": { "x": 700, "y": 100 },
+      "data": {
+        "to": ["sales@company.com", "ceo@company.com"],
+        "cc": ["analytics@company.com"],
+        "subject": "Daily Sales Report - ${trigger.scheduledTime}",
+        "template": "sales-report",
+        "templateData": {
+          "date": "${trigger.scheduledTime}",
+          "totalSales": "${node.webhook-fetch-data.data.totalSales}",
+          "totalLeads": "${node.webhook-fetch-data.data.totalLeads}",
+          "conversionRate": "${node.webhook-fetch-data.data.conversionRate}",
+          "analysis": "${node.agent-analyze.result.analysis}",
+          "recommendations": "${node.agent-analyze.result.recommendations}"
+        }
+      }
+    },
+    {
+      "id": "condition-check-target",
+      "type": "condition",
+      "position": { "x": 900, "y": 100 },
+      "data": {
+        "operator": "<",
+        "leftValue": "${node.webhook-fetch-data.data.totalSales}",
+        "rightValue": 10000,
+        "description": "Check if sales below target"
+      }
+    },
+    {
+      "id": "email-alert",
+      "type": "email",
+      "position": { "x": 1100, "y": 50 },
+      "data": {
+        "to": "sales-manager@company.com",
+        "subject": "ALERT: Sales Below Target",
+        "template": "sales-alert",
+        "templateData": {
+          "date": "${trigger.scheduledTime}",
+          "actualSales": "${node.webhook-fetch-data.data.totalSales}",
+          "targetSales": 10000,
+          "deficit": "${node.webhook-fetch-data.data.deficit}"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "trigger-1",
+      "target": "webhook-fetch-data"
+    },
+    {
+      "id": "e2",
+      "source": "webhook-fetch-data",
+      "target": "agent-analyze"
+    },
+    {
+      "id": "e3",
+      "source": "agent-analyze",
+      "target": "email-report"
+    },
+    {
+      "id": "e4",
+      "source": "email-report",
+      "target": "condition-check-target"
+    },
+    {
+      "id": "e5",
+      "source": "condition-check-target",
+      "target": "email-alert",
+      "condition": "true"
+    }
+  ]
+}

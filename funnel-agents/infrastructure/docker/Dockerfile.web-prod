@@ -1,0 +1,85 @@
+# =============================================================================
+# FunnelAgents - Production Web UI Dockerfile (Vite/React)
+# =============================================================================
+# Multi-stage build for optimized static asset serving with nginx
+
+ARG NODE_VERSION=20
+
+# =============================================================================
+# Stage 1: Dependencies
+# =============================================================================
+FROM node:${NODE_VERSION}-alpine AS deps
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
+# Copy package files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+
+# Install dependencies
+RUN npm ci --prefer-offline --no-audit --progress=false
+
+# =============================================================================
+# Stage 2: Builder - Build the frontend application
+# =============================================================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code
+COPY . .
+
+# Build the web-ui with production configuration
+# Vite will create optimized, minified bundles
+RUN npx nx build web-ui --configuration=production
+
+# =============================================================================
+# Stage 3: Production - Serve with nginx
+# =============================================================================
+FROM nginx:1.25-alpine AS runner
+
+# Install wget for healthchecks
+RUN apk add --no-cache wget ca-certificates && \
+    rm -rf /var/cache/apk/*
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --ingroup nodejs www
+
+# Copy built assets from builder
+COPY --from=builder /app/dist/apps/web-ui /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY infrastructure/docker/nginx/web-ui.conf /etc/nginx/conf.d/default.conf
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run && \
+    chown -R www:nodejs /var/cache/nginx /var/log/nginx /var/run /usr/share/nginx/html && \
+    chmod -R 755 /var/cache/nginx /var/log/nginx /var/run
+
+# Remove default nginx configuration
+RUN rm -f /etc/nginx/conf.d/default.conf.default
+
+# Set proper permissions for nginx
+RUN touch /var/run/nginx.pid && \
+    chown www:nodejs /var/run/nginx.pid
+
+# Switch to non-root user
+USER www
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

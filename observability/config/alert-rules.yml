@@ -1,0 +1,310 @@
+# Prometheus Alert Rules for Agent Orchestration System
+# Defines critical, warning, and informational alerts
+
+groups:
+  # =============================================================================
+  # Critical Alerts - Require immediate attention
+  # =============================================================================
+  - name: critical_alerts
+    interval: 30s
+    rules:
+      # Worker process down
+      - alert: WorkerDown
+        expr: up{component="worker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: worker
+          alert_type: availability
+        annotations:
+          summary: "Worker {{ $labels.worker_name }} is down"
+          description: "Worker {{ $labels.worker_name }} has been unreachable for more than 1 minute"
+          runbook: "https://runbooks.company.com/worker-down"
+
+      # Orchestrator down
+      - alert: OrchestratorDown
+        expr: up{component="orchestrator"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: orchestrator
+          alert_type: availability
+        annotations:
+          summary: "Orchestrator is down"
+          description: "The main orchestrator has been unreachable for more than 30 seconds"
+          runbook: "https://runbooks.company.com/orchestrator-down"
+
+      # Task queue overflow
+      - alert: TaskQueueOverflow
+        expr: task_queue_depth{status="pending"} > 1000
+        for: 5m
+        labels:
+          severity: critical
+          alert_type: task_processing
+        annotations:
+          summary: "Task queue overflow on worker {{ $labels.worker }}"
+          description: "Worker {{ $labels.worker }} has {{ $value }} pending tasks (threshold: 1000)"
+
+      # Disk space critical
+      - alert: DiskSpaceCritical
+        expr: (system_disk_usage_bytes{usage_type="free"} / system_disk_usage_bytes{usage_type="used"}) < 0.05
+        for: 2m
+        labels:
+          severity: critical
+          alert_type: resource
+        annotations:
+          summary: "Critical disk space on {{ $labels.worker }}"
+          description: "Less than 5% disk space remaining on {{ $labels.worker }}"
+
+      # Claude API failures
+      - alert: ClaudeAPIFailures
+        expr: rate(claude_api_errors_total[5m]) > 0.5
+        for: 3m
+        labels:
+          severity: critical
+          alert_type: api_failure
+        annotations:
+          summary: "High Claude API error rate on {{ $labels.worker }}"
+          description: "Claude API error rate is {{ $value }} errors/sec (threshold: 0.5)"
+
+  # =============================================================================
+  # Warning Alerts - Need attention soon
+  # =============================================================================
+  - name: warning_alerts
+    interval: 60s
+    rules:
+      # High task processing latency
+      - alert: HighTaskLatency
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(task_processing_duration_seconds_bucket[5m])) by (worker, le)
+          ) > 30
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: performance
+        annotations:
+          summary: "High task processing latency on {{ $labels.worker }}"
+          description: "P95 latency is {{ $value }}s (threshold: 30s)"
+
+      # Task backlog growing
+      - alert: TaskBacklogGrowing
+        expr: |
+          rate(task_queue_depth{status="pending"}[15m]) > 0
+          AND task_queue_depth{status="pending"} > 100
+        for: 15m
+        labels:
+          severity: warning
+          alert_type: task_processing
+        annotations:
+          summary: "Task backlog growing on {{ $labels.worker }}"
+          description: "Backlog has {{ $value }} tasks and is increasing"
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: |
+          rate(task_failed_total[5m]) / rate(task_completed_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: error_rate
+        annotations:
+          summary: "High error rate on {{ $labels.worker }}"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 10%)"
+
+      # Memory usage warning
+      - alert: HighMemoryUsage
+        expr: |
+          (system_memory_usage_bytes{memory_type="used"} /
+           system_memory_usage_bytes{memory_type="available"}) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: resource
+          resource_type: memory
+        annotations:
+          summary: "High memory usage on {{ $labels.worker }}"
+          description: "Memory usage is {{ $value | humanizePercentage }} (threshold: 85%)"
+
+      # CPU usage warning
+      - alert: HighCPUUsage
+        expr: avg(system_cpu_usage_percent) by (worker) > 80
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: resource
+          resource_type: cpu
+        annotations:
+          summary: "High CPU usage on {{ $labels.worker }}"
+          description: "Average CPU usage is {{ $value }}% (threshold: 80%)"
+
+      # Watcher heartbeat missing
+      - alert: WatcherHeartbeatMissing
+        expr: time() - watcher_heartbeat_timestamp > 60
+        for: 2m
+        labels:
+          severity: warning
+          component: watcher
+        annotations:
+          summary: "Watcher heartbeat missing for {{ $labels.worker }}"
+          description: "No heartbeat received for {{ $value }}s"
+
+      # Named pipe errors
+      - alert: NamedPipeErrors
+        expr: rate(pipe_connection_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: communication
+        annotations:
+          summary: "Named pipe errors on {{ $labels.worker }}"
+          description: "Pipe error rate is {{ $value }}/sec"
+
+  # =============================================================================
+  # Task-specific Alerts
+  # =============================================================================
+  - name: task_alerts
+    interval: 60s
+    rules:
+      # Stuck tasks
+      - alert: TaskStuck
+        expr: |
+          task_backlog_age_seconds > 1800
+          AND task_queue_depth{status="pending"} > 0
+        for: 5m
+        labels:
+          severity: high
+          alert_type: task_processing
+          alertname: TaskStuck
+        annotations:
+          summary: "Task stuck in queue on {{ $labels.worker }}"
+          description: "Oldest task has been waiting for {{ $value | humanizeDuration }}"
+
+      # Task processing timeout
+      - alert: TaskProcessingTimeout
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(task_processing_duration_seconds_bucket[5m])) by (worker, le)
+          ) > 300
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: task_processing
+        annotations:
+          summary: "Tasks timing out on {{ $labels.worker }}"
+          description: "P99 processing time is {{ $value }}s (threshold: 300s)"
+
+      # High retry rate
+      - alert: HighRetryRate
+        expr: |
+          rate(task_retried_total[15m]) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: task_processing
+        annotations:
+          summary: "High task retry rate on {{ $labels.worker }}"
+          description: "Retry rate is {{ $value }}/sec"
+
+  # =============================================================================
+  # Performance Alerts
+  # =============================================================================
+  - name: performance_alerts
+    interval: 60s
+    rules:
+      # Degraded performance
+      - alert: DegradedPerformance
+        expr: |
+          (
+            histogram_quantile(0.95,
+              sum(rate(task_processing_duration_seconds_bucket[5m])) by (worker, le)
+            ) /
+            histogram_quantile(0.95,
+              sum(rate(task_processing_duration_seconds_bucket[1h] offset 1d)) by (worker, le)
+            )
+          ) > 2
+        for: 15m
+        labels:
+          severity: warning
+          alert_type: performance
+        annotations:
+          summary: "Performance degradation on {{ $labels.worker }}"
+          description: "P95 latency is {{ $value }}x higher than yesterday"
+
+      # Trace sampling issues
+      - alert: TraceSamplingLow
+        expr: |
+          rate(traces_sampled_total[5m]) / rate(traces_total[5m]) < 0.001
+        for: 10m
+        labels:
+          severity: info
+          alert_type: observability
+        annotations:
+          summary: "Trace sampling rate too low"
+          description: "Only {{ $value | humanizePercentage }} of traces being sampled"
+
+  # =============================================================================
+  # Capacity Alerts
+  # =============================================================================
+  - name: capacity_alerts
+    interval: 5m
+    rules:
+      # Approaching task limit
+      - alert: ApproachingTaskLimit
+        expr: |
+          predict_linear(task_queue_depth{status="pending"}[1h], 3600) > 5000
+        for: 10m
+        labels:
+          severity: warning
+          alert_type: capacity
+        annotations:
+          summary: "Task queue will overflow within 1 hour on {{ $labels.worker }}"
+          description: "Predicted queue size in 1 hour: {{ $value }}"
+
+      # Disk space prediction
+      - alert: DiskSpaceWillRunOut
+        expr: |
+          predict_linear(system_disk_usage_bytes{usage_type="free"}[6h], 24*3600) < 0
+        for: 30m
+        labels:
+          severity: warning
+          alert_type: capacity
+          resource_type: disk
+        annotations:
+          summary: "Disk will be full within 24 hours on {{ $labels.worker }}"
+          description: "Current free space: {{ $value | humanize1024 }}B"
+
+  # =============================================================================
+  # SLO Violation Alerts
+  # =============================================================================
+  - name: slo_alerts
+    interval: 60s
+    rules:
+      # Error budget burn rate
+      - alert: ErrorBudgetBurnHigh
+        expr: |
+          (
+            1 - (
+              sum(rate(task_completed_total{status="success"}[1h])) by (worker) /
+              sum(rate(task_completed_total[1h])) by (worker)
+            )
+          ) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: slo
+        annotations:
+          summary: "Error budget burn rate high on {{ $labels.worker }}"
+          description: "Current error rate: {{ $value | humanizePercentage }}"
+
+      # Availability SLO violation
+      - alert: AvailabilitySLOViolation
+        expr: |
+          avg_over_time(up{component="worker"}[1h]) < 0.99
+        for: 5m
+        labels:
+          severity: warning
+          alert_type: slo
+        annotations:
+          summary: "Availability SLO violation for {{ $labels.worker_name }}"
+          description: "Availability is {{ $value | humanizePercentage }} (SLO: 99%)"

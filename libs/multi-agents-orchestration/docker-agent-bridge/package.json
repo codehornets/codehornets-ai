@@ -1,0 +1,42 @@
+{
+  "name": "docker-agent-bridge",
+  "version": "1.0.0",
+  "description": "Production-ready inter-container communication for Docker agents with TTY support",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "example:basic": "node examples/basic.js",
+    "example:advanced": "node examples/advanced.js",
+    "example:listener": "node examples/listener.js"
+  },
+  "keywords": [
+    "docker",
+    "inter-container",
+    "communication",
+    "tty",
+    "agent",
+    "ipc",
+    "orchestration",
+    "multi-agent"
+  ],
+  "author": "CodeHornets AI",
+  "license": "MIT",
+  "dependencies": {
+    "dockerode": "^4.0.2",
+    "eventemitter3": "^5.0.1",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/node": "^20.10.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codehornets-ai/docker-agent-bridge"
+  }
+}

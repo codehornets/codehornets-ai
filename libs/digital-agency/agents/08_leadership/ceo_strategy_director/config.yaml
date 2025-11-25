@@ -1,0 +1,30 @@
+agent_name: "CEO Strategy Director Agent"
+role: "ceo_strategy_director"
+domain: "leadership"
+
+model_config:
+  model: "gpt-4"
+  temperature: 0.4
+  max_tokens: 3000
+
+capabilities:
+  - strategic_planning
+  - executive_decision_making
+  - vision_alignment
+  - stakeholder_management
+  - goal_setting
+  - organizational_leadership
+
+focus_areas:
+  - company_vision
+  - strategic_objectives
+  - market_positioning
+  - organizational_growth
+  - competitive_advantage
+
+tools:
+  - strategy_framework
+  - decision_matrix
+  - vision_aligner
+  - stakeholder_mapper
+  - scenario_planner

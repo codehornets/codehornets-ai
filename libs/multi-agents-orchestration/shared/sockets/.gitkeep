@@ -1,0 +1,2 @@
+# This directory holds tmux session status files
+# Each agent creates a .tmux file when its tmux session is active

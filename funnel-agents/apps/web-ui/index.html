@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Security Headers: Content Security Policy
+         Note: frame-ancestors must be set via HTTP header (handled by API Gateway/Helmet)
+         X-Frame-Options must also be set via HTTP header -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        img-src 'self' data: https: blob:;
+        font-src 'self' data: https://fonts.gstatic.com;
+        connect-src 'self' http://localhost:* ws://localhost:*;
+        base-uri 'self';
+        form-action 'self';
+      "
+    />
+
+    <!-- Security Headers: Additional Protection
+         Note: X-Frame-Options removed - must be set via HTTP header -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="manifest" href="/manifest.json" />
+    <title>FunnelAgents</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

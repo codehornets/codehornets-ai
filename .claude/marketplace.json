@@ -1,0 +1,22 @@
+{
+  "name": "codehornets-local",
+  "version": "1.0.0",
+  "description": "CodeHornets AI local plugins",
+  "owner": {
+    "name": "CodeHornets AI",
+    "email": "team@codehornets.ai"
+  },
+  "pluginRoot": "./plugins/",
+  "plugins": [
+    {
+      "name": "agent-manager",
+      "source": "./plugins/agent-manager",
+      "version": "1.0.0",
+      "description": "Create and manage Claude Code agents, output styles, skills, and sub-agents with best practices",
+      "author": {
+        "name": "CodeHornets AI"
+      },
+      "keywords": ["agents", "management", "creation", "configuration"]
+    }
+  ]
+}

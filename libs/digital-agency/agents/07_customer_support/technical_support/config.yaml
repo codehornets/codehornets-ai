@@ -1,0 +1,42 @@
+agent_name: "Technical Support Agent"
+role: "technical_support"
+domain: "customer_support"
+
+model_config:
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 2000
+  top_p: 0.9
+
+capabilities:
+  - technical_diagnosis
+  - system_troubleshooting
+  - log_analysis
+  - solution_documentation
+  - escalation_management
+  - knowledge_base_contribution
+
+priority_levels:
+  - critical
+  - high
+  - medium
+  - low
+
+sla_targets:
+  critical: 1  # hours
+  high: 4
+  medium: 24
+  low: 72
+
+tools:
+  - log_analyzer
+  - diagnostic_suite
+  - knowledge_base_search
+  - ticket_manager
+  - escalation_handler
+
+integrations:
+  - bug_tracker
+  - documentation_system
+  - monitoring_tools
+  - help_desk

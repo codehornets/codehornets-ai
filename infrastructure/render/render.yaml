@@ -1,0 +1,566 @@
+# HandyMate - Render Blueprint
+# https://render.com/docs/blueprint-spec
+
+# Databases
+databases:
+  - name: handymate-mysql
+    databaseName: handymate
+    user: handymate
+    plan: standard # Options: free, starter, standard, pro
+    region: oregon # Choose your region
+    ipAllowList: [] # Empty means accessible from anywhere
+
+  - name: handymate-redis
+    plan: standard # Options: free, starter, standard, pro
+    region: oregon
+
+# CRM Application Services
+services:
+  # Developer CRM
+  - type: web
+    name: handymate-developer
+    runtime: docker
+    region: oregon
+    plan: standard # Options: free, starter, standard, pro, pro plus, pro max
+    dockerfilePath: ./crm/developer/Dockerfile
+    dockerContext: ./crm/developer
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: developer
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_developer
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Dancer CRM
+  - type: web
+    name: handymate-dancer
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/dancer/Dockerfile
+    dockerContext: ./crm/dancer
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: dancer
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_dancer
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Painter CRM
+  - type: web
+    name: handymate-painter
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/painter/Dockerfile
+    dockerContext: ./crm/painter
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: painter
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_painter
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Driver CRM
+  - type: web
+    name: handymate-driver
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/driver/Dockerfile
+    dockerContext: ./crm/driver
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: driver
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_driver
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Influencer CRM
+  - type: web
+    name: handymate-influencer
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/influencer/Dockerfile
+    dockerContext: ./crm/influencer
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: influencer
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_influencer
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Hunter CRM
+  - type: web
+    name: handymate-hunter
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/hunter/Dockerfile
+    dockerContext: ./crm/hunter
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: hunter
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_hunter
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Seller CRM
+  - type: web
+    name: handymate-seller
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/seller/Dockerfile
+    dockerContext: ./crm/seller
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: seller
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_seller
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # Trader CRM
+  - type: web
+    name: handymate-trader
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./crm/trader/Dockerfile
+    dockerContext: ./crm/trader
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_MODULE
+        value: trader
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_DATABASE
+        value: handymate_trader
+      - key: DB_USERNAME
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+
+  # n8n Workflow Automation
+  - type: web
+    name: handymate-n8n
+    runtime: docker
+    region: oregon
+    plan: pro # n8n needs more resources
+    dockerfilePath: ./infrastructure/docker/n8n/Dockerfile
+    dockerContext: ./infrastructure/docker/n8n
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: DB_TYPE
+        value: mysqldb
+      - key: DB_MYSQLDB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_MYSQLDB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_MYSQLDB_DATABASE
+        value: handymate_n8n
+      - key: DB_MYSQLDB_USER
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_MYSQLDB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: EXECUTIONS_MODE
+        value: queue
+      - key: QUEUE_BULL_REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: QUEUE_BULL_REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: QUEUE_BULL_REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: N8N_LOG_LEVEL
+        value: info
+
+  # n8n Workers (Background Jobs)
+  - type: worker
+    name: handymate-n8n-worker-developer
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/n8n/Dockerfile
+    dockerContext: ./infrastructure/docker/n8n
+    dockerCommand: n8n worker
+    autoDeploy: true
+    envVars:
+      - key: WORKER_APP
+        value: developer
+      - key: WORKER_ID
+        value: developer-worker
+      - key: DB_TYPE
+        value: mysqldb
+      - key: DB_MYSQLDB_HOST
+        fromDatabase:
+          name: handymate-mysql
+          property: host
+      - key: DB_MYSQLDB_PORT
+        fromDatabase:
+          name: handymate-mysql
+          property: port
+      - key: DB_MYSQLDB_DATABASE
+        value: handymate_n8n
+      - key: DB_MYSQLDB_USER
+        fromDatabase:
+          name: handymate-mysql
+          property: user
+      - key: DB_MYSQLDB_PASSWORD
+        fromDatabase:
+          name: handymate-mysql
+          property: password
+      - key: EXECUTIONS_MODE
+        value: queue
+      - key: QUEUE_BULL_REDIS_HOST
+        fromDatabase:
+          name: handymate-redis
+          property: host
+      - key: QUEUE_BULL_REDIS_PORT
+        fromDatabase:
+          name: handymate-redis
+          property: port
+      - key: QUEUE_BULL_REDIS_PASSWORD
+        fromDatabase:
+          name: handymate-redis
+          property: password
+      - key: QUEUE_BULL_PREFIX
+        value: "n8n:developer"
+      - key: N8N_LOG_LEVEL
+        value: info
+
+  # Additional n8n Workers for other modules (dancer, painter, etc.)
+  # ... (repeat pattern for each module with appropriate WORKER_APP and QUEUE_BULL_PREFIX values)
+# Note: After deployment, you'll need to:
+# 1. Run database migrations for each CRM module
+# 2. Create the separate databases (handymate_developer, handymate_dancer, etc.) in MySQL
+# 3. Configure custom domains if needed
+# 4. Set up SSL certificates (Render provides automatic Let's Encrypt)
+# 5. Configure any additional environment variables via Render Dashboard

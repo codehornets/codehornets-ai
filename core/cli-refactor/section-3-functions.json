@@ -1,0 +1,58 @@
+{
+  "section": "170001-255000",
+  "totalLinesAnalyzed": 85000,
+  "functions": [
+    {"name": "oO1", "line": 186244, "description": "Check non-ASCII chars", "category": "utility"},
+    {"name": "WtB", "line": 186248, "description": "Binary search Unicode status", "category": "unicode"},
+    {"name": "Z_8", "line": 186263, "description": "IDNA mapping", "category": "unicode"},
+    {"name": "Y_8", "line": 186291, "description": "Validate IDNA label", "category": "unicode"},
+    {"name": "X_8", "line": 186400, "description": "toASCII - punycode", "category": "export"},
+    {"name": "W_8", "line": 186438, "description": "toUnicode", "category": "export"},
+    {"name": "D_8", "line": 186493, "description": "UTF-8 encode", "category": "encoding"},
+    {"name": "E_8", "line": 186497, "description": "UTF-8 decode", "category": "encoding"},
+    {"name": "z_8", "line": 186537, "description": "Percent decode string", "category": "encoding"},
+    {"name": "j_8", "line": 186593, "description": "UTF-8 percent encode", "category": "encoding"},
+    {"name": "XY", "line": 186924, "description": "URL state machine parser", "category": "class"},
+    {"name": "Ax8", "line": 187194, "description": "Serialize URL", "category": "export"},
+    {"name": "JR1", "line": 187215, "description": "Serialize path", "category": "export"},
+    {"name": "CqQ", "line": 252140, "description": "Check if process running", "category": "ide"},
+    {"name": "Ux1", "line": 252167, "description": "Check VS Code IDE", "category": "ide"},
+    {"name": "FN", "line": 252173, "description": "Check JetBrains IDE", "category": "ide"},
+    {"name": "IiA", "line": 252184, "description": "Get IDE lock files", "category": "ide"},
+    {"name": "VqQ", "line": 252204, "description": "Parse IDE lock file", "category": "ide"},
+    {"name": "Fj6", "line": 252291, "description": "Clean stale lock files", "category": "async"},
+    {"name": "Kj6", "line": 252322, "description": "Install IDE extension", "category": "async"},
+    {"name": "PDA", "line": 252362, "description": "Get IDE connections", "category": "async"},
+    {"name": "ZiA", "line": 252544, "description": "Detect running IDEs", "category": "utility"},
+    {"name": "Sj", "line": 252594, "description": "Get IDE display name", "category": "utility"},
+    {"name": "jx", "line": 253367, "description": "Render message - main", "category": "react"},
+    {"name": "dqQ", "line": 253711, "description": "Create diff hunks", "category": "diff"},
+    {"name": "eU", "line": 253726, "description": "Diff from edits", "category": "diff"},
+    {"name": "yx1", "line": 254309, "description": "Runtime abstraction", "category": "lsp"}
+  ],
+  "classes": [
+    {"name": "k8A", "line": 252086, "description": "WSL path converter"},
+    {"name": "LO", "line": 252825, "description": "Diagnostics manager"},
+    {"name": "XY", "line": 186924, "description": "URL state machine"},
+    {"name": "Px1", "line": 254028, "description": "LinkedMap"},
+    {"name": "wNQ", "line": 254256, "description": "LRU Cache"},
+    {"name": "mNQ", "line": 254542, "description": "Semaphore"},
+    {"name": "CiA", "line": 254373, "description": "Emitter"}
+  ],
+  "exports": ["toASCII", "toUnicode", "serializeURL", "parseURL", "LinkedMap", "LRUCache", "Emitter", "Semaphore"],
+  "modules": [
+    {"name": "IDNA/Punycode", "lineRange": "170001-186463", "description": "Unicode IDNA processing"},
+    {"name": "URL Parser", "lineRange": "186614-187272", "description": "WHATWG URL Standard"},
+    {"name": "IDE Integration", "lineRange": "252000-252824", "description": "VS Code, JetBrains, Cursor, Windsurf"},
+    {"name": "Diagnostics", "lineRange": "252825-252975", "description": "IDE diagnostics"},
+    {"name": "React Components", "lineRange": "252976-253558", "description": "Message rendering"},
+    {"name": "Diff Utilities", "lineRange": "253688-253758", "description": "Diff generation"},
+    {"name": "LSP Core", "lineRange": "253800-255000", "description": "JSON-RPC, Events, Message I/O"}
+  ],
+  "patterns": {
+    "moduleSystem": "CommonJS with z() wrapper for lazy loading",
+    "functionNaming": "3-4 character minified names",
+    "reactComponents": "Function components with createElement"
+  },
+  "summary": "Section 170001-255000 contains: (1) URL parsing with WHATWG Standard, IDNA/punycode support; (2) IDE integration for VS Code, Cursor, Windsurf, JetBrains with extension installation and diagnostics; (3) LSP implementation with JSON-RPC, events, cancellation, message I/O. Core CLI infrastructure for Claude Code terminal application."
+}

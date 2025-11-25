@@ -1,0 +1,226 @@
+# Prometheus Configuration for Agent Orchestration System
+# This configuration scrapes metrics from all agent workers and system components
+
+global:
+  # How frequently to scrape targets
+  scrape_interval: 15s
+
+  # How frequently to evaluate rules
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager)
+  external_labels:
+    monitor: 'agent-orchestrator'
+    environment: 'production'
+    cluster: 'main'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+      # Timeout for sending alerts
+      timeout: 10s
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+# Scrape configurations
+scrape_configs:
+  # =============================================================================
+  # Orchestrator Metrics
+  # =============================================================================
+  - job_name: 'orchestrator'
+    static_configs:
+      - targets: ['orchestrator:9090']
+        labels:
+          component: 'orchestrator'
+          role: 'coordinator'
+
+    # Override global settings for this job
+    scrape_interval: 10s
+    scrape_timeout: 10s
+
+    # Metric relabeling for orchestrator
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'go_.*'
+        action: drop  # Drop Go runtime metrics if not needed
+
+  # =============================================================================
+  # Worker Metrics - Marie
+  # =============================================================================
+  - job_name: 'worker-marie'
+    static_configs:
+      - targets: ['marie:9091']
+        labels:
+          component: 'worker'
+          worker_name: 'marie'
+          worker_type: 'document_processor'
+
+    scrape_interval: 15s
+
+    # Add worker-specific labels
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'marie'
+
+  # =============================================================================
+  # Worker Metrics - Anga
+  # =============================================================================
+  - job_name: 'worker-anga'
+    static_configs:
+      - targets: ['anga:9092']
+        labels:
+          component: 'worker'
+          worker_name: 'anga'
+          worker_type: 'data_analyzer'
+
+    scrape_interval: 15s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'anga'
+
+  # =============================================================================
+  # Worker Metrics - Fabien
+  # =============================================================================
+  - job_name: 'worker-fabien'
+    static_configs:
+      - targets: ['fabien:9093']
+        labels:
+          component: 'worker'
+          worker_name: 'fabien'
+          worker_type: 'integration_specialist'
+
+    scrape_interval: 15s
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'fabien'
+
+  # =============================================================================
+  # Node Exporter - System Metrics
+  # =============================================================================
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+          - 'orchestrator:9100'
+          - 'marie:9100'
+          - 'anga:9100'
+          - 'fabien:9100'
+
+    # Relabel to extract node name
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '([^:]+):.*'
+        target_label: node
+        replacement: '${1}'
+
+  # =============================================================================
+  # Jaeger Metrics (if Jaeger exposes Prometheus metrics)
+  # =============================================================================
+  - job_name: 'jaeger'
+    static_configs:
+      - targets: ['jaeger:14269']
+        labels:
+          component: 'tracing'
+
+    metrics_path: /metrics
+
+  # =============================================================================
+  # Grafana Metrics (self-monitoring)
+  # =============================================================================
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          component: 'visualization'
+
+    metrics_path: /metrics
+
+  # =============================================================================
+  # Push Gateway for Batch Jobs
+  # =============================================================================
+  - job_name: 'pushgateway'
+    honor_labels: true
+    static_configs:
+      - targets: ['pushgateway:9091']
+        labels:
+          component: 'pushgateway'
+
+  # =============================================================================
+  # Service Discovery for Dynamic Workers
+  # =============================================================================
+  - job_name: 'dynamic-workers'
+    # File-based service discovery for dynamically added workers
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/workers/*.yml'
+        refresh_interval: 30s
+
+    relabel_configs:
+      # Extract worker name from target label
+      - source_labels: [__meta_worker_name]
+        target_label: worker_name
+
+      # Set instance to worker name for cleaner display
+      - source_labels: [__meta_worker_name]
+        target_label: instance
+
+  # =============================================================================
+  # Blackbox Exporter - Endpoint Monitoring
+  # =============================================================================
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://orchestrator:8080/health
+          - http://marie:8080/health
+          - http://anga:8080/health
+          - http://fabien:8080/health
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
+
+# =============================================================================
+# Remote Write Configuration (optional)
+# =============================================================================
+# remote_write:
+#   - url: "http://cortex:9009/api/prom/push"
+#     queue_config:
+#       capacity: 10000
+#       max_shards: 100
+#       max_samples_per_send: 5000
+#       batch_send_deadline: 30s
+#     metadata_config:
+#       send: true
+#       send_interval: 1m
+
+# =============================================================================
+# Remote Read Configuration (optional)
+# =============================================================================
+# remote_read:
+#   - url: "http://cortex:9009/api/prom/read"
+#     read_recent: true
+
+# =============================================================================
+# Storage Configuration
+# =============================================================================
+# storage:
+#   tsdb:
+#     retention.time: 30d
+#     retention.size: 50GB

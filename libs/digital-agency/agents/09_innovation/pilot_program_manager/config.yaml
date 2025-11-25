@@ -1,0 +1,28 @@
+agent:
+  name: "Pilot Program Manager"
+  version: "0.1.0"
+  description: "Plans and manages pilot programs for new initiatives"
+
+capabilities:
+  - pilot_planning
+  - execution_coordination
+  - progress_tracking
+  - success_evaluation
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

@@ -1,0 +1,17 @@
+agent:
+  name: "Strategy Advisor"
+  id: "strategy_advisor"
+  domain: "feedback"
+  version: "1.0.0"
+
+  description: >
+    Develops strategic recommendations and roadmaps
+
+capabilities: ['synthesize_insights', 'develop_strategies', 'create_roadmaps', 'advise_growth', 'align_objectives']
+
+tools: ['strategy_synthesizer', 'roadmap_creator', 'recommendation_engine']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

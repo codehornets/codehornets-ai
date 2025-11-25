@@ -1,0 +1,2 @@
+# Applications directory
+# Add NestJS applications here using: nx generate @nx/nest:application <name>

@@ -1,0 +1,261 @@
+# Alertmanager Configuration for Agent Orchestration System
+# Routes alerts to appropriate receivers based on severity and component
+
+global:
+  # ResolveTimeout is the time after which an alert is declared resolved
+  # if it has not been updated.
+  resolve_timeout: 5m
+
+  # SMTP configuration for email alerts
+  smtp_from: 'alerts@agent-orchestrator.com'
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_auth_username: 'alerts@agent-orchestrator.com'
+  smtp_auth_password: 'YOUR_APP_PASSWORD'
+  smtp_require_tls: true
+
+  # Slack configuration
+  slack_api_url: 'YOUR_SLACK_WEBHOOK_URL'
+
+  # PagerDuty configuration
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+
+# Inhibition rules to suppress alerts
+inhibit_rules:
+  # Inhibit low priority alerts when high priority alerts are firing
+  - source_matchers:
+      - severity = critical
+    target_matchers:
+      - severity = warning
+    equal: ['worker_name', 'alertname']
+
+  # Inhibit worker alerts when orchestrator is down
+  - source_matchers:
+      - component = orchestrator
+      - severity = critical
+    target_matchers:
+      - component = worker
+
+# The root route with default receiver
+route:
+  # Group alerts by these labels
+  group_by: ['alertname', 'cluster', 'service', 'worker_name']
+
+  # Wait before sending the initial notification
+  group_wait: 30s
+
+  # Wait before sending notifications about new alerts in the group
+  group_interval: 5m
+
+  # Wait before re-sending the same alert
+  repeat_interval: 4h
+
+  # Default receiver for alerts
+  receiver: 'default-receiver'
+
+  # Child routes for specific alert routing
+  routes:
+    # =============================================================================
+    # Critical Alerts - Immediate PagerDuty escalation
+    # =============================================================================
+    - matchers:
+        - severity = critical
+      receiver: 'critical-receiver'
+      group_wait: 10s
+      repeat_interval: 1h
+      continue: true
+
+    # =============================================================================
+    # Worker-specific alerts
+    # =============================================================================
+    - matchers:
+        - component = worker
+      receiver: 'worker-alerts'
+      group_by: ['worker_name', 'alertname']
+      routes:
+        # High-priority worker alerts
+        - matchers:
+            - severity = high
+          receiver: 'worker-high-priority'
+          repeat_interval: 2h
+
+        # Worker performance alerts
+        - matchers:
+            - alert_type = performance
+          receiver: 'worker-performance'
+          group_interval: 15m
+          repeat_interval: 6h
+
+    # =============================================================================
+    # Orchestrator alerts
+    # =============================================================================
+    - matchers:
+        - component = orchestrator
+      receiver: 'orchestrator-alerts'
+      group_wait: 10s
+      repeat_interval: 2h
+
+    # =============================================================================
+    # System resource alerts
+    # =============================================================================
+    - matchers:
+        - alert_type = resource
+      receiver: 'resource-alerts'
+      group_interval: 10m
+      repeat_interval: 3h
+
+    # =============================================================================
+    # Task processing alerts
+    # =============================================================================
+    - matchers:
+        - alert_type = task_processing
+      receiver: 'task-alerts'
+      routes:
+        # Stuck tasks need immediate attention
+        - matchers:
+            - alertname = TaskStuck
+          receiver: 'stuck-task-alerts'
+          group_wait: 5m
+          repeat_interval: 30m
+
+    # =============================================================================
+    # Development/Testing alerts (lower priority)
+    # =============================================================================
+    - matchers:
+        - environment = development
+      receiver: 'dev-alerts'
+      group_interval: 30m
+      repeat_interval: 12h
+
+# Receivers configuration
+receivers:
+  # =============================================================================
+  # Default Receiver - Slack notification
+  # =============================================================================
+  - name: 'default-receiver'
+    slack_configs:
+      - channel: '#agent-alerts'
+        title: 'Agent System Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        send_resolved: true
+
+  # =============================================================================
+  # Critical Receiver - PagerDuty + Slack + Email
+  # =============================================================================
+  - name: 'critical-receiver'
+    pagerduty_configs:
+      - routing_key: 'YOUR_PAGERDUTY_ROUTING_KEY'
+        description: '{{ .GroupLabels.alertname }}'
+        details:
+          severity: '{{ .GroupLabels.severity }}'
+          component: '{{ .GroupLabels.component }}'
+          worker: '{{ .GroupLabels.worker_name }}'
+          summary: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+
+    slack_configs:
+      - channel: '#critical-alerts'
+        title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        text: |
+          *Component:* {{ .GroupLabels.component }}
+          *Worker:* {{ .GroupLabels.worker_name }}
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+        color: 'danger'
+        send_resolved: true
+
+    email_configs:
+      - to: 'oncall@company.com'
+        headers:
+          Subject: 'CRITICAL: {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Critical Alert: {{ .GroupLabels.alertname }}</h2>
+          <p><strong>Component:</strong> {{ .GroupLabels.component }}</p>
+          <p><strong>Summary:</strong> {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}</p>
+
+  # =============================================================================
+  # Worker Alerts Receiver
+  # =============================================================================
+  - name: 'worker-alerts'
+    slack_configs:
+      - channel: '#worker-alerts'
+        title: 'Worker Alert: {{ .GroupLabels.worker_name }}'
+        text: |
+          *Worker:* {{ .GroupLabels.worker_name }}
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+        send_resolved: true
+
+  - name: 'worker-high-priority'
+    slack_configs:
+      - channel: '#worker-critical'
+        title: '⚠️ High Priority Worker Alert'
+        color: 'warning'
+
+    email_configs:
+      - to: 'worker-team@company.com'
+
+  - name: 'worker-performance'
+    slack_configs:
+      - channel: '#performance-alerts'
+        title: 'Performance Issue: {{ .GroupLabels.worker_name }}'
+
+  # =============================================================================
+  # Orchestrator Alerts Receiver
+  # =============================================================================
+  - name: 'orchestrator-alerts'
+    pagerduty_configs:
+      - routing_key: 'ORCHESTRATOR_PAGERDUTY_KEY'
+        severity: 'error'
+
+    slack_configs:
+      - channel: '#orchestrator-alerts'
+        title: '🎯 Orchestrator Alert'
+        color: 'danger'
+
+  # =============================================================================
+  # Resource Alerts Receiver
+  # =============================================================================
+  - name: 'resource-alerts'
+    slack_configs:
+      - channel: '#resource-alerts'
+        title: 'Resource Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          *Resource Type:* {{ .GroupLabels.resource_type }}
+          *Node:* {{ .GroupLabels.instance }}
+          *Current Value:* {{ .GroupLabels.value }}
+          *Threshold:* {{ .GroupLabels.threshold }}
+
+  # =============================================================================
+  # Task Processing Alerts
+  # =============================================================================
+  - name: 'task-alerts'
+    slack_configs:
+      - channel: '#task-processing'
+        title: 'Task Processing Alert'
+
+  - name: 'stuck-task-alerts'
+    slack_configs:
+      - channel: '#stuck-tasks'
+        title: '🔴 STUCK TASK DETECTED'
+        color: 'danger'
+        text: |
+          *Task ID:* {{ .GroupLabels.task_id }}
+          *Worker:* {{ .GroupLabels.worker_name }}
+          *Duration:* {{ .GroupLabels.duration }}
+          *Action Required:* Manual intervention may be needed
+
+    webhook_configs:
+      - url: 'http://orchestrator:8080/webhooks/stuck-task'
+        send_resolved: false
+
+  # =============================================================================
+  # Development Alerts
+  # =============================================================================
+  - name: 'dev-alerts'
+    slack_configs:
+      - channel: '#dev-alerts'
+        title: '[DEV] {{ .GroupLabels.alertname }}'
+        send_resolved: false
+
+# Templates for reusable notification formats
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

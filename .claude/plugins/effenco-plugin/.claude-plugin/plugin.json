@@ -1,0 +1,42 @@
+{
+  "name": "enterprise-tools",
+  "source": {
+    "source": "github",
+    "repo": "company/enterprise-plugin"
+  },
+  "description": "Enterprise workflow automation tools",
+  "version": "2.1.0",
+  "author": {
+    "name": "Enterprise Team",
+    "email": "enterprise@company.com"
+  },
+  "homepage": "https://docs.company.com/plugins/enterprise-tools",
+  "repository": "https://github.com/company/enterprise-plugin",
+  "license": "MIT",
+  "keywords": ["enterprise", "workflow", "automation"],
+  "category": "productivity",
+  "commands": [
+    "./commands/core/",
+    "./commands/enterprise/",
+    "./commands/experimental/preview.md"
+  ],
+  "agents": [
+    "./agents/security-reviewer.md",
+    "./agents/compliance-checker.md"
+  ],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [{"type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh"}]
+      }
+    ]
+  },
+  "mcpServers": {
+    "enterprise-db": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/servers/db-server",
+      "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/config.json"]
+    }
+  },
+  "strict": false
+}

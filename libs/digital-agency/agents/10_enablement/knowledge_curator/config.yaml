@@ -1,0 +1,28 @@
+agent:
+  name: "Knowledge Curator"
+  version: "0.1.0"
+  description: "Manages organizational knowledge and facilitates knowledge sharing"
+
+capabilities:
+  - knowledge_organization
+  - documentation_creation
+  - wiki_maintenance
+  - sharing_facilitation
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

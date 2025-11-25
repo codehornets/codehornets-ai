@@ -1,0 +1,28 @@
+agent:
+  name: "Pricing Strategist"
+  version: "0.1.0"
+  description: "Develops pricing strategies and cost models"
+
+capabilities:
+  - cost_calculation
+  - pricing_model_creation
+  - competitor_price_analysis
+  - profit_margin_optimization
+  - pricing_recommendation
+
+parameters:
+  pricing_strategies:
+    - value_based
+    - cost_plus
+    - competitive
+    - penetration
+    - premium
+  margin_targets:
+    minimum: 20
+    target: 40
+    optimal: 60
+
+integrations:
+  - service_designer
+  - competitor_analyst
+  - market_researcher

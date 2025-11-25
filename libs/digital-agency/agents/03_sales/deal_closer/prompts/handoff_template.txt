@@ -1,0 +1,68 @@
+Fulfillment Handoff Template:
+
+DEAL HANDOFF SUMMARY
+
+Client Information:
+- Company: [Company Name]
+- Primary Contact: [Name, Title, Email, Phone]
+- Decision Maker: [Name, Title]
+- Additional Stakeholders: [List]
+
+Deal Details:
+- Contract Value: $[Amount]
+- Contract Term: [Duration]
+- Payment Terms: [Terms]
+- Start Date: [Date]
+- Contract Signed: [Date]
+
+Services/Deliverables:
+[Detailed list from SOW]
+
+Client Objectives:
+1. [Primary objective from discovery]
+2. [Secondary objective]
+3. [Additional objectives]
+
+Pain Points Addressed:
+- [Key pain point 1]
+- [Key pain point 2]
+- [Key pain point 3]
+
+Success Criteria:
+- [Metric 1]
+- [Metric 2]
+- [Metric 3]
+
+Requirements & Constraints:
+- Must-Have: [List]
+- Timeline Constraints: [Details]
+- Budget Constraints: [Details]
+- Technical Requirements: [Details]
+
+Stakeholder Map:
+- Executive Sponsor: [Name/Role]
+- Project Champion: [Name/Role]
+- Day-to-Day Contacts: [Names/Roles]
+- Decision Makers: [Names/Roles]
+
+Special Considerations:
+[Any unique client needs, preferences, or concerns]
+
+Discovery Notes:
+[Link to detailed discovery documentation]
+
+Next Steps:
+1. [Immediate action]
+2. [Follow-up action]
+3. [Ongoing actions]
+
+Kickoff Call Scheduled:
+- Date/Time: [Details]
+- Attendees: [List]
+- Agenda: [Overview]
+
+Questions or Concerns:
+[Any areas needing clarification or special attention]
+
+Sales Contact:
+[Your name and contact info for any follow-up questions]

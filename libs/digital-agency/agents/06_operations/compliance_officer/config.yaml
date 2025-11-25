@@ -1,0 +1,17 @@
+agent:
+  name: "Compliance Officer"
+  id: "compliance_officer"
+  domain: "operations"
+  version: "1.0.0"
+
+  description: >
+    Ensures regulatory compliance and data protection
+
+capabilities: ['monitor_compliance', 'manage_data_protection', 'conduct_audits', 'develop_policies', 'handle_reporting']
+
+tools: ['compliance_monitor', 'data_protection_tool', 'audit_manager']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

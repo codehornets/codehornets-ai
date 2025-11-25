@@ -1,0 +1,16 @@
+# revert-web-ui:
+# 	  The only changes I made were:
+
+#   1. Root package.json - Excluded web-ui from npm workspaces
+
+#   // Before
+#   "workspaces": [
+#     "apps/*",
+#     "libs/*"
+#   ]
+
+#   // After
+#   "workspaces": [
+#     "apps/!(web-ui)",
+#     "libs/*"
+#   ]

@@ -1,0 +1,101 @@
+# =============================================================================
+# FunnelAgents - Production NestJS Microservices Dockerfile
+# =============================================================================
+# Multi-stage build optimized for production with security hardening
+# and minimal image size using alpine base
+
+ARG NODE_VERSION=20
+
+# =============================================================================
+# Stage 1: Dependencies - Install all dependencies
+# =============================================================================
+FROM node:${NODE_VERSION}-alpine AS deps
+
+WORKDIR /app
+
+# Install build dependencies for native modules
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    libc6-compat
+
+# Copy package files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+
+# Install dependencies with production optimization
+RUN npm ci --prefer-offline --no-audit --progress=false
+
+# =============================================================================
+# Stage 2: Builder - Build the application
+# =============================================================================
+FROM node:${NODE_VERSION}-alpine AS builder
+
+ARG SERVICE
+
+WORKDIR /app
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code
+COPY . .
+
+# Build the specific service with production configuration
+RUN npx nx build ${SERVICE} --configuration=production --skip-nx-cache
+
+# Remove dev dependencies and clean cache
+RUN npm prune --production && \
+    npm cache clean --force
+
+# =============================================================================
+# Stage 3: Production Runner - Minimal runtime image
+# =============================================================================
+FROM node:${NODE_VERSION}-alpine AS runner
+
+ARG SERVICE
+
+WORKDIR /app
+
+# Install runtime dependencies only
+RUN apk add --no-cache \
+    dumb-init \
+    wget \
+    ca-certificates && \
+    rm -rf /var/cache/apk/*
+
+# Create non-root user with specific UID/GID for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --ingroup nodejs nestjs && \
+    mkdir -p /app/logs /app/tmp && \
+    chown -R nestjs:nodejs /app
+
+# Copy production dependencies
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/package*.json ./
+
+# Copy built application
+COPY --from=builder --chown=nestjs:nodejs /app/dist/apps/${SERVICE} ./dist
+
+# Set environment variables
+ENV NODE_ENV=production \
+    NODE_OPTIONS="--max-old-space-size=512" \
+    PORT=3000
+
+# Switch to non-root user
+USER nestjs
+
+# Expose port (documentation only, not actually publishing)
+EXPOSE 3000
+
+# Health check with proper configuration
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "dist/main.js"]

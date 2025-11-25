@@ -1,0 +1,48 @@
+{"display":"\u0010\u0001what can you do ?","pastedContents":{},"timestamp":1763601815787,"project":"/home/agent/workspace"}
+{"display":"create a task for the agent marie?","pastedContents":{},"timestamp":1763601867610,"project":"/home/agent/workspace"}
+{"display":"send a message to marie","pastedContents":{},"timestamp":1763601945225,"project":"/home/agent/workspace"}
+{"display":"send_message_to_agent(\n      target_agent=\"anga\",\n      message=\"Test message - please acknowledge\",\n      from_agent=\"orchestrator\"\n  )","pastedContents":{},"timestamp":1763606683306,"project":"/home/agent/workspace"}
+{"display":"list_available_agents()","pastedContents":{},"timestamp":1763607265404,"project":"/home/agent/workspace"}
+{"display":"list_available_agents()","pastedContents":{},"timestamp":1763607765645,"project":"/home/agent/workspace"}
+{"display":"\n  # Send a message to Anga\n  bash tools/wake_worker.sh anga \"Test message from orchestrator\"","pastedContents":{},"timestamp":1763607886379,"project":"/home/agent/workspace"}
+{"display":"its working","pastedContents":{},"timestamp":1763608724225,"project":"/home/agent/workspace"}
+{"display":"you need to use the make attach-dev","pastedContents":{},"timestamp":1763608804423,"project":"/home/agent/workspace"}
+{"display":"What are your capabilities?","pastedContents":{},"timestamp":1763635960343,"project":"/home/agent/workspace"}
+{"display":"What are your main capabilities?","pastedContents":{},"timestamp":1763636000251,"project":"/home/agent/workspace"}
+{"display":"List all available agents","pastedContents":{},"timestamp":1763636304191,"project":"/home/agent/workspace"}
+{"display":"Hello! Testing the new unified messaging system. Can you confirm you received this?","pastedContents":{},"timestamp":1763636754875,"project":"/home/agent/workspace"}
+{"display":"Check for pending tasks and start monitoring","pastedContents":{},"timestamp":1763636850885,"project":"/home/agent/workspace"}
+{"display":"what can you dCheck for pending tasks and start monitoringo ","pastedContents":{},"timestamp":1763637430089,"project":"/home/agent/workspace"}
+{"display":"send a message to anga","pastedContents":{},"timestamp":1763638208651,"project":"/home/agent/workspace"}
+{"display":"sned a message to anga","pastedContents":{},"timestamp":1763638724573,"project":"/home/agent/workspace"}
+{"display":"tell him that you're its boss","pastedContents":{},"timestamp":1763638758528,"project":"/home/agent/workspace"}
+{"display":"send a good morning message to anga","pastedContents":{},"timestamp":1763640081203,"project":"/home/agent/workspace"}
+{"display":"send a hello message to anga","pastedContents":{},"timestamp":1763640204584,"project":"/home/agent/workspace"}
+{"display":"send a message again to anga","pastedContents":{},"timestamp":1763640551631,"project":"/home/agent/workspace"}
+{"display":"What tasks are currently assigned?","pastedContents":{},"timestamp":1763657963664,"project":"/"}
+{"display":"What tasks are currently assigned?","pastedContents":{},"timestamp":1763657963726,"project":"/"}
+{"display":"send a message to anga","pastedContents":{},"timestamp":1763660492601,"project":"/"}
+{"display":"said hello","pastedContents":{},"timestamp":1763660518471,"project":"/"}
+{"display":"Please test inter-agent communication by sending a message to Anga. Use Method 1 (bash script): bash /scripts/send_agent_message.sh anga 'Hello from orchestrator - testing communication'","pastedContents":{},"timestamp":1763660697367,"project":"/"}
+{"display":"Reply from Anga: Message received successfully","pastedContents":{},"timestamp":1763660984912,"project":"/"}
+{"display":"send a message to anga and make hime answer to you","pastedContents":{},"timestamp":1763661129299,"project":"/"}
+{"display":"send a meesage to anga","pastedContents":{},"timestamp":1763696568444,"project":"/"}
+{"display":"said hello","pastedContents":{},"timestamp":1763696609275,"project":"/"}
+{"display":"Test message from Anga to Orchestrator","pastedContents":{},"timestamp":1763704836614,"project":"/"}
+{"display":"/msg-anga \"tell him hello and to answer back\"","pastedContents":{},"timestamp":1763705161234,"project":"/"}
+{"display":"/msg-anga \"tell him hello and to answer back\"","pastedContents":{},"timestamp":1763705161291,"project":"/"}
+{"display":"/msg-marie \"tell her hello and to answer you bacl\"","pastedContents":{},"timestamp":1763705376603,"project":"/"}
+{"display":"/msg-marie \"tell her hello and to answer you bacl\"","pastedContents":{},"timestamp":1763705376661,"project":"/"}
+{"display":"send another message","pastedContents":{},"timestamp":1763705858793,"project":"/"}
+{"display":"Message from anga: Communication confirmed again! Receiving you loud and clear, Orchestrator. Standing by for any coding tasks or assignments you need handled.","pastedContents":{},"timestamp":1763706278026,"project":"/"}
+{"display":"/msg-anga said hellol to anga and tell him to answer back\"","pastedContents":{},"timestamp":1763706278110,"project":"/"}
+{"display":"/msg-anga said hellol to anga and tell him to answer back\"","pastedContents":{},"timestamp":1763706278264,"project":"/"}
+{"display":"Message from anga: Acknowledged - said hello from orchestrator","pastedContents":{},"timestamp":1763706559640,"project":"/"}
+{"display":"send a message to anga","pastedContents":{},"timestamp":1763774212125,"project":"/","sessionId":"9b6c98a1-e024-41ce-aade-7635eae82dbe"}
+{"display":"hello and ask him to answer to you","pastedContents":{},"timestamp":1763774236800,"project":"/","sessionId":"9b6c98a1-e024-41ce-aade-7635eae82dbe"}
+{"display":"what were we doing","pastedContents":{},"timestamp":1763774941991,"project":"/","sessionId":"f971828f-f4f1-464d-8dd1-8930f8f7ffe4"}
+{"display":"send a message to anga","pastedContents":{},"timestamp":1763774965370,"project":"/","sessionId":"f971828f-f4f1-464d-8dd1-8930f8f7ffe4"}
+{"display":"tell him hello and ask him to answer we testing the communivcation","pastedContents":{},"timestamp":1763775002852,"project":"/","sessionId":"f971828f-f4f1-464d-8dd1-8930f8f7ffe4"}
+{"display":"yes","pastedContents":{},"timestamp":1763775068073,"project":"/","sessionId":"f971828f-f4f1-464d-8dd1-8930f8f7ffe4"}
+{"display":"do you have some idea how to fix that","pastedContents":{},"timestamp":1763775451988,"project":"/","sessionId":"f971828f-f4f1-464d-8dd1-8930f8f7ffe4"}
+{"display":"send a message to anga and let him know to tell you hello","pastedContents":{},"timestamp":1763816339049,"project":"/","sessionId":"59f5e2af-0955-48f7-82d0-26140b945fd9"}

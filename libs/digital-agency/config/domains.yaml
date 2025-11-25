@@ -1,0 +1,289 @@
+# Domain Definitions for Digital Agency AI Platform
+# Defines all business domains, their capabilities, and agent assignments
+
+domains:
+  lead_generation:
+    id: 1
+    name: "Lead Generation & Qualification"
+    description: "Automated prospecting, lead discovery, and qualification"
+    capabilities:
+      - prospect_research
+      - contact_discovery
+      - lead_scoring
+      - qualification_workflows
+      - database_enrichment
+    agents:
+      - lead_researcher
+      - contact_finder
+      - lead_qualifier
+    integrations:
+      - linkedin
+      - apollo
+      - clearbit
+      - hubspot
+    priority: high
+    sla_hours: 24
+
+  email_marketing:
+    id: 2
+    name: "Email Marketing & Communication"
+    description: "Intelligent email campaign creation and management"
+    capabilities:
+      - campaign_creation
+      - personalization
+      - ab_testing
+      - send_optimization
+      - deliverability_monitoring
+    agents:
+      - email_writer
+      - campaign_manager
+      - deliverability_monitor
+    integrations:
+      - sendgrid
+      - mailchimp
+      - hubspot
+    priority: high
+    sla_hours: 12
+
+  content_marketing:
+    id: 3
+    name: "Content Marketing & Creation"
+    description: "AI-powered content generation across channels"
+    capabilities:
+      - blog_writing
+      - whitepaper_creation
+      - case_study_development
+      - social_content
+      - video_scripts
+      - infographic_copy
+    agents:
+      - content_writer
+      - editor
+      - seo_optimizer
+      - content_strategist
+    integrations:
+      - wordpress
+      - contentful
+      - medium
+    priority: medium
+    sla_hours: 48
+
+  social_media:
+    id: 4
+    name: "Social Media Management"
+    description: "Automated social media posting, engagement, and analytics"
+    capabilities:
+      - post_scheduling
+      - content_curation
+      - engagement_monitoring
+      - hashtag_research
+      - competitor_analysis
+      - influencer_identification
+    agents:
+      - social_poster
+      - engagement_manager
+      - social_analyst
+    integrations:
+      - facebook
+      - twitter
+      - linkedin
+      - instagram
+      - buffer
+      - hootsuite
+    priority: high
+    sla_hours: 6
+
+  paid_advertising:
+    id: 5
+    name: "Paid Advertising Management"
+    description: "Campaign setup, optimization, and performance monitoring"
+    capabilities:
+      - campaign_setup
+      - ad_copy_generation
+      - bid_optimization
+      - audience_targeting
+      - performance_tracking
+      - budget_allocation
+    agents:
+      - ad_creator
+      - bid_optimizer
+      - performance_analyst
+    integrations:
+      - google_ads
+      - facebook_ads
+      - linkedin_ads
+      - twitter_ads
+    priority: high
+    sla_hours: 12
+
+  seo:
+    id: 6
+    name: "SEO & Search Optimization"
+    description: "Search engine optimization and organic traffic growth"
+    capabilities:
+      - keyword_research
+      - on_page_optimization
+      - technical_seo
+      - link_building
+      - content_optimization
+      - rank_tracking
+    agents:
+      - keyword_researcher
+      - on_page_optimizer
+      - link_builder
+      - seo_analyst
+    integrations:
+      - semrush
+      - ahrefs
+      - google_search_console
+      - google_analytics
+    priority: medium
+    sla_hours: 72
+
+  crm_management:
+    id: 7
+    name: "CRM & Pipeline Management"
+    description: "Customer relationship and sales pipeline optimization"
+    capabilities:
+      - data_enrichment
+      - pipeline_tracking
+      - lead_nurturing
+      - deal_automation
+      - contact_segmentation
+      - workflow_automation
+    agents:
+      - crm_enricher
+      - pipeline_manager
+      - automation_builder
+    integrations:
+      - hubspot
+      - salesforce
+      - pipedrive
+      - zoho
+    priority: high
+    sla_hours: 24
+
+  project_management:
+    id: 8
+    name: "Project & Task Coordination"
+    description: "Automated project planning and task management"
+    capabilities:
+      - task_creation
+      - timeline_management
+      - resource_allocation
+      - dependency_tracking
+      - status_reporting
+      - milestone_tracking
+    agents:
+      - project_planner
+      - task_manager
+      - resource_coordinator
+    integrations:
+      - asana
+      - jira
+      - monday
+      - clickup
+      - trello
+    priority: medium
+    sla_hours: 48
+
+  analytics:
+    id: 9
+    name: "Analytics & Reporting"
+    description: "Data collection, analysis, and insights generation"
+    capabilities:
+      - data_collection
+      - metric_tracking
+      - dashboard_creation
+      - insight_generation
+      - trend_analysis
+      - predictive_analytics
+    agents:
+      - data_collector
+      - analyst
+      - report_generator
+      - insight_engine
+    integrations:
+      - google_analytics
+      - mixpanel
+      - segment
+      - tableau
+      - looker
+    priority: medium
+    sla_hours: 24
+
+  quality_assurance:
+    id: 10
+    name: "Quality Assurance & Compliance"
+    description: "Content review, brand compliance, and performance validation"
+    capabilities:
+      - content_review
+      - brand_compliance
+      - tone_checking
+      - fact_verification
+      - performance_validation
+      - error_detection
+    agents:
+      - content_reviewer
+      - compliance_checker
+      - performance_validator
+    integrations:
+      - grammarly
+      - copyscape
+    priority: high
+    sla_hours: 12
+
+# Domain Dependencies (which domains depend on others)
+dependencies:
+  email_marketing:
+    - lead_generation
+    - crm_management
+  paid_advertising:
+    - analytics
+    - content_marketing
+  social_media:
+    - content_marketing
+    - analytics
+  seo:
+    - content_marketing
+    - analytics
+  project_management:
+    - "*"  # Can coordinate all domains
+  analytics:
+    - "*"  # Monitors all domains
+  quality_assurance:
+    - "*"  # Reviews all domain outputs
+
+# Domain Workflows (common multi-domain workflows)
+workflows:
+  new_lead_to_customer:
+    domains:
+      - lead_generation
+      - email_marketing
+      - crm_management
+      - analytics
+    description: "Complete lead acquisition to customer conversion"
+
+  content_campaign:
+    domains:
+      - content_marketing
+      - social_media
+      - seo
+      - analytics
+      - quality_assurance
+    description: "Full content creation and distribution campaign"
+
+  paid_campaign:
+    domains:
+      - paid_advertising
+      - content_marketing
+      - analytics
+      - crm_management
+    description: "End-to-end paid advertising campaign"
+
+  client_onboarding:
+    domains:
+      - crm_management
+      - project_management
+      - email_marketing
+    description: "New client onboarding and setup"

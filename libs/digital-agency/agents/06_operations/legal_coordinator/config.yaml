@@ -1,0 +1,17 @@
+agent:
+  name: "Legal Coordinator"
+  id: "legal_coordinator"
+  domain: "operations"
+  version: "1.0.0"
+
+  description: >
+    Handles contracts, legal compliance, and IP matters
+
+capabilities: ['draft_contracts', 'review_agreements', 'ensure_compliance', 'manage_ip', 'coordinate_counsel']
+
+tools: ['contract_manager', 'compliance_checker', 'ip_tracker']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

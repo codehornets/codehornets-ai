@@ -1,0 +1,29 @@
+agent:
+  name: "Competitor Analyst"
+  version: "0.1.0"
+  description: "Analyzes competitors and identifies market opportunities"
+
+capabilities:
+  - competitor_profiling
+  - offering_comparison
+  - pricing_analysis
+  - gap_identification
+  - competitive_tracking
+
+parameters:
+  analysis_frequency: "weekly"
+  competitor_sources:
+    - websites
+    - social_media
+    - review_sites
+    - industry_reports
+  tracking_metrics:
+    - pricing
+    - features
+    - marketing_messages
+    - customer_reviews
+
+integrations:
+  - market_researcher
+  - pricing_strategist
+  - value_proposition_creator

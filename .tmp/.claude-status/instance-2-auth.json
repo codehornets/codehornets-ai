@@ -1,0 +1,24 @@
+{
+  "instance": "instance-2-auth",
+  "service": "auth-service",
+  "port": 3001,
+  "status": "not_started",
+  "current_task": null,
+  "files_created": [],
+  "files_modified": [],
+  "blockers": [],
+  "completed": [],
+  "pending": [
+    "User entity in libs/domain",
+    "Session entity",
+    "RefreshToken entity",
+    "POST /auth/register",
+    "POST /auth/login",
+    "POST /auth/refresh",
+    "POST /auth/logout",
+    "GET /auth/me",
+    "JwtAuthGuard",
+    "RolesGuard"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

@@ -1,0 +1,110 @@
+# HandyMate GCP - Terraform Variables Example
+# Copy this file to terraform.tfvars and update with your actual values
+
+# Global Configuration
+project_name   = "handymate"
+environment    = "production"  # Options: dev, staging, production
+gcp_project_id = "your-gcp-project-id"
+gcp_region     = "us-central1"
+
+# Application Modules (all 8 CRM apps)
+app_modules = [
+  "developer",
+  "dancer",
+  "painter",
+  "driver",
+  "influencer",
+  "hunter",
+  "seller",
+  "trader"
+]
+
+# Network Configuration
+subnet_cidr         = "10.8.0.0/28"
+vpc_connector_cidr  = "10.8.1.0/28"
+
+# Cloud SQL Configuration (MySQL)
+db_tier      = "db-n1-standard-2"    # Production: db-n1-standard-4 or higher
+db_disk_size = 100                    # GB
+db_username  = "handymate_admin"     # Change this
+db_password  = "CHANGE_THIS_PASSWORD" # Use a strong password
+
+# Redis Configuration (Memorystore)
+redis_tier      = "STANDARD_HA"  # Options: BASIC, STANDARD_HA (HA recommended for production)
+redis_memory_gb = 5               # GB
+
+# Cloud Run Configuration
+cloud_run_max_instances = 10     # Maximum instances per service
+cloud_run_cpu           = "1000m" # 1 vCPU per instance
+cloud_run_memory        = "512Mi" # 512 MB per instance
+
+# Container Configuration
+container_image_tag = "latest"  # Use specific tags in production (e.g., "v1.0.0", git SHA)
+
+# n8n Configuration
+n8n_encryption_key = ""       # Auto-generated if empty, or provide your own 32+ character key
+n8n_cpu            = "2000m"  # 2 vCPU for main n8n service
+n8n_memory         = "2Gi"    # 2 GB for main n8n service
+n8n_worker_cpu     = "1000m"  # 1 vCPU per worker
+n8n_worker_memory  = "1Gi"    # 1 GB per worker
+
+# ===================================
+# Production Recommendations
+# ===================================
+#
+# Cloud SQL:
+# - Use db-n1-standard-4 or higher for production workloads
+# - Set availability_type to REGIONAL for high availability
+# - Enable point-in-time recovery
+# - Configure automated backups with 30 day retention
+# - Enable query insights for monitoring
+#
+# Memorystore Redis:
+# - Use STANDARD_HA tier for production (automatic failover)
+# - Allocate sufficient memory (5GB minimum for production)
+# - Monitor memory usage and scale as needed
+# - Configure maxmemory-policy appropriately
+#
+# Cloud Run:
+# - Set minimum instances to 1+ for critical services
+# - Configure CPU and memory based on load testing
+# - Use specific image tags, not "latest"
+# - Enable Cloud Run authentication for internal services
+# - Configure VPC connector for private Cloud SQL access
+#
+# Networking:
+# - Use VPC connector with appropriate CIDR ranges
+# - Enable Private Service Connect for Cloud SQL
+# - Configure firewall rules appropriately
+# - Use Cloud NAT for outbound traffic
+#
+# Security:
+# - Store secrets in Secret Manager
+# - Use IAM service accounts with minimal permissions
+# - Enable audit logging
+# - Rotate database passwords regularly
+# - Use Cloud Armor for DDoS protection
+# - Enable Binary Authorization for container image verification
+#
+# Cost Optimization:
+# - Set minimum instances to 0 for dev/staging
+# - Use autoscaling to scale down during off-peak
+# - Monitor and optimize container resource allocation
+# - Use committed use discounts for predictable workloads
+# - Implement lifecycle policies for Cloud Storage
+#
+# Monitoring:
+# - Enable Cloud Monitoring for all services
+# - Set up alerting for critical metrics
+# - Configure uptime checks
+# - Enable Cloud Logging
+# - Create custom dashboards for visibility
+#
+# Deployment:
+# 1. Enable required APIs (done automatically by Terraform)
+# 2. Configure remote state storage in Cloud Storage
+# 3. Run terraform init, plan, apply
+# 4. Build and push container images to Artifact Registry
+# 5. Update Cloud Run services with new image versions
+# 6. Run database migrations
+# 7. Configure Cloud DNS or custom domains

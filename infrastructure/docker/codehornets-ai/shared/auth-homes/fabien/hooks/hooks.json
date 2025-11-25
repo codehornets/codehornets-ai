@@ -1,0 +1,65 @@
+{
+  "hooks": [
+    {
+      "name": "fabien-task-notification",
+      "description": "Notify when Fabien receives a new marketing task",
+      "event": "UserPromptSubmit",
+      "condition": {
+        "type": "pattern",
+        "pattern": "campaign|marketing|social|content|strategy"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/fabien/prompt-submitted.trigger",
+        "payload": {
+          "worker": "fabien",
+          "event": "prompt_submit",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "fabien-tool-use-logger",
+      "description": "Log all tool usage for debugging",
+      "event": "PreToolUse",
+      "action": {
+        "type": "log",
+        "path": "/var/log/fabien-tool-use.log",
+        "format": "${timestamp} [${tool_name}] ${tool_args}"
+      }
+    },
+    {
+      "name": "fabien-result-complete",
+      "description": "Notify when Fabien completes a task",
+      "event": "PostToolUse",
+      "condition": {
+        "type": "tool_name",
+        "value": "Write"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/fabien-result-ready.trigger",
+        "payload": {
+          "worker": "fabien",
+          "event": "result_ready",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "fabien-error-notification",
+      "description": "Notify orchestrator on errors",
+      "event": "OnError",
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/fabien-error.trigger",
+        "payload": {
+          "worker": "fabien",
+          "event": "error",
+          "error_message": "${error}",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ]
+}

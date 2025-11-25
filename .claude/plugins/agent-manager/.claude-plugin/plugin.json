@@ -1,0 +1,9 @@
+{
+  "name": "agent-manager",
+  "version": "1.0.0",
+  "description": "Create and manage Claude Code agents, output styles, skills, and sub-agents with best practices",
+  "author": "CodeHornets AI",
+  "repository": "local",
+  "license": "MIT",
+  "keywords": ["agents", "management", "creation", "configuration"]
+}

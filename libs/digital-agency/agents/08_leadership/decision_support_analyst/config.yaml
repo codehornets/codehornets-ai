@@ -1,0 +1,8 @@
+agent_name: "Decision Support Analyst Agent"
+role: "decision_support_analyst"
+domain: "leadership"
+model_config:
+  model: "gpt-4"
+  temperature: 0.2
+capabilities: [data_analysis, reporting, insight_generation]
+tools: [data_analyzer, report_generator, visualization_tool]

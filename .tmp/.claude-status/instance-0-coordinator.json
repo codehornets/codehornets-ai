@@ -1,0 +1,29 @@
+{
+  "instance": "instance-0-coordinator",
+  "service": "project-manager",
+  "status": "active",
+  "current_task": "Setting up coordination infrastructure",
+  "responsibilities": [
+    "Database migrations",
+    "Shared interfaces in libs/",
+    "API Gateway proxy routes",
+    "BullMQ queue setup",
+    "Docker compose updates",
+    "Makefile updates",
+    "Cross-instance coordination"
+  ],
+  "files_created": [],
+  "files_modified": [],
+  "blockers": [],
+  "completed": [
+    "Status file system setup"
+  ],
+  "monitoring": [
+    "instance-1-adapter",
+    "instance-2-auth",
+    "instance-3-crm",
+    "instance-4-tasks",
+    "instance-5-agents"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

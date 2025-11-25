@@ -1,0 +1,827 @@
+{
+  "total_agents": 18,
+  "total_files": 283,
+  "domains": {
+    "04_fulfillment": {
+      "agents": {
+        "project_manager": {
+          "agent": "project_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\project_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\project_planning.txt",
+            "prompts\\status_reporting.txt",
+            "tasks\\allocate_resources.py",
+            "tasks\\create_plan.py",
+            "tasks\\manage_risks.py",
+            "tasks\\track_progress.py",
+            "tasks\\update_stakeholders.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\resource_allocator.py",
+            "tools\\risk_analyzer.py",
+            "tools\\timeline_builder.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "project_planning.txt",
+              "status_reporting.txt"
+            ],
+            "tasks": [
+              "allocate_resources.py",
+              "create_plan.py",
+              "manage_risks.py",
+              "track_progress.py",
+              "update_stakeholders.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "resource_allocator.py",
+              "risk_analyzer.py",
+              "timeline_builder.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "account_manager": {
+          "agent": "account_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\account_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\escalation_response.txt",
+            "prompts\\relationship_management.txt",
+            "tasks\\client_checkin.py",
+            "tasks\\handle_escalation.py",
+            "tasks\\identify_opportunities.py",
+            "tasks\\manage_renewals.py",
+            "tasks\\measure_satisfaction.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\escalation_manager.py",
+            "tools\\opportunity_identifier.py",
+            "tools\\satisfaction_tracker.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "escalation_response.txt",
+              "relationship_management.txt"
+            ],
+            "tasks": [
+              "client_checkin.py",
+              "handle_escalation.py",
+              "identify_opportunities.py",
+              "manage_renewals.py",
+              "measure_satisfaction.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "escalation_manager.py",
+              "opportunity_identifier.py",
+              "satisfaction_tracker.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "creative_producer": {
+          "agent": "creative_producer",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\creative_producer",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\creative_brief_template.txt",
+            "prompts\\feedback_management.txt",
+            "tasks\\approve_assets.py",
+            "tasks\\assign_creative.py",
+            "tasks\\create_brief.py",
+            "tasks\\manage_feedback.py",
+            "tasks\\review_creative.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\brand_checker.py",
+            "tools\\brief_generator.py",
+            "tools\\feedback_collector.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "creative_brief_template.txt",
+              "feedback_management.txt"
+            ],
+            "tasks": [
+              "approve_assets.py",
+              "assign_creative.py",
+              "create_brief.py",
+              "manage_feedback.py",
+              "review_creative.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "brand_checker.py",
+              "brief_generator.py",
+              "feedback_collector.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "quality_checker": {
+          "agent": "quality_checker",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\quality_checker",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\defect_reporting.txt",
+            "prompts\\qa_checklist.txt",
+            "tasks\\approve_quality.py",
+            "tasks\\create_checklist.py",
+            "tasks\\document_issues.py",
+            "tasks\\execute_tests.py",
+            "tasks\\perform_review.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\checklist_generator.py",
+            "tools\\defect_tracker.py",
+            "tools\\test_runner.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "defect_reporting.txt",
+              "qa_checklist.txt"
+            ],
+            "tasks": [
+              "approve_quality.py",
+              "create_checklist.py",
+              "document_issues.py",
+              "execute_tests.py",
+              "perform_review.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "checklist_generator.py",
+              "defect_tracker.py",
+              "test_runner.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "client_reporter": {
+          "agent": "client_reporter",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\client_reporter",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\data_storytelling.txt",
+            "prompts\\report_structure.txt",
+            "tasks\\compile_data.py",
+            "tasks\\create_visualizations.py",
+            "tasks\\deliver_report.py",
+            "tasks\\generate_report.py",
+            "tasks\\prepare_presentation.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\chart_generator.py",
+            "tools\\metrics_collector.py",
+            "tools\\report_builder.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "data_storytelling.txt",
+              "report_structure.txt"
+            ],
+            "tasks": [
+              "compile_data.py",
+              "create_visualizations.py",
+              "deliver_report.py",
+              "generate_report.py",
+              "prepare_presentation.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "chart_generator.py",
+              "metrics_collector.py",
+              "report_builder.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "delivery_coordinator": {
+          "agent": "delivery_coordinator",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\04_fulfillment\\delivery_coordinator",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\delivery_checklist.txt",
+            "prompts\\training_guide.txt",
+            "tasks\\complete_handoff.py",
+            "tasks\\create_documentation.py",
+            "tasks\\deliver_assets.py",
+            "tasks\\prepare_package.py",
+            "tasks\\schedule_training.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\documentation_generator.py",
+            "tools\\package_assembler.py",
+            "tools\\training_scheduler.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "delivery_checklist.txt",
+              "training_guide.txt"
+            ],
+            "tasks": [
+              "complete_handoff.py",
+              "create_documentation.py",
+              "deliver_assets.py",
+              "prepare_package.py",
+              "schedule_training.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "documentation_generator.py",
+              "package_assembler.py",
+              "training_scheduler.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        }
+      },
+      "total_files": 98
+    },
+    "05_feedback_loop": {
+      "agents": {
+        "analytics_specialist": {
+          "agent": "analytics_specialist",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\analytics_specialist",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\analysis_prompt.txt",
+            "prompts\\system_prompt.txt",
+            "tasks\\analyze_performance.py",
+            "tasks\\generate_report.py",
+            "tasks\\identify_insights.py",
+            "tasks\\monitor_trends.py",
+            "tasks\\track_metrics.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\analytics_tracker.py",
+            "tools\\insight_detector.py",
+            "tools\\report_generator.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "analysis_prompt.txt",
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "analyze_performance.py",
+              "generate_report.py",
+              "identify_insights.py",
+              "monitor_trends.py",
+              "track_metrics.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "analytics_tracker.py",
+              "insight_detector.py",
+              "report_generator.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 16
+        },
+        "client_feedback_manager": {
+          "agent": "client_feedback_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\client_feedback_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\analyze_sentiment.py",
+            "tasks\\categorize_feedback.py",
+            "tasks\\collect_feedback.py",
+            "tasks\\create_action_plans.py",
+            "tasks\\track_improvements.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\categorization_engine.py",
+            "tools\\feedback_collector.py",
+            "tools\\sentiment_analyzer.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "analyze_sentiment.py",
+              "categorize_feedback.py",
+              "collect_feedback.py",
+              "create_action_plans.py",
+              "track_improvements.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "categorization_engine.py",
+              "feedback_collector.py",
+              "sentiment_analyzer.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "process_optimizer": {
+          "agent": "process_optimizer",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\process_optimizer",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\analyze_workflows.py",
+            "tasks\\design_improvements.py",
+            "tasks\\identify_bottlenecks.py",
+            "tasks\\implement_changes.py",
+            "tasks\\monitor_impact.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\bottleneck_detector.py",
+            "tools\\process_mapper.py",
+            "tools\\workflow_analyzer.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "analyze_workflows.py",
+              "design_improvements.py",
+              "identify_bottlenecks.py",
+              "implement_changes.py",
+              "monitor_impact.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "bottleneck_detector.py",
+              "process_mapper.py",
+              "workflow_analyzer.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "market_intelligence_analyst": {
+          "agent": "market_intelligence_analyst",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\market_intelligence_analyst",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\analyze_opportunities.py",
+            "tasks\\generate_intelligence.py",
+            "tasks\\monitor_competitors.py",
+            "tasks\\research_market.py",
+            "tasks\\track_trends.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\competitor_tracker.py",
+            "tools\\market_research_tool.py",
+            "tools\\trend_monitor.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "analyze_opportunities.py",
+              "generate_intelligence.py",
+              "monitor_competitors.py",
+              "research_market.py",
+              "track_trends.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "competitor_tracker.py",
+              "market_research_tool.py",
+              "trend_monitor.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "strategy_advisor": {
+          "agent": "strategy_advisor",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\strategy_advisor",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\advise_growth.py",
+            "tasks\\align_objectives.py",
+            "tasks\\create_roadmaps.py",
+            "tasks\\develop_strategies.py",
+            "tasks\\synthesize_insights.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\recommendation_engine.py",
+            "tools\\roadmap_creator.py",
+            "tools\\strategy_synthesizer.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "advise_growth.py",
+              "align_objectives.py",
+              "create_roadmaps.py",
+              "develop_strategies.py",
+              "synthesize_insights.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "recommendation_engine.py",
+              "roadmap_creator.py",
+              "strategy_synthesizer.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "knowledge_manager": {
+          "agent": "knowledge_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\05_feedback_loop\\knowledge_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\curate_resources.py",
+            "tasks\\document_practices.py",
+            "tasks\\facilitate_sharing.py",
+            "tasks\\maintain_accessibility.py",
+            "tasks\\organize_knowledge.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\documentation_tool.py",
+            "tools\\knowledge_organizer.py",
+            "tools\\search_indexer.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "curate_resources.py",
+              "document_practices.py",
+              "facilitate_sharing.py",
+              "maintain_accessibility.py",
+              "organize_knowledge.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "documentation_tool.py",
+              "knowledge_organizer.py",
+              "search_indexer.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        }
+      },
+      "total_files": 93
+    },
+    "06_operations": {
+      "agents": {
+        "finance_manager": {
+          "agent": "finance_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\finance_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\generate_reports.py",
+            "tasks\\handle_payments.py",
+            "tasks\\manage_budgets.py",
+            "tasks\\process_invoices.py",
+            "tasks\\track_expenses.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\budget_tracker.py",
+            "tools\\financial_reporter.py",
+            "tools\\invoice_processor.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "generate_reports.py",
+              "handle_payments.py",
+              "manage_budgets.py",
+              "process_invoices.py",
+              "track_expenses.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "budget_tracker.py",
+              "financial_reporter.py",
+              "invoice_processor.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "legal_coordinator": {
+          "agent": "legal_coordinator",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\legal_coordinator",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\coordinate_counsel.py",
+            "tasks\\draft_contracts.py",
+            "tasks\\ensure_compliance.py",
+            "tasks\\manage_ip.py",
+            "tasks\\review_agreements.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\compliance_checker.py",
+            "tools\\contract_manager.py",
+            "tools\\ip_tracker.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "coordinate_counsel.py",
+              "draft_contracts.py",
+              "ensure_compliance.py",
+              "manage_ip.py",
+              "review_agreements.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "compliance_checker.py",
+              "contract_manager.py",
+              "ip_tracker.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "hr_specialist": {
+          "agent": "hr_specialist",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\hr_specialist",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\coordinate_recruitment.py",
+            "tasks\\coordinate_training.py",
+            "tasks\\handle_relations.py",
+            "tasks\\manage_onboarding.py",
+            "tasks\\manage_reviews.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\onboarding_manager.py",
+            "tools\\performance_tracker.py",
+            "tools\\recruitment_tracker.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "coordinate_recruitment.py",
+              "coordinate_training.py",
+              "handle_relations.py",
+              "manage_onboarding.py",
+              "manage_reviews.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "onboarding_manager.py",
+              "performance_tracker.py",
+              "recruitment_tracker.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "it_support": {
+          "agent": "it_support",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\it_support",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\coordinate_maintenance.py",
+            "tasks\\ensure_security.py",
+            "tasks\\handle_licenses.py",
+            "tasks\\manage_infrastructure.py",
+            "tasks\\provide_support.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\infrastructure_monitor.py",
+            "tools\\security_scanner.py",
+            "tools\\ticket_system.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "coordinate_maintenance.py",
+              "ensure_security.py",
+              "handle_licenses.py",
+              "manage_infrastructure.py",
+              "provide_support.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "infrastructure_monitor.py",
+              "security_scanner.py",
+              "ticket_system.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "office_manager": {
+          "agent": "office_manager",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\office_manager",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\coordinate_supplies.py",
+            "tasks\\handle_administration.py",
+            "tasks\\manage_facilities.py",
+            "tasks\\manage_vendors.py",
+            "tasks\\organize_events.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\facility_manager.py",
+            "tools\\supply_tracker.py",
+            "tools\\vendor_coordinator.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "coordinate_supplies.py",
+              "handle_administration.py",
+              "manage_facilities.py",
+              "manage_vendors.py",
+              "organize_events.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "facility_manager.py",
+              "supply_tracker.py",
+              "vendor_coordinator.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        },
+        "compliance_officer": {
+          "agent": "compliance_officer",
+          "path": "C:\\workspace\\@ornomedia-ai\\digital-agency\\agents\\06_operations\\compliance_officer",
+          "files": [
+            "agent.py",
+            "config.yaml",
+            "__init__.py",
+            "prompts\\system_prompt.txt",
+            "tasks\\conduct_audits.py",
+            "tasks\\develop_policies.py",
+            "tasks\\handle_reporting.py",
+            "tasks\\manage_data_protection.py",
+            "tasks\\monitor_compliance.py",
+            "tasks\\__init__.py",
+            "tests\\test_agent.py",
+            "tools\\audit_manager.py",
+            "tools\\compliance_monitor.py",
+            "tools\\data_protection_tool.py",
+            "tools\\__init__.py"
+          ],
+          "directories": {
+            "prompts": [
+              "system_prompt.txt"
+            ],
+            "tasks": [
+              "conduct_audits.py",
+              "develop_policies.py",
+              "handle_reporting.py",
+              "manage_data_protection.py",
+              "monitor_compliance.py",
+              "__init__.py"
+            ],
+            "tests": [
+              "test_agent.py"
+            ],
+            "tools": [
+              "audit_manager.py",
+              "compliance_monitor.py",
+              "data_protection_tool.py",
+              "__init__.py"
+            ]
+          },
+          "total_files": 15
+        }
+      },
+      "total_files": 92
+    }
+  }
+}

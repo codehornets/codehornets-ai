@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "_DEPRECATED_agent-communication": {
+      "command": "python3",
+      "args": ["/tools/agent_communication_mcp.py"],
+      "description": "DEPRECATED - Do NOT use for agent communication. Agents use bash scripts instead: /tools/send_agent_message.sh"
+    }
+  }
+}

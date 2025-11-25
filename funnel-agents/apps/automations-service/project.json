@@ -1,0 +1,58 @@
+{
+  "name": "automations-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/automations-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/automations-service",
+        "main": "apps/automations-service/src/main.ts",
+        "tsConfig": "apps/automations-service/tsconfig.build.json",
+        "assets": ["apps/automations-service/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/automations-service/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "automations-service:build",
+        "watch": true,
+        "inspect": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/automations-service"
+      ],
+      "options": {
+        "jestConfig": "apps/automations-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/automations-service/**/*.ts"
+        ]
+      }
+    }
+  },
+  "tags": [
+    "scope:automations",
+    "type:microservice"
+  ]
+}

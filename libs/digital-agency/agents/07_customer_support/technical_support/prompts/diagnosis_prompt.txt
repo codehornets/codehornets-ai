@@ -1,0 +1,15 @@
+Diagnose the following technical issue:
+
+Issue Description: {issue_description}
+Environment: {environment}
+Error Messages: {error_messages}
+Recent Changes: {recent_changes}
+
+Please provide:
+1. Root cause analysis
+2. Severity assessment
+3. Affected components
+4. Recommended resolution steps
+5. Potential preventive measures
+
+Be thorough and systematic in your analysis.

@@ -1,0 +1,36 @@
+Objection Response Templates:
+
+PRICE OBJECTIONS:
+
+"Too expensive":
+- "I understand budget is important. Many of our clients initially felt the same way. When they saw that [specific ROI example], they realized the investment paid for itself in [timeframe]. Would it help to break down the specific ROI for your situation?"
+
+"Need to think about it":
+- "Of course - this is an important decision. To help you think it through, what specific aspects would you like to explore further? I want to make sure you have all the information you need."
+
+TIMING OBJECTIONS:
+
+"Not the right time":
+- "I understand timing is crucial. Can you help me understand what would make it the right time? Often we find that [specific insight about their pain point] and waiting actually increases the cost."
+
+AUTHORITY OBJECTIONS:
+
+"Need to discuss with team":
+- "That makes complete sense - what would be most helpful for those conversations? I'd be happy to provide materials or even join that discussion to answer any questions they might have."
+
+NEED OBJECTIONS:
+
+"Current solution works fine":
+- "That's great to hear! I'm curious - what prompted you to explore alternatives? Understanding what's working helps me see if there are areas where we could add value you might not have considered."
+
+TRUST OBJECTIONS:
+
+"Never heard of you":
+- "Fair point! We've been working with [industry] companies like [similar company] to solve [specific problem]. Let me share how [company X] was in a similar position and what they achieved..."
+
+PRODUCT OBJECTIONS:
+
+"Missing feature X":
+- "Thanks for bringing that up. Help me understand how you'd use feature X in your workflow. We might have a different approach that achieves the same outcome, or this could be valuable feedback for our roadmap."
+
+Always customize responses based on the specific context and maintain an consultative, helpful tone.

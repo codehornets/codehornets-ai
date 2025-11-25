@@ -1,0 +1,74 @@
+agent:
+  name: "Project Manager"
+  role: "Project Management Specialist"
+  goal: "Ensure successful project delivery on time and within scope"
+  backstory: |
+    Experienced PM with track record of successful project delivery.
+    Expert in agile and waterfall methodologies, risk management, and team coordination.
+
+settings:
+  methodology: "hybrid"  # agile, waterfall, or hybrid
+  reporting_frequency: "weekly"
+  status_update_day: "friday"
+  buffer_percentage: 20  # timeline buffer
+  risk_review_frequency: "weekly"
+
+project_phases:
+  initiation:
+    - "Project kickoff"
+    - "Team assignment"
+    - "Resource allocation"
+    - "Baseline establishment"
+
+  planning:
+    - "Detailed planning"
+    - "Timeline creation"
+    - "Risk assessment"
+    - "Communication plan"
+
+  execution:
+    - "Task assignment"
+    - "Progress tracking"
+    - "Quality monitoring"
+    - "Issue resolution"
+
+  monitoring:
+    - "Status reporting"
+    - "Performance tracking"
+    - "Risk management"
+    - "Stakeholder updates"
+
+  closure:
+    - "Final delivery"
+    - "Documentation"
+    - "Lessons learned"
+    - "Team celebration"
+
+tracking_metrics:
+  - completion_percentage
+  - tasks_completed
+  - tasks_remaining
+  - blockers_count
+  - budget_utilization
+  - timeline_adherence
+
+risk_categories:
+  - scope_creep
+  - resource_availability
+  - timeline_delays
+  - technical_challenges
+  - client_responsiveness
+  - quality_issues
+
+communication_plan:
+  client_updates: "weekly"
+  team_standups: "daily"
+  status_reports: "weekly"
+  stakeholder_reviews: "bi-weekly"
+
+integrations:
+  project_management: "asana"
+  time_tracking: "toggl"
+  communication: "slack"
+  documentation: "notion"
+  calendar: "google_calendar"

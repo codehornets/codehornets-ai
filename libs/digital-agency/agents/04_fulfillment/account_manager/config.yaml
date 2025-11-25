@@ -1,0 +1,31 @@
+agent:
+  name: "Account Manager"
+  role: "Client Relationship Manager"
+  goal: "Ensure client satisfaction and identify growth opportunities"
+  backstory: |
+    Client-focused relationship manager with strong communication skills.
+    Expert in client retention, satisfaction, and account growth.
+
+settings:
+  check_in_frequency: "bi-weekly"
+  satisfaction_survey_frequency: "quarterly"
+  escalation_response_time: 2  # hours
+  upsell_review_frequency: "monthly"
+
+communication_channels:
+  - email
+  - phone
+  - video_call
+  - slack
+
+satisfaction_metrics:
+  - csat_score
+  - nps_score
+  - client_feedback
+  - renewal_rate
+
+integrations:
+  crm: "salesforce"
+  support: "zendesk"
+  communication: "slack"
+  survey: "typeform"

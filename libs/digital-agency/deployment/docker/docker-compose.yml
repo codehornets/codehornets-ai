@@ -1,0 +1,176 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: digital-agency-db
+    environment:
+      POSTGRES_DB: digital_agency
+      POSTGRES_USER: ${DB_USER:-agency_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-agency_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agency-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: digital-agency-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - agency-network
+
+  # API Server
+  api:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.api
+    container_name: digital-agency-api
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-agency_user}:${DB_PASSWORD:-change_me_in_production}@postgres:5432/digital_agency
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      APP_ENV: ${APP_ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+  # Marketing Domain Agent
+  marketing-agent:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.agent
+      args:
+        AGENT_NAME: campaign_creator
+        DOMAIN: marketing
+    container_name: marketing-agent
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-agency_user}:${DB_PASSWORD:-change_me_in_production}@postgres:5432/digital_agency
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DOMAIN: marketing
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+  # Sales Domain Agent
+  sales-agent:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.agent
+      args:
+        AGENT_NAME: lead_qualifier
+        DOMAIN: sales
+    container_name: sales-agent
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-agency_user}:${DB_PASSWORD:-change_me_in_production}@postgres:5432/digital_agency
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DOMAIN: sales
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: digital-agency-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: digital-agency-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+  # Grafana Dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: digital-agency-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - agency-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  agency-network:
+    driver: bridge

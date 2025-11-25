@@ -1,0 +1,93 @@
+{
+  "name": "@codehornets-ai/cli-refactor",
+  "version": "0.1.0",
+  "description": "Refactored CLI modules in TypeScript",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./aws": {
+      "import": "./dist/aws/index.js",
+      "types": "./dist/aws/index.d.ts"
+    },
+    "./aws/*": {
+      "import": "./dist/aws/*.js",
+      "types": "./dist/aws/*.d.ts"
+    },
+    "./telemetry": {
+      "import": "./dist/telemetry/index.js",
+      "types": "./dist/telemetry/index.d.ts"
+    },
+    "./telemetry/*": {
+      "import": "./dist/telemetry/*.js",
+      "types": "./dist/telemetry/*.d.ts"
+    },
+    "./network": {
+      "import": "./dist/network/index.js",
+      "types": "./dist/network/index.d.ts"
+    },
+    "./network/*": {
+      "import": "./dist/network/*.js",
+      "types": "./dist/network/*.d.ts"
+    }
+  },
+  "bin": {
+    "claude-refactor": "./dist/main.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@aws-sdk/client-sts": "^3.650.0",
+    "@aws-sdk/credential-providers": "^3.650.0",
+    "@aws-sdk/types": "^3.650.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@smithy/types": "^3.5.0",
+    "ink": "^4.4.1",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "eslint": "^8.55.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "keywords": [
+    "aws",
+    "credentials",
+    "sts",
+    "cli",
+    "refactor",
+    "telemetry",
+    "opentelemetry",
+    "tracing",
+    "metrics",
+    "observability",
+    "network",
+    "http",
+    "proxy"
+  ],
+  "author": "CodeHornets AI",
+  "license": "MIT"
+}

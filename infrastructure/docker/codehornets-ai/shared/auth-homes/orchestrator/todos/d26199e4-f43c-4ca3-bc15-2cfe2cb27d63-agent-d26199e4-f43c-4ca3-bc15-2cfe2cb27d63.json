@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Create task file for Marie with student evaluation requirements",
+    "status": "completed",
+    "activeForm": "Creating task file for Marie"
+  },
+  {
+    "content": "Wake Marie to process the task immediately",
+    "status": "completed",
+    "activeForm": "Waking Marie"
+  },
+  {
+    "content": "Monitor for results from Marie",
+    "status": "in_progress",
+    "activeForm": "Monitoring for results"
+  }
+]

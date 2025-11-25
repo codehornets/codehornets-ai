@@ -1,0 +1,297 @@
+name: 'codehornets-ai'
+
+# Enhanced Docker Compose with Hooks-Based Agent Communication
+# Supports: polling, event-driven (wrapper), and hooks-based modes
+#
+# Usage:
+#   Polling (default):     docker-compose up
+#   Event-driven:          ACTIVATION_WRAPPER=1 docker-compose --profile activated up
+#   Hooks-based (NEW):     HOOKS_MODE=1 docker-compose --profile hooks up
+#   Hybrid (wrapper+hooks): ACTIVATION_WRAPPER=1 HOOKS_MODE=1 docker-compose --profile hybrid up
+
+services:
+  # Redis - For event-driven and hooks modes
+  redis:
+    image: redis:8.0-rc1-alpine
+    container_name: codehornets-redis
+    profiles: ["activated", "hooks", "hybrid"]
+    networks:
+      - claude-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis-data:/data
+
+  # Orchestrator - Coordinates workers
+  orchestrator:
+    image: docker/sandbox-templates:claude-code
+    container_name: orchestrator
+    command: >
+      bash -c "
+      echo '🔧 Setting up orchestrator...' &&
+      cp /prompts/orchestrator.md /home/agent/workspace/CLAUDE.md &&
+      if [ -n \"${HOOKS_MODE}\" ]; then
+        echo '🔗 Installing hooks dependencies...' &&
+        pip install --quiet --break-system-packages watchdog redis &&
+        echo '🪝 Setting up hooks configuration...' &&
+        mkdir -p /home/agent/.claude/hooks &&
+        cp /hooks-config/orchestrator-hooks.json /home/agent/.claude/hooks/hooks.json &&
+        mkdir -p /shared/triggers /shared/pipes &&
+        mkfifo /shared/pipes/orchestrator-control 2>/dev/null || true &&
+        echo '🎯 Starting hook watchers in background...' &&
+        python3 /tools/hook_watcher.py orchestrator > /var/log/hook-watcher.log 2>&1 &
+      fi &&
+      echo '🚀 Starting Claude CLI...' &&
+      claude
+      "
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
+      - ./shared/tasks:/tasks:rw
+      - ./shared/results:/results:ro
+      - ./shared/heartbeats:/shared/heartbeats:ro
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ../../../workspaces:/workspaces:ro
+      - ../../../tools:/tools:ro
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - HOOKS_MODE=${HOOKS_MODE:-}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Marie - Dance teacher assistant
+  marie:
+    image: docker/sandbox-templates:claude-code
+    container_name: marie
+    entrypoint: ["/tools/entrypoint.sh"]
+    command: ["marie"]
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./shared/auth-homes/marie:/home/agent/.claude:rw
+      - ./shared/tasks/marie:/tasks:ro
+      - ./shared/results/marie:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ../../../workspaces/dance:/workspace/dance:rw
+      - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ../../../tools:/tools:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - WORKER_NAME=marie
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/marie.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Anga - Coding assistant
+  anga:
+    image: docker/sandbox-templates:claude-code
+    container_name: anga
+    entrypoint: ["/tools/entrypoint.sh"]
+    command: ["anga"]
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./shared/auth-homes/anga:/home/agent/.claude:rw
+      - ./shared/tasks/anga:/tasks:ro
+      - ./shared/results/anga:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ../../../workspaces/coding:/workspace/coding:rw
+      - ./shared/workspaces/anga:/home/agent/workspace:rw
+      - ../../../tools:/tools:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - WORKER_NAME=anga
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/anga.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # Fabien - Marketing assistant
+  fabien:
+    image: docker/sandbox-templates:claude-code
+    container_name: fabien
+    entrypoint: ["/tools/entrypoint.sh"]
+    command: ["fabien"]
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./shared/auth-homes/fabien:/home/agent/.claude:rw
+      - ./shared/tasks/fabien:/tasks:ro
+      - ./shared/results/fabien:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ../../../workspaces/marketing:/workspace/marketing:rw
+      - ./shared/workspaces/fabien:/home/agent/workspace:rw
+      - ../../../tools:/tools:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - WORKER_NAME=fabien
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/heartbeats/fabien.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+networks:
+  claude-network:
+    driver: bridge
+    name: codehornets-ai-network
+
+volumes:
+  redis-data:
+    name: codehornets-redis-data
+
+# =============================================================================
+# USAGE GUIDE - Multi-Mode Support
+# =============================================================================
+#
+# 1. Polling Mode (Original - Simplest):
+#    docker-compose -f docker-compose.hooks.yml up
+#    - Workers poll every 1s
+#    - No dependencies
+#    - Great for development
+#
+# 2. Event-Driven Mode (Zero CPU - activation_wrapper.py):
+#    ACTIVATION_WRAPPER=1 docker-compose -f docker-compose.hooks.yml --profile activated up
+#    - Instant wakeup with inotify/Redis
+#    - 0% CPU when idle
+#    - Requires watchdog library
+#
+# 3. Hooks-Based Mode (NEW - Claude Code Hooks):
+#    HOOKS_MODE=1 docker-compose -f docker-compose.hooks.yml --profile hooks up
+#    - Native Claude Code hooks integration
+#    - File triggers + named pipes
+#    - UserPromptSubmit + PreToolUse hooks
+#    - Observable watcher logs
+#
+# 4. Hybrid Mode (Best of Both):
+#    ACTIVATION_WRAPPER=1 HOOKS_MODE=1 docker-compose -f docker-compose.hooks.yml --profile hybrid up
+#    - activation_wrapper.py for zero-CPU idle
+#    - Hooks for rich Claude Code integration
+#    - Production-ready
+#
+# =============================================================================
+# HOOKS MODE FEATURES
+# =============================================================================
+#
+# File-Based Triggers:
+#   - /shared/triggers/{worker}/task-{id}.trigger (task arrival)
+#   - /shared/triggers/{worker}/result-{id}.trigger (result ready)
+#   - Watched by hook_watcher.py (inotify)
+#
+# Named Pipes (Bidirectional):
+#   - /shared/pipes/orchestrator-control (control channel)
+#   - /shared/pipes/{worker}-status (status updates)
+#   - Low-latency IPC
+#
+# Health Monitoring:
+#   - Watcher logs: /shared/watcher-logs/{worker}-watcher.log
+#   - Heartbeats: /shared/heartbeats/{worker}.json
+#   - Docker healthchecks
+#
+# Hook Configuration:
+#   - /hooks-config/{worker}-hooks.json
+#   - Mounted to /home/agent/.claude/hooks/hooks.json
+#   - Auto-loaded by Claude Code
+#
+# =============================================================================
+# ENVIRONMENT VARIABLES
+# =============================================================================
+#
+# HOOKS_MODE=1                   Enable hooks-based communication
+# ACTIVATION_WRAPPER=1           Enable activation_wrapper.py
+# ACTIVATION_MODE=inotify        inotify|redis|polling (for wrapper)
+# REDIS_URL=redis://redis:6379   Redis connection
+# HEARTBEAT_INTERVAL=10          Heartbeat frequency (seconds)
+# TRIGGER_DIR=/shared/triggers   File trigger directory
+# PIPE_DIR=/shared/pipes         Named pipes directory
+#
+# =============================================================================

@@ -1,0 +1,1269 @@
+name: handymate
+
+services:
+  # PHP-FPM & Nginx Application Container
+  developer:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/developer
+    container_name: handymate-developer
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_DEVELOPER:-79}:79"
+      - "${VITE_PORT_DEVELOPER:-5174}:5174"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_DEVELOPER:-handymate_developer}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  dancer:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/dancer
+    container_name: handymate-dancer
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_DANCER:-80}:80"
+      - "${VITE_PORT_DANCER:-5173}:5173"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_DANCER:-handymate_dancer}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  painter:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/painter
+    container_name: handymate-painter
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_PAINTER:-81}:81"
+      - "${VITE_PORT_PAINTER:-5180}:5173"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_PAINTER:-handymate_painter}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  driver:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/driver
+    container_name: handymate-driver
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_DRIVER:-82}:82"
+      - "${VITE_PORT_DRIVER:-5175}:5175"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_DRIVER:-handymate_driver}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  influencer:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/influencer
+    container_name: handymate-influencer
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_INFLUENCER:-83}:83"
+      - "${VITE_PORT_INFLUENCER:-5176}:5176"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_INFLUENCER:-handymate_influencer}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  hunter:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/hunter
+    container_name: handymate-hunter
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_HUNTER:-84}:84"
+      - "${VITE_PORT_HUNTER:-5177}:5177"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_HUNTER:-handymate_hunter}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  seller:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/seller
+    container_name: handymate-seller
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_seller:-85}:85"
+      - "${VITE_PORT_seller:-5178}:5178"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_seller:-handymate_seller}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # PHP-FPM & Nginx Application Container
+  trader:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/trader
+    container_name: handymate-trader
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code for hot-reload
+      - ../..:/var/www/html
+      # Use named volumes for vendor and node_modules so all containers share them
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+      # Storage directories
+      - ../../storage/app:/var/www/html/storage/app
+      - ../../storage/logs:/var/www/html/storage/logs
+    ports:
+      - "${APP_PORT_TRADER:-86}:86"
+      - "${VITE_PORT_TRADER:-5179}:5179"
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE_TRADER:-handymate_trader}
+      - DB_USERNAME=${DB_USERNAME:-handymate}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: handymate-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-handymate}
+      MYSQL_USER: ${DB_USERNAME:-handymate}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - handymate-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: handymate-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - handymate-network
+
+  # Mailhog for testing emails (optional)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: handymate-mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+    networks:
+      - handymate-network
+
+  # Queue Worker (Default)
+  queue:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/dancer
+    container_name: handymate-queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php workspaces/dancer/artisan queue:work --sleep=3 --tries=3
+    volumes:
+      - ../..:/var/www/html
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # Library Queue Workers - OCR Processing
+  queue-ocr:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/dancer
+    container_name: handymate-queue-ocr
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php workspaces/dancer/artisan queue:work redis --queue=libraries:ocr --sleep=3 --tries=3 --timeout=600 --verbose
+    volumes:
+      - ../..:/var/www/html
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # Library Queue Workers - ML Processing
+  queue-ml:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/dancer
+    container_name: handymate-queue-ml
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php workspaces/dancer/artisan queue:work redis --queue=libraries:ml --sleep=3 --tries=3 --timeout=300 --verbose
+    volumes:
+      - ../..:/var/www/html
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # Library Queue Workers - Default Processing
+  queue-default:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - PHP_VERSION=8.3
+        - WORKSPACE=workspaces/dancer
+    container_name: handymate-queue-default
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php workspaces/dancer/artisan queue:work redis --queue=libraries:default --sleep=3 --tries=3 --timeout=120 --verbose
+    volumes:
+      - ../..:/var/www/html
+      - vendor-data:/var/www/html/vendor
+      - node_modules-data:/var/www/html/node_modules
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - handymate-network
+
+  # ==========================================================================
+  # n8n Workflow Automation Service
+  # ==========================================================================
+  n8n:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # ======================================================================
+      # Database Configuration (Shared MySQL with Laravel)
+      # ======================================================================
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # ======================================================================
+      # n8n Core Configuration
+      # ======================================================================
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost/workflow/webhook}
+
+      # Execution mode: 'queue' for production scalability, 'regular' for dev
+      EXECUTIONS_MODE: ${N8N_EXECUTIONS_MODE:-queue}
+
+      # Queue configuration (when EXECUTIONS_MODE=queue)
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # ======================================================================
+      # Authentication & Security
+      # ======================================================================
+      # Basic auth (disable in production, use Laravel JWT instead)
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-false}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme}
+
+      # JWT authentication (for Laravel integration)
+      N8N_JWT_AUTH_ACTIVE: ${N8N_JWT_AUTH_ACTIVE:-true}
+      N8N_JWT_AUTH_HEADER: ${N8N_JWT_AUTH_HEADER:-Authorization}
+      N8N_JWKS_URI: ${N8N_JWKS_URI:-http://app/api/jwks}
+
+      # Encryption key (IMPORTANT: Generate secure key for production)
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # ======================================================================
+      # Features & Behavior
+      # ======================================================================
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Workflow execution
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_PROGRESS: true
+      EXECUTIONS_DATA_MAX_AGE: 336
+      EXECUTIONS_DATA_PRUNE: true
+      EXECUTIONS_DATA_PRUNE_MAX_COUNT: 10000
+
+      # Workflows
+      WORKFLOWS_DEFAULT_NAME: "PainterFlow Workflow"
+
+      # ======================================================================
+      # External Hooks (Laravel Integration)
+      # ======================================================================
+      # Webhook to notify Laravel of workflow events
+      EXTERNAL_HOOK_FILES: /data/custom-hooks.js
+
+      # ======================================================================
+      # Performance & Limits
+      # ======================================================================
+      N8N_PAYLOAD_SIZE_MAX: 16 # MB
+      EXECUTIONS_PROCESS_MAX_TIMEOUT: 3600 # 1 hour
+      EXECUTIONS_TIMEOUT: 3600 # 1 hour
+      EXECUTIONS_TIMEOUT_MAX: 7200 # 2 hours
+
+      # ======================================================================
+      # Telemetry & Diagnostics
+      # ======================================================================
+      N8N_DIAGNOSTICS_ENABLED: ${N8N_DIAGNOSTICS_ENABLED:-false}
+      N8N_PERSONALIZATION_ENABLED: ${N8N_PERSONALIZATION_ENABLED:-false}
+      N8N_VERSION_NOTIFICATIONS_ENABLED: false
+      N8N_HIRING_BANNER_ENABLED: false
+
+      # ======================================================================
+      # Logging
+      # ======================================================================
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: ${N8N_LOG_OUTPUT:-console,file}
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      N8N_LOG_FILE_COUNT_MAX: 10
+      N8N_LOG_FILE_SIZE_MAX: 10 # MB
+
+      # ======================================================================
+      # Custom Nodes & Extensions
+      # ======================================================================
+      N8N_CUSTOM_EXTENSIONS: /data/custom
+      NODES_INCLUDE: '["n8n-nodes-base.*"]'
+
+      # ======================================================================
+      # Email Configuration (for notifications)
+      # ======================================================================
+      N8N_EMAIL_MODE: ${MAIL_MAILER:-smtp}
+      N8N_SMTP_HOST: ${MAIL_HOST:-mailhog}
+      N8N_SMTP_PORT: ${MAIL_PORT:-1025}
+      N8N_SMTP_USER: ${MAIL_USERNAME:-}
+      N8N_SMTP_PASS: ${MAIL_PASSWORD:-}
+      N8N_SMTP_SENDER: ${MAIL_FROM_ADDRESS:-noreply@painterflow.com}
+      N8N_SMTP_SSL: ${MAIL_ENCRYPTION:-false}
+    ports:
+      # Internal port only - access via nginx reverse proxy in production
+      - "${N8N_PORT:-5678}:5678"
+    volumes:
+      # Persistent data
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+
+      # Custom configurations
+      - ./n8n/custom:/data/custom:ro
+      - ./n8n/custom-hooks.js:/data/custom-hooks.js:ro
+
+      # Logs
+      - ../../storage/logs/n8n:/data/logs
+      # - ../../storage/logs/n8n:/data/logs
+    networks:
+      - handymate-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://127.0.0.1:5678/healthz || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    labels:
+      - "com.handymate.service=n8n"
+      - "com.handymate.environment=${APP_ENV:-local}"
+      - "com.handymate.component=workflow-automation"
+
+  # ==========================================================================
+  # n8n Worker - Developer CRM
+  # ==========================================================================
+  n8n-worker-developer:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-developer
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      developer:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for developer workflows)
+      QUEUE_BULL_PREFIX: "n8n:developer"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: developer
+      WORKER_ID: developer-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/developer:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=developer"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=developer-1"
+
+  # ==========================================================================
+  # n8n Worker - Dancer CRM
+  # ==========================================================================
+  n8n-worker-dancer:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-dancer
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      dancer:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for dancer workflows)
+      QUEUE_BULL_PREFIX: "n8n:dancer"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: dancer
+      WORKER_ID: dancer-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/dancer:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=dancer"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=dancer-1"
+
+  # ==========================================================================
+  # n8n Worker - Painter CRM
+  # ==========================================================================
+  n8n-worker-painter:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-painter
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      painter:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for painter workflows)
+      QUEUE_BULL_PREFIX: "n8n:painter"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: painter
+      WORKER_ID: painter-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/painter:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=painter"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=painter-1"
+
+  # ==========================================================================
+  # n8n Worker - Driver CRM
+  # ==========================================================================
+  n8n-worker-driver:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-driver
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      driver:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for driver workflows)
+      QUEUE_BULL_PREFIX: "n8n:driver"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: driver
+      WORKER_ID: driver-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/driver:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=driver"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=driver-1"
+
+  # ==========================================================================
+  # n8n Worker - Influencer CRM
+  # ==========================================================================
+  n8n-worker-influencer:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-influencer
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      influencer:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for influencer workflows)
+      QUEUE_BULL_PREFIX: "n8n:influencer"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: influencer
+      WORKER_ID: influencer-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/influencer:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=influencer"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=influencer-1"
+
+  # ==========================================================================
+  # n8n Worker - Hunter CRM
+  # ==========================================================================
+  n8n-worker-hunter:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-hunter
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      hunter:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for hunter workflows)
+      QUEUE_BULL_PREFIX: "n8n:hunter"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: hunter
+      WORKER_ID: hunter-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/hunter:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=hunter"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=hunter-1"
+
+  # ==========================================================================
+  # n8n Worker - seller CRM
+  # ==========================================================================
+  n8n-worker-seller:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-seller
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      seller:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for seller workflows)
+      QUEUE_BULL_PREFIX: "n8n:seller"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: seller
+      WORKER_ID: seller-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/seller:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=seller"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=seller-1"
+
+  # ==========================================================================
+  # n8n Worker - Trader CRM
+  # ==========================================================================
+  n8n-worker-trader:
+    image: n8nio/n8n:1.68.0
+    container_name: handymate-n8n-worker-trader
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      trader:
+        condition: service_started
+    command: worker
+    environment:
+      # Database Configuration
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: ${N8N_DB_DATABASE:-handymate_n8n}
+      DB_MYSQLDB_USER: ${DB_USERNAME:-handymate}
+      DB_MYSQLDB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      # Queue Configuration
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Worker-specific queue prefix (for trader workflows)
+      QUEUE_BULL_PREFIX: "n8n:trader"
+
+      # Security
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+
+      # Worker Metadata
+      WORKER_APP: trader
+      WORKER_ID: trader-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/trader:/data/logs
+    networks:
+      - handymate-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.handymate.service=n8n-worker"
+      - "com.handymate.app=trader"
+      - "com.handymate.component=workflow-automation"
+      - "com.handymate.worker-id=trader-1"
+
+volumes:
+  n8n-data:
+    driver: local
+  n8n-files:
+    driver: local
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+  vendor-data:
+    driver: local
+  node_modules-data:
+    driver: local
+
+networks:
+  handymate-network:
+    driver: bridge

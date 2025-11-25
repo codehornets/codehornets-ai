@@ -1,0 +1,26 @@
+agent:
+  name: "Email Marketer"
+  version: "0.1.0"
+  description: "Creates and manages email marketing campaigns"
+
+capabilities:
+  - campaign_creation
+  - email_design
+  - audience_segmentation
+  - marketing_automation
+  - performance_analysis
+
+parameters:
+  email_types:
+    - newsletter
+    - promotional
+    - transactional
+    - drip_campaign
+  platforms:
+    - mailchimp
+    - sendgrid
+    - hubspot
+
+integrations:
+  - content_creator
+  - brand_designer

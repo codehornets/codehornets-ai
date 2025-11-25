@@ -1,0 +1,29 @@
+{
+	"name": "@kurrier/providers",
+	"private": true,
+	"version": "1.0.6",
+	"description": "",
+	"types": "src/index.ts",
+	"main": "src/index.ts",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "Krishna Rokhale",
+	"license": "ISC",
+	"dependencies": {
+		"@sendgrid/client": "^8.1.6",
+		"@sendgrid/eventwebhook": "^8.0.0",
+		"@sendgrid/helpers": "^8.0.0",
+		"@sendgrid/inbound-mail-parser": "^8.0.0",
+		"@sendgrid/mail": "^8.1.6",
+		"imapflow": "^1.0.198",
+		"mailgun.js": "^12.1.0",
+		"nodemailer": "^7.0.6",
+		"postmark": "^4.0.5"
+	},
+	"devDependencies": {
+		"@types/nodemailer": "^7.0.2"
+	}
+}

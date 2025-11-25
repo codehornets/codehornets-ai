@@ -1,0 +1,26 @@
+agent_name: Satisfaction Tracker Agent
+model: gpt-4
+temperature: 0.4
+max_tokens: 1500
+
+csat_low_threshold: 3.0
+nps_low_threshold: 30
+sentiment_negative_threshold: -0.3
+alert_enabled: true
+trend_analysis_days: 30
+min_responses_for_trend: 10
+
+capabilities:
+  - csat_tracking
+  - nps_tracking
+  - sentiment_analysis
+  - trend_detection
+  - alerting
+  - feedback_analysis
+  - predictive_analytics
+
+survey_channels:
+  - email
+  - sms
+  - in_app
+  - web

@@ -1,0 +1,27 @@
+{
+  "instance": "instance-1-adapter",
+  "service": "web-ui adapter layer",
+  "status": "in_progress",
+  "current_task": "Creating backend adapter layer (client.js, nestjsClient.js)",
+  "files_created": [
+    "apps/web-ui/.env.example",
+    "apps/web-ui/.env",
+    "apps/web-ui/src/api/nestjsClient.js",
+    "apps/web-ui/src/api/client.js"
+  ],
+  "files_modified": [
+    "apps/web-ui/src/api/entities.js"
+  ],
+  "blockers": [],
+  "completed": [
+    "Environment config files",
+    "NestJS client stub",
+    "Client switch logic",
+    "Entity exports update"
+  ],
+  "pending": [
+    "API Gateway routes",
+    "Full nestjsClient implementation"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

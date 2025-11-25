@@ -1,0 +1,31 @@
+# Global Configuration
+project_name = "handymate"
+environment  = "production"
+
+# Application Configuration
+app_modules = ["developer", "dancer", "painter", "driver", "influencer", "hunter", "seller", "trader"]
+
+# Database Configuration
+db_username = "handymate"
+db_name     = "handymate"
+
+# Redis Configuration
+redis_version = "7.0"
+
+# Container Configuration
+container_image_tag = "latest"
+container_registry  = "your-registry-url"
+
+# Domain Configuration
+domain_name = "handymate.com"
+
+# Platform-Specific Variables (uncomment based on platform)
+# AWS
+# aws_region = "us-east-1"
+
+# GCP
+# gcp_project_id = "your-gcp-project"
+# gcp_region     = "us-central1"
+
+# Azure
+# azure_location = "eastus"

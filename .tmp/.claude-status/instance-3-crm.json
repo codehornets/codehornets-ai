@@ -1,0 +1,26 @@
+{
+  "instance": "instance-3-crm",
+  "service": "crm-service",
+  "port": 3002,
+  "status": "not_started",
+  "current_task": null,
+  "files_created": [],
+  "files_modified": [],
+  "blockers": [],
+  "completed": [],
+  "pending": [
+    "Workspace entity in libs/domain",
+    "Lead entity",
+    "Contact entity",
+    "Deal entity",
+    "LeadActivity entity",
+    "CRUD /workspaces",
+    "CRUD /leads",
+    "CRUD /contacts",
+    "CRUD /deals",
+    "GET /leads/:id/activities",
+    "POST /leads/:id/activities",
+    "Multi-tenancy with workspace_id"
+  ],
+  "updated_at": "2025-11-25T10:00:00Z"
+}

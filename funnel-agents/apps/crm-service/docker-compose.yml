@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: crm-postgres
+    environment:
+      POSTGRES_USER: funnelagents
+      POSTGRES_PASSWORD: funnelagents_dev
+      POSTGRES_DB: funnel_agents_crm
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U funnelagents"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crm-network
+
+  # CRM Service
+  crm-service:
+    build:
+      context: ../..
+      dockerfile: apps/crm-service/Dockerfile
+    container_name: crm-service
+    environment:
+      NODE_ENV: development
+      CRM_SERVICE_HOST: 0.0.0.0
+      CRM_SERVICE_PORT: 3002
+      DATABASE_URL: postgresql://funnelagents:funnelagents_dev@postgres:5432/funnel_agents_crm
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/apps/crm-service/src
+    networks:
+      - crm-network
+    restart: unless-stopped
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: crm-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@funnelagents.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - crm-network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  crm-network:
+    driver: bridge

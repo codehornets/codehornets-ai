@@ -1,0 +1,63 @@
+# Development Environment Configuration
+# Copy this file to terraform.tfvars.dev and update with your values
+
+# AWS Configuration
+aws_region  = "us-east-1"
+environment = "dev"
+
+# VPC Configuration
+vpc_cidr = "10.0.0.0/16"
+private_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+public_subnet_cidrs  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+# EKS Configuration
+cluster_name    = "painterflow-dev"
+cluster_version = "1.28"
+
+node_groups = {
+  general = {
+    desired_size   = 2
+    max_size       = 4
+    min_size       = 1
+    instance_types = ["t3.small"]
+    capacity_type  = "ON_DEMAND"
+    disk_size      = 50
+  }
+}
+
+# RDS Configuration
+central_db_instance_class = "db.t3.small"
+central_db_username       = "painterflow_admin"
+central_db_password       = "CHANGE_ME_TO_SECURE_PASSWORD"  # Use AWS Secrets Manager in production
+
+# ElastiCache Redis Configuration
+redis_node_type = "cache.t3.micro"
+redis_num_nodes = 1
+
+# S3 Configuration
+s3_lifecycle_rules = [
+  {
+    id                       = "cleanup-old-uploads"
+    enabled                  = true
+    transition_days          = 30
+    transition_storage_class = "STANDARD_IA"
+    expiration_days          = 90
+  }
+]
+
+# Domain Configuration
+domain_name = "dev.painterflow.com"
+
+# Cost Optimization Settings for Dev
+enable_nat_gateway         = true
+single_nat_gateway        = true  # Single NAT for cost savings in dev
+enable_flow_logs          = false # Disable flow logs in dev to save costs
+enable_cross_region_replication = false
+
+# Additional Tags
+additional_tags = {
+  Project     = "PainterFlow"
+  Owner       = "DevOps Team"
+  CostCenter  = "Development"
+  Terraform   = "true"
+}

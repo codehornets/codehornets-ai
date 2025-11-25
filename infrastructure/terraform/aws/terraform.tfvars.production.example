@@ -1,0 +1,124 @@
+# Production Environment Configuration
+# Copy this file to terraform.tfvars.production and update with your values
+
+# AWS Configuration
+aws_region  = "us-east-1"
+environment = "production"
+
+# VPC Configuration
+vpc_cidr = "10.2.0.0/16"
+private_subnet_cidrs = ["10.2.1.0/24", "10.2.2.0/24", "10.2.3.0/24"]
+public_subnet_cidrs  = ["10.2.101.0/24", "10.2.102.0/24", "10.2.103.0/24"]
+database_subnet_cidrs = ["10.2.201.0/24", "10.2.202.0/24", "10.2.203.0/24"]
+
+# EKS Configuration
+cluster_name    = "painterflow-production"
+cluster_version = "1.28"
+
+node_groups = {
+  general = {
+    desired_size   = 3
+    max_size       = 10
+    min_size       = 3
+    instance_types = ["t3.large"]
+    capacity_type  = "ON_DEMAND"
+    disk_size      = 200
+  }
+  spot = {
+    desired_size   = 2
+    max_size       = 20
+    min_size       = 0
+    instance_types = ["t3.large", "t3a.large", "t3.xlarge", "t3a.xlarge"]
+    capacity_type  = "SPOT"
+    disk_size      = 100
+  }
+}
+
+# RDS Configuration
+central_db_instance_class = "db.r6i.large"
+central_db_username       = "painterflow_admin"
+central_db_password       = "CHANGE_ME_TO_SECURE_PASSWORD"  # Must use AWS Secrets Manager
+
+# RDS Production Settings
+multi_az                    = true
+backup_retention_period     = 30
+enable_performance_insights = true
+performance_insights_retention_period = 7
+monitoring_interval         = 60
+deletion_protection        = true
+create_read_replicas       = true
+read_replica_count         = 2
+
+# ElastiCache Redis Configuration
+redis_node_type = "cache.r6g.large"
+redis_num_nodes = 3
+
+# ElastiCache Production Settings
+cluster_mode_enabled       = true
+num_node_groups           = 3
+replicas_per_node_group   = 1
+automatic_failover_enabled = true
+multi_az_enabled          = true
+at_rest_encryption_enabled = true
+transit_encryption_enabled = true
+snapshot_retention_limit   = 7
+
+# S3 Configuration
+s3_lifecycle_rules = [
+  {
+    id                       = "intelligent-tiering"
+    enabled                  = true
+    transition_days          = 0
+    transition_storage_class = "INTELLIGENT_TIERING"
+    expiration_days          = 0  # No expiration for production
+  }
+]
+
+# Domain Configuration
+domain_name = "painterflow.com"
+
+# High Availability Settings for Production
+enable_nat_gateway              = true
+single_nat_gateway             = false  # Multi-AZ NAT for high availability
+enable_flow_logs               = true
+enable_cross_region_replication = true
+enable_vpc_endpoints           = true
+
+# Security
+storage_encrypted = true
+enable_network_acls = true
+
+# Monitoring & Alerting
+create_cloudwatch_alarms = true
+alarm_cpu_threshold      = 80
+alarm_memory_threshold   = 90
+alarm_connections_threshold = 400
+
+# CloudWatch Settings
+enabled_cloudwatch_logs_exports = ["error", "general", "slowquery", "audit"]
+log_retention_days = 30
+
+# Backup & DR
+backup_retention_days = 365
+enable_cross_region_backup = true
+replication_destination_region = "us-west-2"
+
+# WAF
+enable_waf = true
+waf_rate_limit = 2000
+
+# CloudFront CDN
+enable_cloudfront = true
+cloudfront_price_class = "PriceClass_100"  # Use all edge locations
+
+# Additional Tags
+additional_tags = {
+  Project      = "PainterFlow"
+  Owner        = "DevOps Team"
+  CostCenter   = "Production"
+  Compliance   = "SOC2"
+  Terraform    = "true"
+  Environment  = "Production"
+  Criticality  = "High"
+  DataClass    = "Confidential"
+}

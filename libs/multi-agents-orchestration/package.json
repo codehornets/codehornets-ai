@@ -1,0 +1,41 @@
+{
+  "name": "multi-agents-orchestration",
+  "version": "1.0.0",
+  "description": "Multi-agent orchestration system for CodeHornets AI",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "monitor": "node tools/monitor_daemon.js",
+    "test": "node --test tests/*.test.js",
+    "test:tmux": "node --test tests/tmux-communication.test.js",
+    "test:pty": "node --test tests/pty-wrapper.test.js",
+    "test:agent": "node --test tests/agent-comm.test.js",
+    "test:integration": "node --test tests/integration.test.js",
+    "test:coverage": "node --test --experimental-test-coverage tests/*.test.js",
+    "benchmark": "node tests/benchmark.js",
+    "benchmark:json": "node tests/benchmark.js --output json",
+    "example:send": "node examples/send-task.js",
+    "example:monitor": "node examples/monitor-agents.js",
+    "example:batch": "node examples/batch-commands.js"
+  },
+  "keywords": [
+    "multi-agent",
+    "orchestration",
+    "ai",
+    "llm",
+    "claude",
+    "communication"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "docker-agent-bridge": "file:docker-agent-bridge"
+  },
+  "devDependencies": {
+    "eventemitter3": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

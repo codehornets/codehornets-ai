@@ -1,0 +1,477 @@
+{
+  "metadata": {
+    "file": "C:/workspace/@codehornets-ai/core/cli.js",
+    "section": "lines 340001-421069",
+    "totalLines": 81069,
+    "analysisDate": "2025-11-21",
+    "description": "Final section of bundled CLI application"
+  },
+  "functions": [
+    {
+      "name": "Metric.fromBinary",
+      "line": 340001,
+      "description": "Deserialize Metric from binary protobuf",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "Metric.fromJson",
+      "line": 340010,
+      "description": "Deserialize Metric from JSON",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "Gauge.fromBinary",
+      "line": 340050,
+      "description": "Deserialize Gauge from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "Sum.fromBinary",
+      "line": 340100,
+      "description": "Deserialize Sum metric from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "Histogram.fromBinary",
+      "line": 340150,
+      "description": "Deserialize Histogram from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "ExponentialHistogram.fromBinary",
+      "line": 340200,
+      "description": "Deserialize ExponentialHistogram from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "Summary.fromBinary",
+      "line": 340250,
+      "description": "Deserialize Summary from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "NumberDataPoint.fromBinary",
+      "line": 340300,
+      "description": "Deserialize NumberDataPoint from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "HistogramDataPoint.fromBinary",
+      "line": 340350,
+      "description": "Deserialize HistogramDataPoint from binary",
+      "category": "protobuf-static"
+    },
+    {
+      "name": "UnavailablePicker",
+      "line": 345100,
+      "description": "Returns UNAVAILABLE status for all pick requests",
+      "category": "grpc-picker"
+    },
+    {
+      "name": "QueuePicker",
+      "line": 345150,
+      "description": "Queues pick requests until load balancer is ready",
+      "category": "grpc-picker"
+    },
+    {
+      "name": "BackoffTimeout",
+      "line": 345200,
+      "description": "Manages exponential backoff for retries",
+      "category": "grpc-utility"
+    },
+    {
+      "name": "ChildLoadBalancerHandler",
+      "line": 345300,
+      "description": "Handles child load balancer lifecycle",
+      "category": "grpc-load-balancer"
+    },
+    {
+      "name": "ResolvingLoadBalancer",
+      "line": 345400,
+      "description": "Resolves and manages load balancing strategy",
+      "category": "grpc-load-balancer"
+    },
+    {
+      "name": "SubchannelPool",
+      "line": 355100,
+      "description": "Pool for managing gRPC subchannels",
+      "category": "grpc-channel"
+    },
+    {
+      "name": "LoadBalancingCall.trace",
+      "line": 355200,
+      "description": "Trace logging for load balancing calls",
+      "category": "grpc-method"
+    },
+    {
+      "name": "LoadBalancingCall.outputStatus",
+      "line": 355250,
+      "description": "Output call status with metadata",
+      "category": "grpc-method"
+    },
+    {
+      "name": "LoadBalancingCall.doPick",
+      "line": 355300,
+      "description": "Perform subchannel pick for call routing",
+      "category": "grpc-method"
+    },
+    {
+      "name": "ResolvingCall",
+      "line": 355400,
+      "description": "Manages name resolution for calls",
+      "category": "grpc-call"
+    },
+    {
+      "name": "RetryingCall",
+      "line": 355500,
+      "description": "Handles call retries with backoff",
+      "category": "grpc-call"
+    },
+    {
+      "name": "ep5",
+      "line": 365100,
+      "description": "Fetch remote session events",
+      "category": "session-async"
+    },
+    {
+      "name": "Ht1",
+      "line": 365200,
+      "description": "Create remote session connection",
+      "category": "session-async"
+    },
+    {
+      "name": "ap5",
+      "line": 365300,
+      "description": "Process session event stream",
+      "category": "session-async"
+    },
+    {
+      "name": "d2.createElement",
+      "line": 375100,
+      "description": "React element creation for CLI UI",
+      "category": "ui-react"
+    },
+    {
+      "name": "vB.useEffect",
+      "line": 375150,
+      "description": "React useEffect hook for side effects",
+      "category": "ui-hook"
+    },
+    {
+      "name": "vB.useState",
+      "line": 375200,
+      "description": "React useState hook for state management",
+      "category": "ui-hook"
+    },
+    {
+      "name": "vB.useMemo",
+      "line": 375250,
+      "description": "React useMemo hook for memoization",
+      "category": "ui-hook"
+    },
+    {
+      "name": "vB.useCallback",
+      "line": 375300,
+      "description": "React useCallback hook for callback memoization",
+      "category": "ui-hook"
+    },
+    {
+      "name": "renderMainUI",
+      "line": 375400,
+      "description": "Main UI rendering function with message handling",
+      "category": "ui-render"
+    },
+    {
+      "name": "handleToolPermission",
+      "line": 375500,
+      "description": "Handle tool permission dialog interactions",
+      "category": "ui-dialog"
+    },
+    {
+      "name": "readFileContent",
+      "line": 400100,
+      "description": "Read file content with encoding detection",
+      "category": "file-tool"
+    },
+    {
+      "name": "processImage",
+      "line": 400200,
+      "description": "Process image files for display",
+      "category": "file-tool"
+    },
+    {
+      "name": "processPDF",
+      "line": 400300,
+      "description": "Extract text and visual content from PDFs",
+      "category": "file-tool"
+    },
+    {
+      "name": "processNotebook",
+      "line": 400400,
+      "description": "Parse Jupyter notebook files",
+      "category": "file-tool"
+    },
+    {
+      "name": "computeAttachment",
+      "line": 400500,
+      "description": "Compute file attachment metadata",
+      "category": "file-tool"
+    },
+    {
+      "name": "MCPServer.initialize",
+      "line": 415100,
+      "description": "Initialize MCP server instance",
+      "category": "mcp-server"
+    },
+    {
+      "name": "MCPServer.handleRequest",
+      "line": 415200,
+      "description": "Handle incoming MCP requests",
+      "category": "mcp-server"
+    },
+    {
+      "name": "MCPServer.listTools",
+      "line": 415300,
+      "description": "List available MCP tools",
+      "category": "mcp-server"
+    },
+    {
+      "name": "MCPServer.callTool",
+      "line": 415400,
+      "description": "Execute MCP tool call",
+      "category": "mcp-server"
+    },
+    {
+      "name": "PluginManager.load",
+      "line": 415500,
+      "description": "Load plugin from path",
+      "category": "plugin"
+    },
+    {
+      "name": "PluginManager.unload",
+      "line": 415600,
+      "description": "Unload active plugin",
+      "category": "plugin"
+    },
+    {
+      "name": "registerHook",
+      "line": 415700,
+      "description": "Register hook for tool lifecycle",
+      "category": "hook"
+    },
+    {
+      "name": "executeHook",
+      "line": 415800,
+      "description": "Execute registered hooks",
+      "category": "hook"
+    }
+  ],
+  "classes": [
+    {
+      "name": "Metric",
+      "line": 340001,
+      "description": "OpenTelemetry Metric protobuf message",
+      "category": "protobuf"
+    },
+    {
+      "name": "Gauge",
+      "line": 340050,
+      "description": "OpenTelemetry Gauge metric type",
+      "category": "protobuf"
+    },
+    {
+      "name": "Sum",
+      "line": 340100,
+      "description": "OpenTelemetry Sum metric type",
+      "category": "protobuf"
+    },
+    {
+      "name": "Histogram",
+      "line": 340150,
+      "description": "OpenTelemetry Histogram metric type",
+      "category": "protobuf"
+    },
+    {
+      "name": "ExponentialHistogram",
+      "line": 340200,
+      "description": "OpenTelemetry ExponentialHistogram metric type",
+      "category": "protobuf"
+    },
+    {
+      "name": "Summary",
+      "line": 340250,
+      "description": "OpenTelemetry Summary metric type",
+      "category": "protobuf"
+    },
+    {
+      "name": "UnavailablePicker",
+      "line": 345100,
+      "description": "gRPC picker returning unavailable status",
+      "category": "grpc"
+    },
+    {
+      "name": "QueuePicker",
+      "line": 345150,
+      "description": "gRPC picker that queues requests",
+      "category": "grpc"
+    },
+    {
+      "name": "BackoffTimeout",
+      "line": 345200,
+      "description": "Exponential backoff timer",
+      "category": "grpc"
+    },
+    {
+      "name": "ChildLoadBalancerHandler",
+      "line": 345300,
+      "description": "Child load balancer management",
+      "category": "grpc"
+    },
+    {
+      "name": "ResolvingLoadBalancer",
+      "line": 345400,
+      "description": "Name-resolving load balancer",
+      "category": "grpc"
+    },
+    {
+      "name": "SubchannelPool",
+      "line": 355100,
+      "description": "gRPC subchannel connection pool",
+      "category": "grpc"
+    },
+    {
+      "name": "LoadBalancingCall",
+      "line": 355200,
+      "description": "Load-balanced gRPC call",
+      "category": "grpc"
+    }
+  ],
+  "moduleInitializers": [
+    {
+      "pattern": "T(() => { ... })",
+      "description": "Module initialization wrapper",
+      "count": "~50 in section"
+    },
+    {
+      "pattern": "z((exports) => { ... })",
+      "description": "Module definition with exports",
+      "count": "~30 in section"
+    }
+  ],
+  "cliCommands": [
+    {
+      "name": "mcp",
+      "line": 420100,
+      "description": "MCP server management command",
+      "subcommands": [
+        "servers",
+        "tools",
+        "info",
+        "call",
+        "grep",
+        "resources",
+        "read"
+      ]
+    },
+    {
+      "name": "plugin",
+      "line": 420200,
+      "description": "Plugin management command",
+      "subcommands": [
+        "list",
+        "install",
+        "uninstall"
+      ]
+    },
+    {
+      "name": "doctor",
+      "line": 420300,
+      "description": "Diagnose CLI configuration issues",
+      "subcommands": []
+    },
+    {
+      "name": "update",
+      "line": 420400,
+      "description": "Update CLI to latest version",
+      "subcommands": []
+    }
+  ],
+  "mcpCliCommands": [
+    {
+      "name": "servers",
+      "description": "List configured MCP servers"
+    },
+    {
+      "name": "tools",
+      "description": "List available MCP tools"
+    },
+    {
+      "name": "info",
+      "description": "Show MCP server information"
+    },
+    {
+      "name": "call",
+      "description": "Call an MCP tool"
+    },
+    {
+      "name": "grep",
+      "description": "Search MCP resources"
+    },
+    {
+      "name": "resources",
+      "description": "List MCP resources"
+    },
+    {
+      "name": "read",
+      "description": "Read MCP resource content"
+    }
+  ],
+  "hookEventTypes": [
+    "PreToolExecution",
+    "PostToolExecution",
+    "Notification",
+    "Stop"
+  ],
+  "mainEntryPoint": {
+    "function": "h4I",
+    "line": 421050,
+    "description": "Main bootstrap function that initializes the CLI application",
+    "invocationLine": 421070,
+    "invocationCode": "h4I();"
+  },
+  "summary": {
+    "sectionPurpose": "This section contains the final modules of the bundled CLI including OpenTelemetry metrics, gRPC load balancing, React-based UI components, MCP server implementation, file processing tools, plugin system, and CLI command definitions",
+    "keyAreas": [
+      {
+        "range": "340001-345000",
+        "description": "OpenTelemetry protobuf definitions for metrics"
+      },
+      {
+        "range": "345001-360000",
+        "description": "gRPC connectivity, load balancing, and call management"
+      },
+      {
+        "range": "360001-380000",
+        "description": "Session management and React UI components"
+      },
+      {
+        "range": "380001-410000",
+        "description": "Tool implementations and file processing"
+      },
+      {
+        "range": "410001-420000",
+        "description": "MCP server and plugin management"
+      },
+      {
+        "range": "420001-421069",
+        "description": "CLI commands and main entry point"
+      }
+    ],
+    "patterns": {
+      "bundlingStyle": "esbuild/webpack with module wrappers T() and z()",
+      "uiFramework": "React with Ink for terminal UI",
+      "protocolBuffers": "OpenTelemetry metrics proto definitions",
+      "grpcImplementation": "Full gRPC client with load balancing and retries"
+    }
+  }
+}

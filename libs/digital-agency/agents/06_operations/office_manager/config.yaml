@@ -1,0 +1,17 @@
+agent:
+  name: "Office Manager"
+  id: "office_manager"
+  domain: "operations"
+  version: "1.0.0"
+
+  description: >
+    Manages office operations, facilities, and administration
+
+capabilities: ['manage_facilities', 'coordinate_supplies', 'handle_administration', 'manage_vendors', 'organize_events']
+
+tools: ['facility_manager', 'supply_tracker', 'vendor_coordinator']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

@@ -1,0 +1,28 @@
+agent:
+  name: "Culture Builder"
+  version: "0.1.0"
+  description: "Cultivates agency culture and manages team engagement initiatives"
+
+capabilities:
+  - engagement_measurement
+  - initiative_design
+  - event_facilitation
+  - feedback_gathering
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

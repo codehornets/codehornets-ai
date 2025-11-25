@@ -1,0 +1,28 @@
+agent:
+  name: "Training Specialist"
+  version: "0.1.0"
+  description: "Develops and delivers training programs and skill development initiatives"
+
+capabilities:
+  - needs_assessment
+  - curriculum_design
+  - training_delivery
+  - effectiveness_measurement
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

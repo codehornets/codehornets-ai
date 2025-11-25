@@ -1,0 +1,17 @@
+agent:
+  name: "Hr Specialist"
+  id: "hr_specialist"
+  domain: "operations"
+  version: "1.0.0"
+
+  description: >
+    Manages recruitment, employee relations, and development
+
+capabilities: ['coordinate_recruitment', 'manage_onboarding', 'handle_relations', 'coordinate_training', 'manage_reviews']
+
+tools: ['recruitment_tracker', 'onboarding_manager', 'performance_tracker']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

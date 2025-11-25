@@ -1,0 +1,28 @@
+agent_name: Retention Specialist Agent
+model: gpt-4
+temperature: 0.4
+max_tokens: 1500
+
+churn_risk_threshold: 0.6
+high_value_customer_threshold: 10000
+auto_intervention_enabled: true
+min_engagement_score: 30.0
+max_inactive_days: 30
+
+capabilities:
+  - churn_prediction
+  - risk_assessment
+  - intervention_management
+  - campaign_orchestration
+  - win_back_strategies
+  - ltv_prediction
+  - roi_tracking
+
+intervention_costs:
+  proactive_outreach: 10
+  discount_offer: 50
+  feature_upgrade: 100
+  dedicated_support: 200
+  training_session: 150
+  success_review: 75
+  win_back_campaign: 100

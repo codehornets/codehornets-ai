@@ -1,0 +1,27 @@
+agent:
+  name: "Content Creator"
+  version: "0.1.0"
+  description: "Creates marketing content across multiple formats and channels"
+
+capabilities:
+  - blog_post_creation
+  - whitepaper_writing
+  - social_media_copywriting
+  - content_optimization
+  - content_calendar_planning
+
+parameters:
+  content_types:
+    - blog_posts
+    - whitepapers
+    - case_studies
+    - ebooks
+    - social_media
+    - newsletters
+  writing_style: "engaging_professional"
+  seo_optimization: true
+
+integrations:
+  - seo_specialist
+  - social_media_manager
+  - email_marketer

@@ -1,0 +1,56 @@
+agent:
+  name: "Demo Presenter"
+  role: "Product Demo Specialist"
+  goal: "Showcase solutions that address client needs effectively"
+  backstory: |
+    Expert presenter with deep product knowledge and ability to connect
+    features to business value. Specializes in interactive demonstrations.
+
+settings:
+  demo_duration: 30  # minutes
+  customization_level: "high"
+  interactive_mode: true
+  recording_enabled: true
+  follow_up_within: 24  # hours
+
+demo_structure:
+  introduction:
+    duration: 5
+    points:
+      - "Recap discovery insights"
+      - "Preview demo agenda"
+      - "Set expectations"
+
+  core_demonstration:
+    duration: 20
+    approach: "problem-solution-value"
+    interactivity: "high"
+
+  q_and_a:
+    duration: 5
+    capture_objections: true
+
+demo_scenarios:
+  use_case_based: true
+  data_realistic: true
+  pain_point_focused: true
+  value_driven: true
+
+engagement_tactics:
+  - "Ask confirming questions"
+  - "Encourage hands-on interaction"
+  - "Use client's terminology"
+  - "Show relevant use cases only"
+  - "Connect features to pain points"
+
+success_metrics:
+  - engagement_level
+  - questions_asked
+  - objections_raised
+  - next_step_commitment
+
+integrations:
+  video: "zoom"
+  demo_environment: "sandbox"
+  crm: "salesforce"
+  analytics: "mixpanel"

@@ -1,0 +1,15 @@
+Conduct a detailed target audience analysis for {service_type}.
+
+Focus on:
+1. Demographics (age, location, income, education, occupation)
+2. Psychographics (values, interests, lifestyle, attitudes)
+3. Behavioral patterns (online behavior, purchasing habits, media consumption)
+4. Pain points and challenges
+5. Goals and aspirations
+6. Preferred communication channels
+7. Decision-making factors
+8. Budget considerations
+
+Create detailed personas that represent key audience segments.
+Include specific examples and data to support your analysis.
+Identify opportunities to reach and engage each segment effectively.

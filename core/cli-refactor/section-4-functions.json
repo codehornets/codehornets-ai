@@ -1,0 +1,232 @@
+{
+  "section": "255001-340000",
+  "description": "OpenTelemetry instrumentation, metrics, tracing, protobuf serialization, React/Ink UI components, MCP tools, HTML-to-Markdown conversion",
+  "functions": [
+    {
+      "name": "B92",
+      "line": 330076,
+      "description": "HistogramAggregator class - aggregates histogram data points with configurable boundaries",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "mi1",
+      "line": 330083,
+      "description": "Buckets class - stores histogram bucket boundaries and counts",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "H92",
+      "line": 330259,
+      "description": "ExponentMapping class - maps values to bucket indices using exponential scale",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "N92",
+      "line": 330303,
+      "description": "LogarithmMapping class - maps values to bucket indices using logarithmic scale",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "btA",
+      "line": 330391,
+      "description": "ExponentialHistogramAccumulation class - accumulates exponential histogram data",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "G92",
+      "line": 330450,
+      "description": "ExponentialHistogramAggregator - aggregates exponential histogram metrics",
+      "category": "OpenTelemetry/Metrics"
+    },
+    {
+      "name": "p92",
+      "line": 330715,
+      "description": "W3CBaggagePropagator class - propagates W3C baggage context across service boundaries",
+      "category": "OpenTelemetry/Propagation"
+    },
+    {
+      "name": "a92",
+      "line": 330754,
+      "description": "AnchoredClock class - provides time synchronization for distributed tracing",
+      "category": "OpenTelemetry/Core"
+    },
+    {
+      "name": "pX",
+      "line": 330820,
+      "description": "Attribute sanitization utilities - validates and sanitizes span attributes",
+      "category": "OpenTelemetry/Attributes"
+    },
+    {
+      "name": "SemanticAttributes",
+      "line": 330900,
+      "description": "Semantic attribute constants for distributed tracing (HTTP, DB, messaging)",
+      "category": "OpenTelemetry/Semantic"
+    },
+    {
+      "name": "ResourceSpans",
+      "line": 338100,
+      "description": "Protobuf message class for resource spans in trace export",
+      "category": "OpenTelemetry/Protobuf"
+    },
+    {
+      "name": "ScopeSpans",
+      "line": 338250,
+      "description": "Protobuf message class for instrumentation scope spans",
+      "category": "OpenTelemetry/Protobuf"
+    },
+    {
+      "name": "Span",
+      "line": 338400,
+      "description": "Protobuf message class for individual trace spans with events, links, status",
+      "category": "OpenTelemetry/Protobuf"
+    },
+    {
+      "name": "Span.Event",
+      "line": 338550,
+      "description": "Protobuf message class for span events (timestamps, attributes)",
+      "category": "OpenTelemetry/Protobuf"
+    },
+    {
+      "name": "Span.Link",
+      "line": 338650,
+      "description": "Protobuf message class for span links to other traces",
+      "category": "OpenTelemetry/Protobuf"
+    },
+    {
+      "name": "Span.Status",
+      "line": 338750,
+      "description": "Protobuf message class for span status (OK, ERROR, UNSET)",
+      "category": "OpenTelemetry/Protobuf"
+    }
+  ],
+  "exports": [
+    "HistogramAggregator",
+    "ExponentialHistogramAggregator",
+    "W3CBaggagePropagator",
+    "AnchoredClock",
+    "SemanticAttributes",
+    "ResourceSpans",
+    "ScopeSpans",
+    "Span"
+  ],
+  "classes": [
+    {
+      "name": "B92 (HistogramAggregator)",
+      "line": 330076,
+      "methods": [
+        "create",
+        "merge",
+        "diff",
+        "toMetricData"
+      ]
+    },
+    {
+      "name": "mi1 (Buckets)",
+      "line": 330083,
+      "methods": [
+        "get",
+        "getOffset",
+        "growTo",
+        "downscale",
+        "clone"
+      ]
+    },
+    {
+      "name": "H92 (ExponentMapping)",
+      "line": 330259,
+      "methods": [
+        "mapToIndex",
+        "lowerBoundary",
+        "scale"
+      ]
+    },
+    {
+      "name": "N92 (LogarithmMapping)",
+      "line": 330303,
+      "methods": [
+        "mapToIndex",
+        "lowerBoundary",
+        "scale"
+      ]
+    },
+    {
+      "name": "btA (ExponentialHistogramAccumulation)",
+      "line": 330391,
+      "methods": [
+        "record",
+        "setStartTime",
+        "clone"
+      ]
+    },
+    {
+      "name": "p92 (W3CBaggagePropagator)",
+      "line": 330715,
+      "methods": [
+        "inject",
+        "extract",
+        "fields"
+      ]
+    },
+    {
+      "name": "a92 (AnchoredClock)",
+      "line": 330754,
+      "methods": [
+        "now",
+        "nanoTime"
+      ]
+    },
+    {
+      "name": "ResourceSpans",
+      "line": 338100,
+      "methods": [
+        "encode",
+        "decode",
+        "verify",
+        "fromObject",
+        "toObject"
+      ]
+    },
+    {
+      "name": "ScopeSpans",
+      "line": 338250,
+      "methods": [
+        "encode",
+        "decode",
+        "verify",
+        "fromObject",
+        "toObject"
+      ]
+    },
+    {
+      "name": "Span",
+      "line": 338400,
+      "methods": [
+        "encode",
+        "decode",
+        "verify",
+        "fromObject",
+        "toObject"
+      ]
+    }
+  ],
+  "summary": {
+    "totalFunctions": 16,
+    "totalClasses": 10,
+    "categories": {
+      "OpenTelemetry/Metrics": 6,
+      "OpenTelemetry/Propagation": 1,
+      "OpenTelemetry/Core": 1,
+      "OpenTelemetry/Attributes": 1,
+      "OpenTelemetry/Semantic": 1,
+      "OpenTelemetry/Protobuf": 6
+    },
+    "keyPatterns": [
+      "Histogram aggregation with configurable bucket boundaries",
+      "Exponential and logarithmic mapping for bucket indices",
+      "W3C Baggage context propagation",
+      "Protocol Buffer encoding/decoding for trace export",
+      "Span, Event, Link, Status protobuf message handling"
+    ],
+    "notes": "This section contains OpenTelemetry instrumentation infrastructure including metrics collection (histograms), context propagation (baggage), and protobuf serialization for trace export. The code is heavily minified with short variable names like B92, mi1, etc."
+  }
+}

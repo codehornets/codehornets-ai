@@ -1,0 +1,28 @@
+agent:
+  name: "Proposal Writer"
+  version: "0.1.0"
+  description: "Creates proposals, presentations, and sales materials"
+
+capabilities:
+  - proposal_creation
+  - executive_summary_writing
+  - case_study_development
+  - presentation_design
+  - pricing_presentation
+
+parameters:
+  proposal_sections:
+    - executive_summary
+    - problem_statement
+    - proposed_solution
+    - deliverables
+    - timeline
+    - pricing
+    - team
+    - case_studies
+  writing_style: "professional_persuasive"
+
+integrations:
+  - service_designer
+  - pricing_strategist
+  - value_proposition_creator

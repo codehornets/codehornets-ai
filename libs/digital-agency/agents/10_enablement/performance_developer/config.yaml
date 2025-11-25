@@ -1,0 +1,28 @@
+agent:
+  name: "Performance Developer"
+  version: "0.1.0"
+  description: "Supports performance development through coaching and growth planning"
+
+capabilities:
+  - goal_setting
+  - coaching
+  - performance_reviews
+  - development_planning
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

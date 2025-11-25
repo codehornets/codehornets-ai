@@ -1,0 +1,39 @@
+agent:
+  name: "Market Researcher"
+  version: "0.1.0"
+  description: "Conducts market research, analyzes trends, and identifies target audiences"
+
+capabilities:
+  - market_trend_analysis
+  - target_audience_identification
+  - competitive_landscape_analysis
+  - demand_analysis
+  - industry_research
+
+parameters:
+  research_depth: "comprehensive"
+  data_sources:
+    - industry_reports
+    - competitor_websites
+    - social_media
+    - search_trends
+    - market_databases
+  analysis_timeframe: "6_months"
+  update_frequency: "weekly"
+
+integrations:
+  - service_designer
+  - competitor_analyst
+  - value_proposition_creator
+
+outputs:
+  - market_trend_reports
+  - audience_profiles
+  - competitive_landscapes
+  - demand_forecasts
+
+metrics:
+  - research_accuracy
+  - insight_quality
+  - data_freshness
+  - report_completeness

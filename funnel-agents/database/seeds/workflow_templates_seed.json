@@ -1,0 +1,453 @@
+[
+  {
+    "id": "wftpl_content_pipeline",
+    "name": "Content Pipeline",
+    "description": "Automate content creation from research to publication",
+    "steps": 4,
+    "agents": ["Market Researcher", "Content Creator", "SEO Specialist"],
+    "trigger_type": "manual",
+    "outcome": "SEO-optimized content ready for publication",
+    "category": "Content Marketing",
+    "tags": ["content", "seo", "research"],
+    "difficulty": "intermediate",
+    "popularity": "Popular",
+    "usage_count": 143,
+    "rating": 4.7,
+    "is_active": true,
+    "is_featured": true,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "Manual trigger",
+          "trigger_type": "manual",
+          "description": "Start content pipeline manually"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "agent-1",
+        "type": "agent",
+        "config": {
+          "name": "Market Researcher",
+          "instructions": "Research the topic, analyze trends, and gather key insights",
+          "agent_template": "tpl_market_researcher"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "agent-2",
+        "type": "agent",
+        "config": {
+          "name": "Content Creator",
+          "instructions": "Create engaging content based on research findings",
+          "agent_template": "tpl_content_creator"
+        },
+        "position": { "x": 250, "y": 280 }
+      },
+      {
+        "id": "agent-3",
+        "type": "agent",
+        "config": {
+          "name": "SEO Specialist",
+          "instructions": "Optimize content for search engines and add metadata",
+          "agent_template": "tpl_seo_specialist"
+        },
+        "position": { "x": 250, "y": 410 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "agent-1" },
+      { "id": "conn-2", "from": "agent-1", "to": "agent-2" },
+      { "id": "conn-3", "from": "agent-2", "to": "agent-3" }
+    ],
+    "variables": {
+      "topic": "",
+      "target_keywords": [],
+      "content_type": "blog"
+    }
+  },
+  {
+    "id": "wftpl_lead_to_close",
+    "name": "Lead to Close",
+    "description": "Full sales cycle automation from lead qualification to deal closing",
+    "steps": 5,
+    "agents": ["Lead Qualifier", "Sales Agent", "Follow-up"],
+    "trigger_type": "webhook",
+    "outcome": "Qualified leads automatically routed to sales team",
+    "category": "Sales Automation",
+    "tags": ["sales", "lead-gen", "qualification"],
+    "difficulty": "advanced",
+    "popularity": "Trending",
+    "usage_count": 98,
+    "rating": 4.5,
+    "is_active": true,
+    "is_featured": true,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "New lead webhook",
+          "trigger_type": "webhook",
+          "webhook_url": "/api/webhooks/new-lead"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "agent-1",
+        "type": "agent",
+        "config": {
+          "name": "Lead Qualifier",
+          "instructions": "Qualify lead based on budget, authority, need, and timeline",
+          "agent_template": "tpl_lead_qualifier"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "condition-1",
+        "type": "condition",
+        "config": {
+          "name": "Qualified?",
+          "condition": "score > 70",
+          "description": "Check if lead score meets threshold"
+        },
+        "position": { "x": 250, "y": 280 }
+      },
+      {
+        "id": "agent-2",
+        "type": "agent",
+        "config": {
+          "name": "Sales Agent",
+          "instructions": "Conduct discovery call and create personalized proposal"
+        },
+        "position": { "x": 450, "y": 380 }
+      },
+      {
+        "id": "email-1",
+        "type": "email",
+        "config": {
+          "name": "Send rejection email",
+          "template": "not-qualified",
+          "subject": "Thank you for your interest"
+        },
+        "position": { "x": 50, "y": 380 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "agent-1" },
+      { "id": "conn-2", "from": "agent-1", "to": "condition-1" },
+      { "id": "conn-3", "from": "condition-1", "to": "agent-2", "label": "yes" },
+      { "id": "conn-4", "from": "condition-1", "to": "email-1", "label": "no" }
+    ],
+    "variables": {
+      "qualification_threshold": 70,
+      "sales_team_email": ""
+    }
+  },
+  {
+    "id": "wftpl_client_onboarding",
+    "name": "Client Onboarding",
+    "description": "Streamlined client onboarding and project kickoff workflow",
+    "steps": 5,
+    "agents": ["Account Manager", "Onboarding Specialist"],
+    "trigger_type": "event",
+    "outcome": "New clients onboarded with project setup complete",
+    "category": "Operations",
+    "tags": ["onboarding", "client-success", "automation"],
+    "difficulty": "beginner",
+    "popularity": "Popular",
+    "usage_count": 167,
+    "rating": 4.8,
+    "is_active": true,
+    "is_featured": true,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "New client event",
+          "trigger_type": "event",
+          "event_name": "client.created"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "email-1",
+        "type": "email",
+        "config": {
+          "name": "Send welcome email",
+          "template": "welcome",
+          "subject": "Welcome to [Company Name]!"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "delay-1",
+        "type": "delay",
+        "config": {
+          "name": "Wait 1 day",
+          "duration": 1,
+          "unit": "days"
+        },
+        "position": { "x": 250, "y": 250 }
+      },
+      {
+        "id": "agent-1",
+        "type": "agent",
+        "config": {
+          "name": "Account Manager",
+          "instructions": "Schedule kickoff call and prepare onboarding checklist"
+        },
+        "position": { "x": 250, "y": 350 }
+      },
+      {
+        "id": "webhook-1",
+        "type": "webhook",
+        "config": {
+          "name": "Create project in PM tool",
+          "url": "https://api.example.com/projects",
+          "method": "POST"
+        },
+        "position": { "x": 250, "y": 480 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "email-1" },
+      { "id": "conn-2", "from": "email-1", "to": "delay-1" },
+      { "id": "conn-3", "from": "delay-1", "to": "agent-1" },
+      { "id": "conn-4", "from": "agent-1", "to": "webhook-1" }
+    ],
+    "variables": {
+      "pm_tool_api_key": "",
+      "account_manager_email": ""
+    }
+  },
+  {
+    "id": "wftpl_social_campaign",
+    "name": "Social Media Campaign",
+    "description": "Plan, create, and schedule social media content across platforms",
+    "steps": 4,
+    "agents": ["Social Media Manager", "Content Creator"],
+    "trigger_type": "schedule",
+    "outcome": "Social media posts scheduled across all platforms",
+    "category": "Content Marketing",
+    "tags": ["social-media", "content", "scheduling"],
+    "difficulty": "beginner",
+    "popularity": "Recommended",
+    "usage_count": 124,
+    "rating": 4.6,
+    "is_active": true,
+    "is_featured": false,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "Weekly schedule",
+          "trigger_type": "schedule",
+          "cron": "0 9 * * 1"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "agent-1",
+        "type": "agent",
+        "config": {
+          "name": "Social Media Manager",
+          "instructions": "Generate 10 post ideas for the week",
+          "agent_template": "tpl_social_media_manager"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "agent-2",
+        "type": "agent",
+        "config": {
+          "name": "Content Creator",
+          "instructions": "Write captions and format posts",
+          "agent_template": "tpl_content_creator"
+        },
+        "position": { "x": 250, "y": 280 }
+      },
+      {
+        "id": "webhook-1",
+        "type": "webhook",
+        "config": {
+          "name": "Schedule in Buffer",
+          "url": "https://api.bufferapp.com/1/updates/create.json",
+          "method": "POST"
+        },
+        "position": { "x": 250, "y": 410 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "agent-1" },
+      { "id": "conn-2", "from": "agent-1", "to": "agent-2" },
+      { "id": "conn-3", "from": "agent-2", "to": "webhook-1" }
+    ],
+    "variables": {
+      "buffer_api_key": "",
+      "platforms": ["linkedin", "twitter"],
+      "posts_per_week": 10
+    }
+  },
+  {
+    "id": "wftpl_email_nurture",
+    "name": "Email Nurture Sequence",
+    "description": "Automated email nurture campaign for new subscribers",
+    "steps": 6,
+    "agents": ["Email Marketer", "Content Creator"],
+    "trigger_type": "event",
+    "outcome": "New subscribers receive 5-email nurture sequence",
+    "category": "Email Marketing",
+    "tags": ["email", "nurture", "automation"],
+    "difficulty": "intermediate",
+    "popularity": "Popular",
+    "usage_count": 189,
+    "rating": 4.9,
+    "is_active": true,
+    "is_featured": true,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "New subscriber",
+          "trigger_type": "event",
+          "event_name": "subscriber.created"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "email-1",
+        "type": "email",
+        "config": {
+          "name": "Email 1: Welcome",
+          "template": "welcome",
+          "subject": "Welcome! Here's what to expect"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "delay-1",
+        "type": "delay",
+        "config": {
+          "name": "Wait 2 days",
+          "duration": 2,
+          "unit": "days"
+        },
+        "position": { "x": 250, "y": 250 }
+      },
+      {
+        "id": "email-2",
+        "type": "email",
+        "config": {
+          "name": "Email 2: Value prop",
+          "template": "value-prop",
+          "subject": "Here's how we can help"
+        },
+        "position": { "x": 250, "y": 350 }
+      },
+      {
+        "id": "condition-1",
+        "type": "condition",
+        "config": {
+          "name": "Email opened?",
+          "condition": "email.opened === true"
+        },
+        "position": { "x": 250, "y": 450 }
+      },
+      {
+        "id": "email-3",
+        "type": "email",
+        "config": {
+          "name": "Email 3: Case study",
+          "template": "case-study",
+          "subject": "See how [Client] achieved results"
+        },
+        "position": { "x": 450, "y": 550 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "email-1" },
+      { "id": "conn-2", "from": "email-1", "to": "delay-1" },
+      { "id": "conn-3", "from": "delay-1", "to": "email-2" },
+      { "id": "conn-4", "from": "email-2", "to": "condition-1" },
+      { "id": "conn-5", "from": "condition-1", "to": "email-3", "label": "yes" }
+    ],
+    "variables": {
+      "email_platform": "sendgrid",
+      "unsubscribe_link": ""
+    }
+  },
+  {
+    "id": "wftpl_competitor_monitoring",
+    "name": "Competitor Monitoring",
+    "description": "Track competitor changes and send weekly digest",
+    "steps": 3,
+    "agents": ["Competitor Analyst", "Market Researcher"],
+    "trigger_type": "schedule",
+    "outcome": "Weekly competitor intelligence report",
+    "category": "Research",
+    "tags": ["competitive-intel", "research", "monitoring"],
+    "difficulty": "intermediate",
+    "popularity": "Recommended",
+    "usage_count": 67,
+    "rating": 4.4,
+    "is_active": true,
+    "is_featured": false,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "name": "Weekly schedule",
+          "trigger_type": "schedule",
+          "cron": "0 8 * * 1"
+        },
+        "position": { "x": 250, "y": 50 }
+      },
+      {
+        "id": "agent-1",
+        "type": "agent",
+        "config": {
+          "name": "Competitor Analyst",
+          "instructions": "Monitor competitors and identify changes",
+          "agent_template": "tpl_competitor_analyst"
+        },
+        "position": { "x": 250, "y": 150 }
+      },
+      {
+        "id": "agent-2",
+        "type": "agent",
+        "config": {
+          "name": "Market Researcher",
+          "instructions": "Analyze impact and provide recommendations",
+          "agent_template": "tpl_market_researcher"
+        },
+        "position": { "x": 250, "y": 280 }
+      },
+      {
+        "id": "email-1",
+        "type": "email",
+        "config": {
+          "name": "Send digest",
+          "template": "competitor-digest",
+          "subject": "Weekly Competitor Intelligence"
+        },
+        "position": { "x": 250, "y": 410 }
+      }
+    ],
+    "connections": [
+      { "id": "conn-1", "from": "trigger-1", "to": "agent-1" },
+      { "id": "conn-2", "from": "agent-1", "to": "agent-2" },
+      { "id": "conn-3", "from": "agent-2", "to": "email-1" }
+    ],
+    "variables": {
+      "competitors": [],
+      "recipient_emails": []
+    }
+  }
+]

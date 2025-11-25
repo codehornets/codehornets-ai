@@ -1,0 +1,237 @@
+name: 'codehornets-ai'
+
+# Unified Docker Compose for Multi-Agent Orchestration
+# Supports both polling and event-driven activation modes via profiles
+#
+# Usage:
+#   Default (polling):        docker-compose up
+#   Event-driven (activated): docker-compose --profile activated up
+#   Switch mode:              ACTIVATION_MODE=redis docker-compose --profile activated up
+
+services:
+  # Redis - Only for event-driven mode
+  redis:
+    image: redis:8.0-rc1-alpine
+    container_name: codehornets-redis
+    profiles: ["activated"]  # Only starts with --profile activated
+    networks:
+      - claude-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Orchestrator - Coordinates workers
+  orchestrator:
+    image: docker/sandbox-templates:claude-code
+    container_name: orchestrator
+    command: >
+      bash -c "
+      cp /prompts/orchestrator.md /home/agent/workspace/CLAUDE.md &&
+      claude
+      "
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
+      - ./shared/tasks:/tasks:rw
+      - ./shared/results:/results:ro
+      - ./shared/heartbeats:/shared/heartbeats:ro
+      - ../../../workspaces:/workspaces:ro
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  # Marie - Dance teacher assistant
+  marie:
+    image: docker/sandbox-templates:claude-code
+    container_name: marie
+    command: >
+      bash -c "
+      echo '🔧 Installing dependencies...' &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        pip install --quiet --break-system-packages reportlab watchdog redis;
+      else
+        pip install --quiet --break-system-packages reportlab;
+      fi &&
+      echo '✅ Dependencies installed' &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/marie.md /home/agent/.claude/output-styles/marie.md &&
+      echo '{\"outputStyle\": \"marie\"}' > /home/agent/.claude/settings.local.json &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        echo '🚀 Starting activation wrapper (mode: ${ACTIVATION_MODE:-inotify})' &&
+        python3 /tools/activation_wrapper.py marie --mode ${ACTIVATION_MODE:-inotify};
+      else
+        echo '🚀 Starting Claude CLI (polling mode)' &&
+        claude;
+      fi
+      "
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./shared/auth-homes/marie:/home/agent/.claude:rw
+      - ./shared/tasks/marie:/tasks:ro
+      - ./shared/results/marie:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ../../../workspaces/dance:/workspace/dance:rw
+      - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ../../../tools/pdf-generator:/tools/pdf-generator:ro
+      - ../../../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+
+  # Anga - Coding assistant
+  anga:
+    image: docker/sandbox-templates:claude-code
+    container_name: anga
+    command: >
+      bash -c "
+      echo '🔧 Installing dependencies...' &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        pip install --quiet --break-system-packages watchdog redis;
+      fi &&
+      echo '✅ Dependencies installed' &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/anga.md /home/agent/.claude/output-styles/anga.md &&
+      echo '{\"outputStyle\": \"anga\"}' > /home/agent/.claude/settings.local.json &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        echo '🚀 Starting activation wrapper (mode: ${ACTIVATION_MODE:-inotify})' &&
+        python3 /tools/activation_wrapper.py anga --mode ${ACTIVATION_MODE:-inotify};
+      else
+        echo '🚀 Starting Claude CLI (polling mode)' &&
+        claude;
+      fi
+      "
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./shared/auth-homes/anga:/home/agent/.claude:rw
+      - ./shared/tasks/anga:/tasks:ro
+      - ./shared/results/anga:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ../../../workspaces/coding:/workspace/coding:rw
+      - ./shared/workspaces/anga:/home/agent/workspace:rw
+      - ../../../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+
+  # Fabien - Marketing assistant
+  fabien:
+    image: docker/sandbox-templates:claude-code
+    container_name: fabien
+    command: >
+      bash -c "
+      echo '🔧 Installing dependencies...' &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        pip install --quiet --break-system-packages watchdog redis;
+      fi &&
+      echo '✅ Dependencies installed' &&
+      mkdir -p /home/agent/.claude/output-styles &&
+      cp /output-styles/fabien.md /home/agent/.claude/output-styles/fabien.md &&
+      echo '{\"outputStyle\": \"fabien\"}' > /home/agent/.claude/settings.local.json &&
+      if [ -n \"${ACTIVATION_WRAPPER}\" ]; then
+        echo '🚀 Starting activation wrapper (mode: ${ACTIVATION_MODE:-inotify})' &&
+        python3 /tools/activation_wrapper.py fabien --mode ${ACTIVATION_MODE:-inotify};
+      else
+        echo '🚀 Starting Claude CLI (polling mode)' &&
+        claude;
+      fi
+      "
+    volumes:
+      - ./output-styles:/output-styles:ro
+      - ./shared/auth-homes/fabien:/home/agent/.claude:rw
+      - ./shared/tasks/fabien:/tasks:ro
+      - ./shared/results/fabien:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ../../../workspaces/marketing:/workspace/marketing:rw
+      - ./shared/workspaces/fabien:/home/agent/workspace:rw
+      - ../../../tools/activation_wrapper.py:/tools/activation_wrapper.py:ro
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+
+networks:
+  claude-network:
+    driver: bridge
+    name: codehornets-ai-network
+
+# =============================================================================
+# USAGE GUIDE
+# =============================================================================
+#
+# 1. Default Mode (Polling - Original Behavior):
+#    docker-compose up
+#    - Workers poll for tasks every 1s
+#    - No Redis needed
+#    - Simple, works everywhere
+#
+# 2. Event-Driven Mode (Zero CPU Idle):
+#    ACTIVATION_WRAPPER=1 docker-compose --profile activated up
+#    - Workers sleep with 0% CPU until task arrives
+#    - Instant wakeup (<1ms with inotify, <10ms with Redis)
+#    - Requires activation_wrapper.py
+#
+# 3. Switch Activation Methods:
+#    # inotify (Linux filesystem events - fastest)
+#    ACTIVATION_WRAPPER=1 ACTIVATION_MODE=inotify docker-compose --profile activated up
+#
+#    # Redis pub/sub (clusterable, multi-host)
+#    ACTIVATION_WRAPPER=1 ACTIVATION_MODE=redis docker-compose --profile activated up
+#
+#    # Polling fallback (if watchdog not available)
+#    ACTIVATION_WRAPPER=1 ACTIVATION_MODE=polling docker-compose --profile activated up
+#
+# 4. Environment Variables:
+#    NODE_ENV=production              # Environment mode
+#    ACTIVATION_WRAPPER=1              # Enable event-driven mode
+#    ACTIVATION_MODE=inotify|redis|polling  # Activation method
+#    REDIS_URL=redis://redis:6379      # Redis connection (for redis mode)
+#    HEARTBEAT_INTERVAL=10             # Heartbeat frequency (seconds)
+#
+# 5. Development Override:
+#    Create docker-compose.override.yml for local customization
+#    (automatically merged with this file)
+#
+# =============================================================================

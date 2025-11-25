@@ -1,0 +1,104 @@
+#!/bin/bash
+set -e
+
+echo "========================================="
+echo "🎯 CodeHornets AI Orchestrator Startup"
+echo "========================================="
+echo "Agent: orchestrator"
+echo "Role: Coordinator"
+echo "Time: $(date -Iseconds)"
+echo "========================================="
+
+# Install Node.js dependencies for tools
+if [ -f "/tools/package.json" ]; then
+    echo "📦 Installing Node.js dependencies..."
+    cd /tools && npm install --quiet --no-audit --no-fund 2>/dev/null || echo "⚠️  npm install skipped (may already be installed)"
+    cd /
+fi
+
+# Install make for Makefile support
+if ! command -v make &> /dev/null; then
+    echo "🔧 Installing make..."
+    apt-get update -qq && apt-get install -y -qq make 2>/dev/null || echo "⚠️  make installation skipped"
+fi
+
+# Create necessary directories
+echo "📁 Creating directories..."
+mkdir -p /shared/heartbeats
+mkdir -p /shared/triggers/orchestrator
+mkdir -p /shared/pipes
+mkdir -p /var/log
+mkdir -p /home/agent/.claude/hooks
+
+# Copy orchestrator prompt as CLAUDE.md
+if [ -f "/prompts/orchestrator.md" ]; then
+    echo "📝 Loading orchestrator prompt..."
+    cp "/prompts/orchestrator.md" "/home/agent/workspace/CLAUDE.md"
+else
+    echo "⚠️  Warning: No prompt found at /prompts/orchestrator.md"
+fi
+
+# Copy hooks configuration
+if [ -f "/hooks-config/orchestrator-hooks.json" ]; then
+    echo "🪝 Loading orchestrator hooks configuration..."
+    cp "/hooks-config/orchestrator-hooks.json" "/home/agent/.claude/hooks.json"
+    # Also copy to hooks directory for reference
+    mkdir -p "/home/agent/.claude/hooks"
+    cp "/hooks-config/orchestrator-hooks.json" "/home/agent/.claude/hooks/hooks.json"
+else
+    echo "⚠️  Warning: No hooks config found at /hooks-config/orchestrator-hooks.json"
+fi
+
+# Create named pipe for control if needed
+if [ -n "${HOOKS_MODE}" ]; then
+    mkfifo /shared/pipes/orchestrator-control 2>/dev/null || true
+fi
+
+# Create initial heartbeat
+HEARTBEAT_FILE="/shared/heartbeats/orchestrator.json"
+echo "💓 Creating heartbeat: ${HEARTBEAT_FILE}"
+cat > "${HEARTBEAT_FILE}" <<EOF
+{
+  "agent_name": "orchestrator",
+  "status": "starting",
+  "last_updated": "$(date -Iseconds)",
+  "current_task": null,
+  "tasks_completed": 0
+}
+EOF
+
+# Start hook watcher in background if enabled
+if [ -n "${HOOKS_MODE}" ] && [ -f "/tools/monitoring/hook_watcher.js" ]; then
+    echo "👁️  Starting hook watcher for orchestrator..."
+    node /tools/monitoring/hook_watcher.js orchestrator >> "/var/log/orchestrator-watcher.log" 2>&1 &
+    WATCHER_PID=$!
+    echo "   Watcher started (PID: ${WATCHER_PID})"
+fi
+
+# Start Redis message listener in background
+if [ -f "/tools/monitoring/redis_message_listener.js" ]; then
+    echo "📡 Starting Redis message listener for orchestrator..."
+    node /tools/monitoring/redis_message_listener.js orchestrator >> "/var/log/orchestrator-messages.log" 2>&1 &
+    MESSAGE_LISTENER_PID=$!
+    echo "   Message listener started (PID: ${MESSAGE_LISTENER_PID})"
+fi
+
+# Update heartbeat to active
+cat > "${HEARTBEAT_FILE}" <<EOF
+{
+  "agent_name": "orchestrator",
+  "status": "active",
+  "last_updated": "$(date -Iseconds)",
+  "current_task": null,
+  "tasks_completed": 0
+}
+EOF
+
+echo "========================================="
+echo "✅ Orchestrator ready"
+echo "========================================="
+echo ""
+
+# Start Claude CLI with permission auto-approval
+echo "🚀 Starting Claude CLI (auto-approval enabled)..."
+exec claude --permission-mode bypassPermissions --add-dir /tasks --add-dir /results --add-dir /workspaces

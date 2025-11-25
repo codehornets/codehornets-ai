@@ -1,0 +1,17 @@
+agent:
+  name: "Market Intelligence Analyst"
+  id: "market_intelligence_analyst"
+  domain: "feedback"
+  version: "1.0.0"
+
+  description: >
+    Monitors market trends, competitors, and industry developments
+
+capabilities: ['monitor_competitors', 'track_trends', 'analyze_opportunities', 'generate_intelligence', 'research_market']
+
+tools: ['competitor_tracker', 'trend_monitor', 'market_research_tool']
+
+performance:
+  max_concurrent_tasks: 10
+  timeout: 300
+  retry_attempts: 3

@@ -1,0 +1,51 @@
+# docker-compose.override.yml.example
+#
+# Copy this file to docker-compose.override.yml for local development customization.
+# This file is automatically merged with docker-compose.yml when you run docker-compose.
+#
+# DO NOT COMMIT docker-compose.override.yml (it's in .gitignore)
+#
+# Usage:
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   # Edit docker-compose.override.yml with your local settings
+#   docker-compose up
+
+# Example: Override orchestrator for local debugging
+services:
+  orchestrator:
+    # Add debug logging
+    environment:
+      - NODE_ENV=development
+      - DEBUG=true
+    # Mount local code for hot-reload
+    volumes:
+      - ../../../your-custom-workspace:/workspace/custom:rw
+
+  # Example: Override Marie with custom ports
+  marie:
+    ports:
+      - "8001:8001"  # Expose internal port for debugging
+    environment:
+      - ACTIVATION_MODE=inotify  # Force specific mode locally
+      - HEARTBEAT_INTERVAL=5     # Faster heartbeats for testing
+
+  # Example: Override Anga with more resources
+  anga:
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+
+  # Example: Local Redis with exposed port for debugging
+  redis:
+    ports:
+      - "6380:6379"  # Map to different host port to avoid conflicts
+
+# Example: Custom network settings
+networks:
+  claude-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

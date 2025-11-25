@@ -1,0 +1,65 @@
+{
+  "hooks": [
+    {
+      "name": "marie-task-notification",
+      "description": "Notify when Marie receives a new task",
+      "event": "UserPromptSubmit",
+      "condition": {
+        "type": "pattern",
+        "pattern": "task|assignment|evaluate|review"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/marie/prompt-submitted.trigger",
+        "payload": {
+          "worker": "marie",
+          "event": "prompt_submit",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "marie-tool-use-logger",
+      "description": "Log all tool usage for debugging",
+      "event": "PreToolUse",
+      "action": {
+        "type": "log",
+        "path": "/var/log/marie-tool-use.log",
+        "format": "${timestamp} [${tool_name}] ${tool_args}"
+      }
+    },
+    {
+      "name": "marie-result-complete",
+      "description": "Notify when Marie completes a task",
+      "event": "PostToolUse",
+      "condition": {
+        "type": "tool_name",
+        "value": "Write"
+      },
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/marie-result-ready.trigger",
+        "payload": {
+          "worker": "marie",
+          "event": "result_ready",
+          "timestamp": "${timestamp}"
+        }
+      }
+    },
+    {
+      "name": "marie-error-notification",
+      "description": "Notify orchestrator on errors",
+      "event": "OnError",
+      "action": {
+        "type": "trigger",
+        "path": "/shared/triggers/orchestrator/marie-error.trigger",
+        "payload": {
+          "worker": "marie",
+          "event": "error",
+          "error_message": "${error}",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ]
+}

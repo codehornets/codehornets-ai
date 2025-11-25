@@ -1,0 +1,129 @@
+# HandyMate AWS ECS - Terraform Variables Example
+# Copy this file to terraform.tfvars and update with your actual values
+
+# Global Configuration
+project_name = "handymate"
+environment  = "production"  # Options: dev, staging, production
+aws_region   = "us-east-1"
+
+# Application Modules (all 8 CRM apps)
+app_modules = [
+  "developer",
+  "dancer",
+  "painter",
+  "driver",
+  "influencer",
+  "hunter",
+  "seller",
+  "trader"
+]
+
+# Network Configuration
+vpc_cidr             = "10.0.0.0/16"
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+private_subnet_cidrs = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+# Database Configuration (RDS MySQL)
+db_instance_class        = "db.t3.medium"        # Production: db.r6g.xlarge or larger
+db_allocated_storage     = 100                    # GB
+db_max_allocated_storage = 500                    # GB (autoscaling limit)
+db_name                  = "handymate"
+db_username              = "handymate_admin"      # Change this
+db_password              = "CHANGE_THIS_PASSWORD" # Use a strong password
+
+# Redis Configuration (ElastiCache)
+redis_node_type = "cache.t3.medium"  # Production: cache.r6g.large or larger
+redis_num_nodes = 1                   # Production: 2 or 3 for redundancy
+redis_version   = "7.0"
+
+# ECS Configuration
+ecs_cpu           = 512   # 0.5 vCPU per task
+ecs_memory        = 1024  # 1 GB per task
+ecs_desired_count = 1     # Number of tasks per service
+ecs_min_capacity  = 1     # Minimum for autoscaling
+ecs_max_capacity  = 4     # Maximum for autoscaling
+
+# Container Configuration
+container_image_tag = "latest"  # Use specific tags in production (e.g., "v1.0.0", git SHA)
+
+# Domain Configuration
+domain_name     = "handymate.com"                               # Your domain
+certificate_arn = "arn:aws:acm:us-east-1:123456789:certificate/xxx"  # Optional: ACM certificate for HTTPS
+
+# n8n Configuration
+n8n_encryption_key = ""  # Auto-generated if empty, or provide your own 32+ character key
+n8n_cpu            = 1024  # 1 vCPU for main n8n service
+n8n_memory         = 2048  # 2 GB for main n8n service
+n8n_worker_cpu     = 512   # 0.5 vCPU per worker
+n8n_worker_memory  = 1024  # 1 GB per worker
+
+# Module-specific overrides (optional)
+# Uncomment and adjust for specific modules that need different resources
+module_configs = {
+  # "developer" = {
+  #   cpu           = 1024
+  #   memory        = 2048
+  #   desired_count = 2
+  #   min_capacity  = 2
+  #   max_capacity  = 8
+  # }
+  # "dancer" = {
+  #   cpu           = 512
+  #   memory        = 1024
+  #   desired_count = 1
+  # }
+}
+
+# Common Tags
+common_tags = {
+  Project     = "HandyMate"
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+  Team        = "Platform"
+  CostCenter  = "Engineering"
+}
+
+# ===================================
+# Production Recommendations
+# ===================================
+#
+# Database:
+# - Use db.r6g.xlarge or larger for production workloads
+# - Enable Multi-AZ for high availability
+# - Set backup_retention_period to 7+ days
+# - Enable automated backups
+#
+# Redis:
+# - Use cache.r6g.large or larger for production
+# - Deploy 2-3 nodes for redundancy
+# - Enable automatic failover
+#
+# ECS:
+# - Run at least 2 tasks per service for high availability
+# - Spread tasks across multiple availability zones
+# - Use FARGATE for serverless, or FARGATE_SPOT for cost savings on non-critical workloads
+# - Set appropriate CPU/memory based on actual usage metrics
+#
+# Networking:
+# - Deploy across 3 availability zones minimum
+# - Use NAT Gateways in each AZ for high availability
+# - Enable VPC Flow Logs for security monitoring
+#
+# Security:
+# - Store sensitive values in AWS Secrets Manager
+# - Rotate database passwords regularly
+# - Enable encryption at rest for RDS and S3
+# - Use IAM roles instead of access keys
+# - Enable CloudTrail for audit logging
+#
+# Cost Optimization:
+# - Use FARGATE_SPOT for development/staging environments
+# - Enable autoscaling to scale down during off-peak hours
+# - Use Reserved Instances or Savings Plans for predictable workloads
+# - Right-size resources based on CloudWatch metrics
+#
+# Monitoring:
+# - Enable Container Insights for ECS
+# - Set up CloudWatch alarms for critical metrics
+# - Configure SNS notifications for alerts
+# - Enable Performance Insights for RDS

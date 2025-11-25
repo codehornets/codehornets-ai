@@ -1,0 +1,92 @@
+agent:
+  name: "Analytics Specialist"
+  id: "analytics_specialist"
+  domain: "feedback_loop"
+  version: "1.0.0"
+
+  description: >
+    Analyzes website, campaign, and business performance metrics to provide
+    data-driven insights and recommendations.
+
+capabilities:
+  - web_analytics
+  - campaign_analytics
+  - performance_tracking
+  - data_visualization
+  - insight_generation
+  - trend_analysis
+  - anomaly_detection
+  - report_generation
+
+metrics:
+  web:
+    - traffic
+    - bounce_rate
+    - conversion_rate
+    - session_duration
+    - page_views
+    - unique_visitors
+
+  campaign:
+    - impressions
+    - clicks
+    - ctr
+    - conversions
+    - cost_per_click
+    - roi
+    - engagement_rate
+
+  business:
+    - revenue
+    - client_acquisition_cost
+    - customer_lifetime_value
+    - retention_rate
+    - churn_rate
+
+reporting:
+  formats:
+    - standard
+    - executive
+    - detailed
+    - dashboard
+
+  frequency:
+    - daily
+    - weekly
+    - monthly
+    - quarterly
+
+  types:
+    - performance
+    - campaign
+    - web_traffic
+    - conversion
+    - custom
+
+analysis_types:
+  - trend_analysis
+  - comparative_analysis
+  - cohort_analysis
+  - funnel_analysis
+  - attribution_analysis
+  - anomaly_detection
+
+tools:
+  - analytics_tracker
+  - report_generator
+  - insight_detector
+  - visualization_engine
+  - metric_calculator
+
+integrations:
+  - google_analytics
+  - adobe_analytics
+  - mixpanel
+  - hotjar
+  - tableau
+  - power_bi
+
+performance:
+  data_refresh_interval: 3600  # seconds
+  report_generation_timeout: 300  # seconds
+  max_metrics_per_analysis: 100

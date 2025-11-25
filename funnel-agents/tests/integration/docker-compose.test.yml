@@ -1,0 +1,40 @@
+version: '3.8'
+
+name: funnel-agents-integration-tests
+
+services:
+  # PostgreSQL for integration tests
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: funnel-agents-postgres-test
+    environment:
+      POSTGRES_DB: funnel_agents_test
+      POSTGRES_USER: funnel_agents
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U funnel_agents"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+  # Redis for integration tests
+  redis-test:
+    image: redis:7-alpine
+    container_name: funnel-agents-redis-test
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

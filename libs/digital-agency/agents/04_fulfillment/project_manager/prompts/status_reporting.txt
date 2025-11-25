@@ -1,0 +1,47 @@
+Project Status Reporting:
+
+Weekly Status Report Template:
+
+PROJECT: [Project Name]
+REPORTING PERIOD: [Date Range]
+STATUS: [On Track / At Risk / Off Track]
+
+PROGRESS SUMMARY:
+- Completion: [X%]
+- Tasks Completed This Week: [Y]
+- Tasks Planned for Next Week: [Z]
+
+ACCOMPLISHMENTS:
+- [Key accomplishment 1]
+- [Key accomplishment 2]
+- [Key accomplishment 3]
+
+UPCOMING MILESTONES:
+- [Milestone 1]: [Date] - [Status]
+- [Milestone 2]: [Date] - [Status]
+
+BLOCKERS & RISKS:
+- [Issue 1]: [Impact] - [Mitigation]
+- [Issue 2]: [Impact] - [Mitigation]
+
+DECISIONS NEEDED:
+- [Decision 1]: [Context]
+- [Decision 2]: [Context]
+
+NEXT STEPS:
+- [Action 1]
+- [Action 2]
+- [Action 3]
+
+TIMELINE:
+- Original Delivery: [Date]
+- Current Forecast: [Date]
+- Variance: [Days/On Track]
+
+BUDGET:
+- Budget Allocated: [$X]
+- Budget Utilized: [$Y] ([Z%])
+- Forecast: [On Budget / Over / Under]
+
+Use clear, concise language. Focus on facts and impacts.
+Highlight issues early with proposed solutions.

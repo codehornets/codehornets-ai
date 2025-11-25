@@ -1,0 +1,1048 @@
+# =============================================================================
+# FunnelAgents - Kubernetes Deployment Manifests
+# All NestJS microservices + React frontend + n8n
+# =============================================================================
+#
+# Services deployed:
+#   - api-gateway (Port 3000)
+#   - auth-service (Port 3001)
+#   - crm-service (Port 3002)
+#   - campaigns-service (Port 3003)
+#   - content-service (Port 3004)
+#   - agents-service (Port 3005)
+#   - tasks-service (Port 3006)
+#   - automations-service (Port 3007)
+#   - reports-service (Port 3008)
+#   - worker-runner (Port 3009)
+#   - scheduler (Port 3010)
+#   - web-ui (Port 4200)
+#   - n8n (Port 5678)
+#
+# Usage:
+#   kubectl apply -f deployment.yaml -n funnelagents
+#
+# Note: Use Kustomize overlays for environment-specific settings.
+
+---
+# =============================================================================
+# API Gateway - Main entry point for all services
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: funnelagents
+    service: api-gateway
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: api-gateway
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: api-gateway
+        component: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: api-gateway
+          image: ghcr.io/funnelagents/api-gateway:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: SERVICE_NAME
+              value: "api-gateway"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+
+---
+# =============================================================================
+# Auth Service - Authentication and authorization
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  labels:
+    app: funnelagents
+    service: auth-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: auth-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: auth-service
+        component: backend
+    spec:
+      containers:
+        - name: auth-service
+          image: ghcr.io/funnelagents/auth-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3001
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3001"
+            - name: SERVICE_NAME
+              value: "auth-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# CRM Service - Customer relationship management
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-service
+  labels:
+    app: funnelagents
+    service: crm-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: crm-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: crm-service
+        component: backend
+    spec:
+      containers:
+        - name: crm-service
+          image: ghcr.io/funnelagents/crm-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3002
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3002"
+            - name: SERVICE_NAME
+              value: "crm-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Campaigns Service - Marketing campaigns management
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: campaigns-service
+  labels:
+    app: funnelagents
+    service: campaigns-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: campaigns-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: campaigns-service
+        component: backend
+    spec:
+      containers:
+        - name: campaigns-service
+          image: ghcr.io/funnelagents/campaigns-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3003
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3003"
+            - name: SERVICE_NAME
+              value: "campaigns-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Content Service - AI content generation
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-service
+  labels:
+    app: funnelagents
+    service: content-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: content-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: content-service
+        component: backend
+    spec:
+      containers:
+        - name: content-service
+          image: ghcr.io/funnelagents/content-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3004
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3004"
+            - name: SERVICE_NAME
+              value: "content-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Agents Service - AI agent orchestration
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agents-service
+  labels:
+    app: funnelagents
+    service: agents-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: agents-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: agents-service
+        component: backend
+    spec:
+      containers:
+        - name: agents-service
+          image: ghcr.io/funnelagents/agents-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3005
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3005"
+            - name: SERVICE_NAME
+              value: "agents-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Tasks Service - Task management
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-service
+  labels:
+    app: funnelagents
+    service: tasks-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: tasks-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: tasks-service
+        component: backend
+    spec:
+      containers:
+        - name: tasks-service
+          image: ghcr.io/funnelagents/tasks-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3006
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3006"
+            - name: SERVICE_NAME
+              value: "tasks-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Automations Service - Workflow automation
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automations-service
+  labels:
+    app: funnelagents
+    service: automations-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: automations-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: automations-service
+        component: backend
+    spec:
+      containers:
+        - name: automations-service
+          image: ghcr.io/funnelagents/automations-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3007
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3007"
+            - name: SERVICE_NAME
+              value: "automations-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Reports Service - Analytics and reporting
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-service
+  labels:
+    app: funnelagents
+    service: reports-service
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: reports-service
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: reports-service
+        component: backend
+    spec:
+      containers:
+        - name: reports-service
+          image: ghcr.io/funnelagents/reports-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3008
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3008"
+            - name: SERVICE_NAME
+              value: "reports-service"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Worker Runner - Background job processing
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-runner
+  labels:
+    app: funnelagents
+    service: worker-runner
+    component: worker
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: worker-runner
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: worker-runner
+        component: worker
+    spec:
+      containers:
+        - name: worker-runner
+          image: ghcr.io/funnelagents/worker-runner:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3009
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3009"
+            - name: SERVICE_NAME
+              value: "worker-runner"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Scheduler - Cron job scheduling
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  labels:
+    app: funnelagents
+    service: scheduler
+    component: worker
+spec:
+  replicas: 1  # Only 1 scheduler to avoid duplicate jobs
+  strategy:
+    type: Recreate  # Ensure only one instance runs at a time
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: scheduler
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: scheduler
+        component: worker
+    spec:
+      containers:
+        - name: scheduler
+          image: ghcr.io/funnelagents/scheduler:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3010
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3010"
+            - name: SERVICE_NAME
+              value: "scheduler"
+          envFrom:
+            - configMapRef:
+                name: funnelagents-config
+            - secretRef:
+                name: funnelagents-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# =============================================================================
+# Web UI - React frontend
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-ui
+  labels:
+    app: funnelagents
+    service: web-ui
+    component: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: web-ui
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: web-ui
+        component: frontend
+    spec:
+      containers:
+        - name: web-ui
+          image: ghcr.io/funnelagents/web-ui:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 4200
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: VITE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: API_GATEWAY_URL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+# =============================================================================
+# n8n - Workflow automation platform
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  labels:
+    app: funnelagents
+    service: n8n
+    component: automation
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: n8n
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: n8n
+        component: automation
+    spec:
+      containers:
+        - name: n8n
+          image: n8nio/n8n:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5678
+          env:
+            - name: N8N_PORT
+              value: "5678"
+            - name: N8N_PROTOCOL
+              value: "http"
+            - name: N8N_HOST
+              value: "localhost"
+            - name: EXECUTIONS_MODE
+              value: "queue"
+            - name: QUEUE_BULL_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: REDIS_HOST
+            - name: QUEUE_BULL_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: REDIS_PORT
+            - name: DB_TYPE
+              value: "postgresdb"
+            - name: DB_POSTGRESDB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: DB_HOST
+            - name: DB_POSTGRESDB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: DB_PORT
+            - name: DB_POSTGRESDB_DATABASE
+              value: "n8n"
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: DB_USERNAME
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: DB_PASSWORD
+            - name: N8N_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: N8N_ENCRYPTION_KEY
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2048Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
+      volumes:
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: n8n-data
+
+---
+# =============================================================================
+# n8n Worker - Background workflow execution
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n-worker
+  labels:
+    app: funnelagents
+    service: n8n-worker
+    component: automation
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: funnelagents
+      service: n8n-worker
+  template:
+    metadata:
+      labels:
+        app: funnelagents
+        service: n8n-worker
+        component: automation
+    spec:
+      containers:
+        - name: n8n-worker
+          image: n8nio/n8n:latest
+          imagePullPolicy: Always
+          command: ["n8n", "worker"]
+          env:
+            - name: EXECUTIONS_MODE
+              value: "queue"
+            - name: QUEUE_BULL_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: REDIS_HOST
+            - name: QUEUE_BULL_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: REDIS_PORT
+            - name: DB_TYPE
+              value: "postgresdb"
+            - name: DB_POSTGRESDB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: DB_HOST
+            - name: DB_POSTGRESDB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: funnelagents-config
+                  key: DB_PORT
+            - name: DB_POSTGRESDB_DATABASE
+              value: "n8n"
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: DB_USERNAME
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: DB_PASSWORD
+            - name: N8N_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: funnelagents-secrets
+                  key: N8N_ENCRYPTION_KEY
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi

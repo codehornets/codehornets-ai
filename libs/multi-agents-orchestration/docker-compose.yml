@@ -1,0 +1,382 @@
+# CodeHornets AI Multi-Agent Orchestration
+#
+# This compose file runs all agents with tmux-based communication for reliable
+# bidirectional message passing between agents.
+#
+# Usage:
+#   make up        # Start all services
+#   make down      # Stop all services
+#   make logs      # View logs
+#
+# Communication:
+#   Agents run Claude CLI inside tmux sessions, allowing:
+#   - Send input:  docker exec <container> tmux send-keys -t <session> 'message' Enter
+#   - Get output:  docker exec <container> tmux capture-pane -t <session> -p
+#   - Attach:      docker exec -it <container> tmux attach -t <session>
+#
+# Environment Variables:
+#   COMMUNICATION_STRATEGY: tmux (default) | wrapper | auto
+#   HOOKS_MODE: enabled (default) | disabled
+#   LOG_LEVEL: info (default) | debug | warn | error
+
+name: codehornets-ai
+
+services:
+  # ===========================================
+  # Infrastructure Services
+  # ===========================================
+
+  redis:
+    image: redis:7-alpine
+    container_name: codehornets-svc-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - claude-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # ===========================================
+  # Orchestrator Agent
+  # ===========================================
+
+  orchestrator:
+    image: codehornets-orchestrator:latest
+    container_name: codehornets-orchestrator
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/orchestrator.Dockerfile
+    entrypoint: ["/scripts/entrypoint-tmux.sh"]
+    command: ["orchestrator"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/orchestrator:/home/agent/.claude:rw
+      - ./shared/tasks:/tasks:rw
+      - ./shared/results:/results:ro
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces:/workspaces:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/shared/sockets:rw
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/orchestrator
+      - TASKS_DIR=/tasks
+      - RESULTS_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - AGENT_NAME=orchestrator
+      - AGENT_ROLE=orchestrator
+      - SOCKET_DIR=/shared/sockets
+      - COMMUNICATION_STRATEGY=${COMMUNICATION_STRATEGY:-tmux}
+      - TMUX_SESSION=claude-orchestrator
+      - TERM=xterm-256color
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/healthcheck-tmux.sh", "orchestrator", "claude-orchestrator"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===========================================
+  # Worker Agents
+  # ===========================================
+
+  marie:
+    image: codehornets-marie:latest
+    container_name: codehornets-worker-marie
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/marie.Dockerfile
+    entrypoint: ["/scripts/entrypoint-tmux.sh"]
+    command: ["marie"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/marie:/home/agent/.claude:rw
+      - ./shared/tasks/marie:/tasks:rw
+      - ./shared/results/marie:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/marie:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/marie:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/shared/sockets:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/marie
+      - WORKER_NAME=marie
+      - AGENT_NAME=marie
+      - AGENT_ROLE=worker
+      - SOCKET_DIR=/shared/sockets
+      - COMMUNICATION_STRATEGY=${COMMUNICATION_STRATEGY:-tmux}
+      - TMUX_SESSION=claude-marie
+      - TERM=xterm-256color
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/healthcheck-tmux.sh", "marie", "claude-marie"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  anga:
+    image: codehornets-anga:latest
+    container_name: codehornets-worker-anga
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/anga.Dockerfile
+    entrypoint: ["/scripts/entrypoint-tmux.sh"]
+    command: ["anga"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/anga:/home/agent/.claude:rw
+      - ./shared/tasks/anga:/tasks:rw
+      - ./shared/tasks/anga:/home/agent/workspace/tasks:ro
+      - ./shared/results/anga:/results:rw
+      - ./shared/results/anga:/home/agent/workspace/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/anga:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/anga:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/shared/sockets:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/anga
+      - WORKER_NAME=anga
+      - AGENT_NAME=anga
+      - AGENT_ROLE=worker
+      - SOCKET_DIR=/shared/sockets
+      - COMMUNICATION_STRATEGY=${COMMUNICATION_STRATEGY:-tmux}
+      - TMUX_SESSION=claude-anga
+      - TERM=xterm-256color
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/healthcheck-tmux.sh", "anga", "claude-anga"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  fabien:
+    image: codehornets-fabien:latest
+    container_name: codehornets-worker-fabien
+    build:
+      context: ../..
+      dockerfile: libs/multi-agents-orchestration/dockerfiles/fabien.Dockerfile
+    entrypoint: ["/scripts/entrypoint-tmux.sh"]
+    command: ["fabien"]
+    group_add:
+      - "0"
+      - "1001"
+    volumes:
+      - ./prompts:/prompts:ro
+      - ./hooks-config:/hooks-config:ro
+      - ./tools:/tools:rw
+      - ./scripts:/scripts:ro
+      - ./Makefile:/Makefile:ro
+      - ./shared/auth-homes/fabien:/home/agent/.claude:rw
+      - ./shared/tasks/fabien:/tasks:rw
+      - ./shared/results/fabien:/results:rw
+      - ./shared/heartbeats:/shared/heartbeats:rw
+      - ./shared/triggers/fabien:/shared/triggers:rw
+      - ./shared/pipes:/shared/pipes:rw
+      - ./shared/messages:/shared/messages:rw
+      - ./shared/watcher-logs:/var/log:rw
+      - ./shared/workspaces/fabien:/home/agent/workspace:rw
+      - ./shared/skills:/shared/skills:ro
+      - ./shared/inbox:/shared/inbox:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/shared/sockets:rw
+    environment:
+      - ACTIVATION_WRAPPER=${ACTIVATION_WRAPPER:-}
+      - ACTIVATION_MODE=${ACTIVATION_MODE:-inotify}
+      - HOOKS_MODE=${HOOKS_MODE:-enabled}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TASK_DIR=/tasks
+      - RESULT_DIR=/results
+      - HEARTBEAT_DIR=/shared/heartbeats
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-10}
+      - TRIGGER_DIR=/shared/triggers
+      - PIPE_DIR=/shared/pipes
+      - INBOX_DIR=/shared/inbox/fabien
+      - WORKER_NAME=fabien
+      - AGENT_NAME=fabien
+      - AGENT_ROLE=worker
+      - SOCKET_DIR=/shared/sockets
+      - COMMUNICATION_STRATEGY=${COMMUNICATION_STRATEGY:-tmux}
+      - TMUX_SESSION=claude-fabien
+      - TERM=xterm-256color
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    networks:
+      - claude-network
+    stdin_open: true
+    tty: true
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/healthcheck-tmux.sh", "fabien", "claude-fabien"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+  # ===========================================
+  # Support Services
+  # ===========================================
+
+  automation:
+    image: alpine:latest
+    container_name: codehornets-svc-automation
+    command: >-
+      sh -c "
+      apk add --no-cache bash expect docker-cli curl tmux socat &&
+      tail -f /dev/null
+      "
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./shared:/workspace/shared:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/shared/sockets:rw
+    networks:
+      - claude-network
+    restart: unless-stopped
+
+  monitor:
+    image: node:22-slim
+    container_name: codehornets-svc-monitor
+    working_dir: /app
+    command: >
+      bash -c "
+      cp /tools/package.json /app/ &&
+      npm install &&
+      apt-get update -qq &&
+      apt-get install -y -qq docker.io curl &&
+      node /tools/monitoring/monitor_daemon.js
+      "
+    volumes:
+      - ./tools:/tools:rw
+      - ./shared/tasks:/workspace/shared/tasks:rw
+      - ./shared/results:/workspace/shared/results:rw
+      - ./shared/heartbeats:/workspace/shared/heartbeats:ro
+      - ./shared/triggers:/workspace/shared/triggers:rw
+      - ./shared/archive:/workspace/shared/archive:rw
+      - ./shared/watcher-logs:/workspace/shared/watcher-logs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./shared/sockets:/workspace/shared/sockets:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MONITOR_INTERVAL=${MONITOR_INTERVAL:-3}
+      - LLM_MODEL=${LLM_MODEL:-llama3.2:1b}
+    networks:
+      - claude-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+        required: false
+
+networks:
+  claude-network:
+    driver: bridge
+
+volumes:
+  redis-data:

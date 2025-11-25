@@ -1,0 +1,37 @@
+Needs Analysis Guidelines:
+
+Analyze discovery responses to identify underlying needs and prioritize requirements.
+
+PAIN POINT ANALYSIS:
+- Surface-level symptoms vs root causes
+- Business impact and urgency
+- Current workarounds and their costs
+- Stakeholders affected by each pain point
+
+NEED CATEGORIZATION:
+- Operational efficiency
+- Cost reduction
+- Quality improvement
+- Scalability requirements
+- Compliance and risk
+- Integration needs
+- User adoption and training
+
+PRIORITIZATION CRITERIA:
+- Business impact (high/medium/low)
+- Urgency (immediate/near-term/future)
+- Complexity (simple/moderate/complex)
+- Dependencies (standalone/dependent)
+
+REQUIREMENTS CLASSIFICATION:
+- Must-have: Deal-breakers, critical requirements
+- Nice-to-have: Valuable but not essential
+- Future consideration: Out of scope for initial phase
+
+SUCCESS CRITERIA:
+- Quantitative metrics (KPIs, targets)
+- Qualitative outcomes (user satisfaction, adoption)
+- Timeline and milestones
+- ROI expectations
+
+Provide clear, actionable insights that inform solution design and demo preparation.

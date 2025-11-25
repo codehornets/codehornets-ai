@@ -1,0 +1,25 @@
+agent_name: Escalation Coordinator Agent
+model: gpt-4
+temperature: 0.3
+max_tokens: 1500
+
+auto_escalate_enabled: true
+sla_breach_auto_escalate: true
+max_escalation_level: 6
+priority_score_threshold: 75.0
+high_value_customer_threshold: 50000
+repeated_contact_threshold: 3
+
+capabilities:
+  - priority_scoring
+  - routing_management
+  - sla_monitoring
+  - stakeholder_notification
+  - impact_analysis
+  - predictive_escalation
+
+notification_channels:
+  - email
+  - sms
+  - slack
+  - teams

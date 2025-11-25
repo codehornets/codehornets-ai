@@ -1,0 +1,58 @@
+{
+  "name": "campaigns-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/campaigns-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/campaigns-service",
+        "main": "apps/campaigns-service/src/main.ts",
+        "tsConfig": "apps/campaigns-service/tsconfig.build.json",
+        "assets": ["apps/campaigns-service/src/assets"],
+        "target": "node",
+        "compiler": "swc",
+        "webpackConfig": "apps/campaigns-service/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "campaigns-service:build",
+        "watch": true,
+        "inspect": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/campaigns-service"
+      ],
+      "options": {
+        "jestConfig": "apps/campaigns-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/campaigns-service/**/*.ts"
+        ]
+      }
+    }
+  },
+  "tags": [
+    "scope:campaigns",
+    "type:microservice"
+  ]
+}

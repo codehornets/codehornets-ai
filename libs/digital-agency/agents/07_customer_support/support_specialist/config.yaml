@@ -1,0 +1,40 @@
+agent_name: Support Specialist Agent
+model: gpt-4
+temperature: 0.3
+max_tokens: 2000
+
+enable_auto_routing: true
+enable_sla_tracking: true
+enable_sentiment_analysis: true
+
+default_response_time_hours: 4
+default_resolution_time_hours: 24
+escalation_threshold_hours: 48
+max_escalation_level: 3
+
+capabilities:
+  - ticket_routing
+  - sla_tracking
+  - priority_scoring
+  - workflow_management
+  - escalation_handling
+  - sentiment_analysis
+  - pattern_detection
+
+supported_categories:
+  - technical
+  - billing
+  - account
+  - feature_request
+  - bug_report
+  - general_inquiry
+  - complaint
+  - security
+
+teams:
+  - tier1
+  - tier2
+  - tier3
+  - billing
+  - technical
+  - security

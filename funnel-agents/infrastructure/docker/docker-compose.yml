@@ -1,0 +1,895 @@
+name: funnel-agents
+
+services:
+  # ==========================================================================
+  # Infrastructure Services
+  # ==========================================================================
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: funnel-agents-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-funnel_agents}
+      POSTGRES_USER: ${POSTGRES_USER:-funnel_agents}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-funnel_agents}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - funnel-agents-network
+
+  # Redis Cache & Queue
+  # NOTE: Uses port 6380 by default to avoid conflict with existing Redis on 6379
+  redis:
+    image: redis:7-alpine
+    container_name: funnel-agents-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6380}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - funnel-agents-network
+
+  # ==========================================================================
+  # NestJS Microservices
+  # ==========================================================================
+
+  # API Gateway (port 3000)
+  api-gateway:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=api-gateway
+    container_name: funnel-agents-api-gateway
+    restart: unless-stopped
+    ports:
+      - "${API_GATEWAY_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - API_GATEWAY_PORT=3000
+      - AUTH_SERVICE_HOST=auth-service
+      - AUTH_SERVICE_PORT=3001
+      - CRM_SERVICE_HOST=crm-service
+      - CRM_SERVICE_PORT=3002
+      - CAMPAIGNS_SERVICE_HOST=campaigns-service
+      - CAMPAIGNS_SERVICE_PORT=3003
+      - CONTENT_SERVICE_HOST=content-service
+      - CONTENT_SERVICE_PORT=3004
+      - AGENTS_SERVICE_HOST=agents-service
+      - AGENTS_SERVICE_PORT=3005
+      - TASKS_SERVICE_HOST=tasks-service
+      - TASKS_SERVICE_PORT=3006
+      - AUTOMATIONS_SERVICE_HOST=automations-service
+      - AUTOMATIONS_SERVICE_PORT=3007
+      - REPORTS_SERVICE_HOST=reports-service
+      - REPORTS_SERVICE_PORT=3008
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+      # Logging Configuration
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FORMAT=${LOG_FORMAT:-json}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service,environment"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+    labels:
+      - "service=api-gateway"
+      - "environment=${NODE_ENV:-development}"
+
+  # Auth Service (port 3001)
+  auth-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=auth-service
+    container_name: funnel-agents-auth-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - AUTH_SERVICE_HOST=0.0.0.0
+      - AUTH_SERVICE_PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-1d}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # CRM Service (port 3002)
+  crm-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=crm-service
+    container_name: funnel-agents-crm-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - CRM_SERVICE_HOST=0.0.0.0
+      - CRM_SERVICE_PORT=3002
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Campaigns Service (port 3003)
+  campaigns-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=campaigns-service
+    container_name: funnel-agents-campaigns-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - CAMPAIGNS_SERVICE_HOST=0.0.0.0
+      - CAMPAIGNS_SERVICE_PORT=3003
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Content Service (port 3004)
+  content-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=content-service
+    container_name: funnel-agents-content-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - CONTENT_SERVICE_HOST=0.0.0.0
+      - CONTENT_SERVICE_PORT=3004
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Agents Service (port 3005)
+  agents-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=agents-service
+    container_name: funnel-agents-agents-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - AGENTS_SERVICE_HOST=0.0.0.0
+      - AGENTS_SERVICE_PORT=3005
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Tasks Service (port 3006)
+  tasks-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=tasks-service
+    container_name: funnel-agents-tasks-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - TASKS_SERVICE_HOST=0.0.0.0
+      - TASKS_SERVICE_PORT=3006
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Automations Service (port 3007)
+  automations-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=automations-service
+    container_name: funnel-agents-automations-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - AUTOMATIONS_SERVICE_HOST=0.0.0.0
+      - AUTOMATIONS_SERVICE_PORT=3007
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Reports Service (port 3008)
+  reports-service:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=reports-service
+    container_name: funnel-agents-reports-service
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - REPORTS_SERVICE_HOST=0.0.0.0
+      - REPORTS_SERVICE_PORT=3008
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - funnel-agents-network
+
+  # Worker Runner (port 3009)
+  worker-runner:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=worker-runner
+    container_name: funnel-agents-worker-runner
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - WORKER_RUNNER_HOST=0.0.0.0
+      - WORKER_RUNNER_PORT=3009
+      - TASKS_SERVICE_HOST=tasks-service
+      - TASKS_SERVICE_PORT=3006
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      tasks-service:
+        condition: service_started
+    networks:
+      - funnel-agents-network
+
+  # Scheduler (port 3010)
+  scheduler:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+      args:
+        - SERVICE=scheduler
+    container_name: funnel-agents-scheduler
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - SCHEDULER_HOST=0.0.0.0
+      - SCHEDULER_PORT=3010
+      - TASKS_SERVICE_HOST=tasks-service
+      - TASKS_SERVICE_PORT=3006
+      - AUTOMATIONS_SERVICE_HOST=automations-service
+      - AUTOMATIONS_SERVICE_PORT=3007
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-funnel_agents}:${POSTGRES_PASSWORD:-secret}@postgres:5432/${POSTGRES_DB:-funnel_agents}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      tasks-service:
+        condition: service_started
+      automations-service:
+        condition: service_started
+    networks:
+      - funnel-agents-network
+
+  # ==========================================================================
+  # Frontend
+  # ==========================================================================
+
+  # Web UI (Vite React)
+  web-ui:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web
+    container_name: funnel-agents-web-ui
+    restart: unless-stopped
+    ports:
+      - "${WEB_UI_PORT:-4200}:4200"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_API_URL=http://localhost:${API_GATEWAY_PORT:-3000}
+    depends_on:
+      - api-gateway
+    networks:
+      - funnel-agents-network
+
+  # ==========================================================================
+  # n8n Workflow Automation (Agent Orchestration)
+  # ==========================================================================
+  n8n:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Database Configuration (PostgreSQL)
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+
+      # n8n Core Configuration
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/webhook}
+
+      # Execution mode: 'queue' for production scalability
+      EXECUTIONS_MODE: ${N8N_EXECUTIONS_MODE:-queue}
+
+      # Queue configuration (BullMQ with Redis)
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+
+      # Authentication & Security
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme}
+
+      # Encryption key (IMPORTANT: Generate secure key for production)
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+
+      # Timezone
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+
+      # Workflow execution settings
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_PROGRESS: true
+      EXECUTIONS_DATA_MAX_AGE: 336
+      EXECUTIONS_DATA_PRUNE: true
+      EXECUTIONS_DATA_PRUNE_MAX_COUNT: 10000
+
+      # Workflows
+      WORKFLOWS_DEFAULT_NAME: "FunnelAgents Workflow"
+
+      # External Hooks (FunnelAgents Integration)
+      EXTERNAL_HOOK_FILES: /data/custom-hooks.js
+
+      # Performance & Limits
+      N8N_PAYLOAD_SIZE_MAX: 16
+      EXECUTIONS_PROCESS_MAX_TIMEOUT: 3600
+      EXECUTIONS_TIMEOUT: 3600
+      EXECUTIONS_TIMEOUT_MAX: 7200
+
+      # Telemetry & Diagnostics
+      N8N_DIAGNOSTICS_ENABLED: ${N8N_DIAGNOSTICS_ENABLED:-false}
+      N8N_PERSONALIZATION_ENABLED: ${N8N_PERSONALIZATION_ENABLED:-false}
+      N8N_VERSION_NOTIFICATIONS_ENABLED: false
+      N8N_HIRING_BANNER_ENABLED: false
+
+      # Logging
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: ${N8N_LOG_OUTPUT:-console,file}
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      N8N_LOG_FILE_COUNT_MAX: 10
+      N8N_LOG_FILE_SIZE_MAX: 10
+
+      # Email Configuration (for notifications)
+      N8N_EMAIL_MODE: ${MAIL_MAILER:-smtp}
+      N8N_SMTP_HOST: ${MAIL_HOST:-mailhog}
+      N8N_SMTP_PORT: ${MAIL_PORT:-1025}
+      N8N_SMTP_USER: ${MAIL_USERNAME:-}
+      N8N_SMTP_PASS: ${MAIL_PASSWORD:-}
+      N8N_SMTP_SENDER: ${MAIL_FROM_ADDRESS:-noreply@funnelagents.com}
+      N8N_SMTP_SSL: ${MAIL_ENCRYPTION:-false}
+    ports:
+      - "${N8N_PORT:-5678}:5678"
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ./n8n/custom:/data/custom:ro
+      - ./n8n/custom-hooks.js:/data/custom-hooks.js:ro
+      - ../../storage/logs/n8n:/data/logs
+    networks:
+      - funnel-agents-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    labels:
+      - "com.funnelagents.service=n8n"
+      - "com.funnelagents.environment=${NODE_ENV:-development}"
+      - "com.funnelagents.component=workflow-automation"
+
+  # ==========================================================================
+  # n8n Workers (Agent Task Processing)
+  # ==========================================================================
+
+  # n8n Worker - CRM Agent
+  n8n-worker-crm:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n-worker-crm
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      QUEUE_BULL_PREFIX: "n8n:crm"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      WORKER_APP: crm
+      WORKER_ID: crm-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/crm:/data/logs
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.agent=crm"
+      - "com.funnelagents.component=workflow-automation"
+
+  # n8n Worker - Campaigns Agent
+  n8n-worker-campaigns:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n-worker-campaigns
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      QUEUE_BULL_PREFIX: "n8n:campaigns"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      WORKER_APP: campaigns
+      WORKER_ID: campaigns-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/campaigns:/data/logs
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.agent=campaigns"
+      - "com.funnelagents.component=workflow-automation"
+
+  # n8n Worker - Content Agent
+  n8n-worker-content:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n-worker-content
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      QUEUE_BULL_PREFIX: "n8n:content"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      WORKER_APP: content
+      WORKER_ID: content-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/content:/data/logs
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.agent=content"
+      - "com.funnelagents.component=workflow-automation"
+
+  # n8n Worker - Reports Agent
+  n8n-worker-reports:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n-worker-reports
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      QUEUE_BULL_PREFIX: "n8n:reports"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      WORKER_APP: reports
+      WORKER_ID: reports-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/reports:/data/logs
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.agent=reports"
+      - "com.funnelagents.component=workflow-automation"
+
+  # n8n Worker - Automations Agent
+  n8n-worker-automations:
+    image: n8nio/n8n:1.68.0
+    container_name: funnel-agents-n8n-worker-automations
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: worker
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_DATABASE:-funnel_agents_n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-funnel_agents}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_DB: ${N8N_REDIS_DB:-2}
+      QUEUE_BULL_PREFIX: "n8n:automations"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      GENERIC_TIMEZONE: ${APP_TIMEZONE:-America/New_York}
+      TZ: ${APP_TIMEZONE:-America/New_York}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_LOCATION: /data/logs/
+      WORKER_APP: automations
+      WORKER_ID: automations-1
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - n8n-files:/files
+      - ../../storage/logs/n8n/automations:/data/logs
+    networks:
+      - funnel-agents-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    labels:
+      - "com.funnelagents.service=n8n-worker"
+      - "com.funnelagents.agent=automations"
+      - "com.funnelagents.component=workflow-automation"
+
+  # ==========================================================================
+  # Monitoring & Observability
+  # ==========================================================================
+
+  # Prometheus - Metrics collection and alerting
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: funnel-agents-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus-data:/prometheus
+    networks:
+      - funnel-agents-network
+    healthcheck:
+      test: ["CMD", "wget", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.funnelagents.service=prometheus"
+      - "com.funnelagents.component=monitoring"
+
+  # Grafana - Metrics visualization and dashboards
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: funnel-agents-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:${GRAFANA_PORT:-3001}
+      - GF_INSTALL_PLUGINS=
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - funnel-agents-network
+    healthcheck:
+      test: ["CMD", "wget", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.funnelagents.service=grafana"
+      - "com.funnelagents.component=monitoring"
+
+  # ==========================================================================
+  # Development Tools
+  # ==========================================================================
+
+  # Mailhog for testing emails
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: funnel-agents-mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+    networks:
+      - funnel-agents-network
+
+  # Redis Commander (Redis GUI)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: funnel-agents-redis-commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "${REDIS_COMMANDER_PORT:-8081}:8081"
+    depends_on:
+      - redis
+    networks:
+      - funnel-agents-network
+    profiles:
+      - dev-tools
+
+  # pgAdmin (PostgreSQL GUI)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: funnel-agents-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@funnelagents.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - funnel-agents-network
+    profiles:
+      - dev-tools
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  n8n-data:
+    driver: local
+  n8n-files:
+    driver: local
+  pgadmin-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  funnel-agents-network:
+    driver: bridge

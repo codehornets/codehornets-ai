@@ -1,0 +1,28 @@
+agent:
+  name: "Competitive Researcher"
+  version: "0.1.0"
+  description: "Monitors competitors and identifies market threats and opportunities"
+
+capabilities:
+  - competitor_monitoring
+  - trend_analysis
+  - service_benchmarking
+  - threat_identification
+
+parameters:
+  operation_mode: "standard"
+  logging_level: "info"
+
+integrations:
+  - leadership_domain
+  - operations_domain
+
+outputs:
+  - reports
+  - analyses
+  - recommendations
+
+metrics:
+  - operation_success_rate
+  - output_quality
+  - response_time

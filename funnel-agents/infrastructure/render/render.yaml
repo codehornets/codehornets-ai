@@ -1,0 +1,645 @@
+# =============================================================================
+# FunnelAgents - Render Blueprint
+# https://render.com/docs/blueprint-spec
+# =============================================================================
+
+# Databases
+databases:
+  - name: funnelagents-postgres
+    databaseName: funnel_agents
+    user: funnel_agents_admin
+    plan: standard
+    region: oregon
+    postgresMajorVersion: "16"
+    ipAllowList: []
+
+  - name: funnelagents-redis
+    plan: standard
+    region: oregon
+
+# =============================================================================
+# Backend Services
+# =============================================================================
+services:
+  # API Gateway - Main entry point
+  - type: web
+    name: funnelagents-api-gateway
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: api-gateway
+      - key: PORT
+        value: "3000"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: "1d"
+
+  # Auth Service
+  - type: web
+    name: funnelagents-auth-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: auth-service
+      - key: PORT
+        value: "3001"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: JWT_SECRET
+        sync: false
+
+  # CRM Service
+  - type: web
+    name: funnelagents-crm-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: crm-service
+      - key: PORT
+        value: "3002"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Campaigns Service
+  - type: web
+    name: funnelagents-campaigns-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: campaigns-service
+      - key: PORT
+        value: "3003"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Content Service
+  - type: web
+    name: funnelagents-content-service
+    runtime: docker
+    region: oregon
+    plan: pro  # More resources for AI processing
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: content-service
+      - key: PORT
+        value: "3004"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: OPENAI_API_KEY
+        sync: false
+
+  # Agents Service
+  - type: web
+    name: funnelagents-agents-service
+    runtime: docker
+    region: oregon
+    plan: pro  # More resources for AI agents
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: agents-service
+      - key: PORT
+        value: "3005"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: OPENAI_API_KEY
+        sync: false
+
+  # Tasks Service
+  - type: web
+    name: funnelagents-tasks-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: tasks-service
+      - key: PORT
+        value: "3006"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Automations Service
+  - type: web
+    name: funnelagents-automations-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: automations-service
+      - key: PORT
+        value: "3007"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Reports Service
+  - type: web
+    name: funnelagents-reports-service
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: reports-service
+      - key: PORT
+        value: "3008"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Worker Runner (Background Jobs)
+  - type: worker
+    name: funnelagents-worker-runner
+    runtime: docker
+    region: oregon
+    plan: pro
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: worker-runner
+      - key: PORT
+        value: "3009"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # Scheduler (Cron Jobs)
+  - type: worker
+    name: funnelagents-scheduler
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVICE
+        value: scheduler
+      - key: PORT
+        value: "3010"
+      - key: DB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_NAME
+        value: funnel_agents
+      - key: DB_USERNAME
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+
+  # =============================================================================
+  # Frontend
+  # =============================================================================
+  - type: web
+    name: funnelagents-web-ui
+    runtime: static
+    region: oregon
+    plan: starter
+    buildCommand: cd apps/web-ui && npm run build
+    staticPublishPath: apps/web-ui/dist
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://funnelagents-api-gateway.onrender.com
+
+  # =============================================================================
+  # n8n Workflow Automation
+  # =============================================================================
+  - type: web
+    name: funnelagents-n8n
+    runtime: docker
+    region: oregon
+    plan: pro
+    dockerfilePath: ./infrastructure/docker/n8n/Dockerfile
+    dockerContext: ./infrastructure/docker/n8n
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: N8N_PORT
+        value: "5678"
+      - key: N8N_PROTOCOL
+        value: https
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: EXECUTIONS_MODE
+        value: queue
+      - key: QUEUE_BULL_REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: QUEUE_BULL_REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: N8N_LOG_LEVEL
+        value: info
+
+  # n8n Workers
+  - type: worker
+    name: funnelagents-n8n-worker
+    runtime: docker
+    region: oregon
+    plan: standard
+    dockerfilePath: ./infrastructure/docker/n8n/Dockerfile
+    dockerContext: ./infrastructure/docker/n8n
+    dockerCommand: n8n worker
+    autoDeploy: true
+    envVars:
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: funnelagents-postgres
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: funnelagents-postgres
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: funnelagents-postgres
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: funnelagents-postgres
+          property: password
+      - key: EXECUTIONS_MODE
+        value: queue
+      - key: QUEUE_BULL_REDIS_HOST
+        fromDatabase:
+          name: funnelagents-redis
+          property: host
+      - key: QUEUE_BULL_REDIS_PORT
+        fromDatabase:
+          name: funnelagents-redis
+          property: port
+      - key: N8N_ENCRYPTION_KEY
+        sync: false
+      - key: N8N_LOG_LEVEL
+        value: info
+
+# =============================================================================
+# Post-deployment Notes:
+# =============================================================================
+# 1. Create separate database for n8n: CREATE DATABASE n8n;
+# 2. Configure custom domains via Render Dashboard
+# 3. Set up SSL certificates (automatic via Render)
+# 4. Add OPENAI_API_KEY and other secrets via Render Dashboard
+# 5. Run database migrations: npm run migrate
+# =============================================================================

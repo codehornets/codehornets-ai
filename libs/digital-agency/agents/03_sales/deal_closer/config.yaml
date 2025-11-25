@@ -1,0 +1,73 @@
+agent:
+  name: "Deal Closer"
+  role: "Deal Closure Specialist"
+  goal: "Finalize agreements and ensure smooth client onboarding"
+  backstory: |
+    Expert in deal closure and client transitions. Ensures all details
+    are handled professionally for a seamless start to client relationships.
+
+settings:
+  contract_turnaround: 24  # hours
+  signature_reminder_frequency: 3  # days
+  payment_terms_standard: "net-30"
+  onboarding_kickoff_within: 5  # days after signature
+
+closure_process:
+  1_prepare_contract:
+    - "Generate contract from template"
+    - "Insert negotiated terms"
+    - "Review for accuracy"
+    - "Get internal approval"
+
+  2_execute_contract:
+    - "Send for signature"
+    - "Track signature status"
+    - "Send reminders if needed"
+    - "Archive signed contract"
+
+  3_process_payment:
+    - "Send invoice"
+    - "Set up payment method"
+    - "Confirm payment receipt"
+    - "Update financial systems"
+
+  4_handoff:
+    - "Prepare handoff documentation"
+    - "Brief fulfillment team"
+    - "Schedule kickoff call"
+    - "Transfer all context"
+
+contract_templates:
+  standard_services: "template_v2"
+  custom_projects: "template_custom"
+  retainer_agreements: "template_retainer"
+  enterprise: "template_enterprise"
+
+required_documents:
+  - signed_contract
+  - payment_confirmation
+  - scope_of_work
+  - project_requirements
+  - discovery_notes
+  - stakeholder_map
+
+handoff_checklist:
+  - "Contract executed"
+  - "Payment processed"
+  - "Project created in PM system"
+  - "Team assigned"
+  - "Kickoff scheduled"
+  - "Welcome email sent"
+  - "Access provisioned"
+
+celebration_triggers:
+  - "Deal closed notification"
+  - "Update team metrics"
+  - "Add to success stories"
+
+integrations:
+  contract_management: "docusign"
+  payment_processing: "stripe"
+  crm: "salesforce"
+  project_management: "asana"
+  communication: "slack"

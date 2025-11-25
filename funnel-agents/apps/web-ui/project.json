@@ -1,0 +1,45 @@
+{
+  "name": "web-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web-ui/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web-ui",
+        "command": "npm run build"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web-ui",
+        "command": "npm run dev"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web-ui",
+        "command": "npm run preview"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web-ui",
+        "command": "npm run lint"
+      }
+    },
+    "lint-fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/web-ui",
+        "command": "npm run lint:fix"
+      }
+    }
+  },
+  "tags": ["scope:frontend", "type:app"]
+}

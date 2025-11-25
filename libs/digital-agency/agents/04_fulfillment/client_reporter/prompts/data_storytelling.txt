@@ -1,0 +1,31 @@
+Data Storytelling for Client Reports:
+
+PRINCIPLES:
+1. Start with insights, not data
+2. Use visualizations to simplify complexity
+3. Connect metrics to business outcomes
+4. Provide context and comparisons
+5. Make recommendations actionable
+
+VISUALIZATION BEST PRACTICES:
+- Use the right chart type for the data
+- Keep designs clean and uncluttered
+- Use consistent colors and branding
+- Label clearly
+- Highlight key insights
+
+NARRATIVE STRUCTURE:
+- Context: What is the situation?
+- Challenge: What needs attention?
+- Solution: What was done?
+- Results: What was achieved?
+- Next: What is coming?
+
+AVOID:
+- Data dumps without insights
+- Jargon and technical terms
+- Charts without context
+- Focusing on activities vs outcomes
+- Surprises in reports (communicate issues early)
+
+Always answer: "So what?" and "What should we do about it?"
