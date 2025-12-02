@@ -1,0 +1,343 @@
+2025-12-02T14:50:26.078Z [DEBUG] Watching for changes in setting files /home/agent/.claude/settings.json...
+2025-12-02T14:50:26.233Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-02T14:50:26.233Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-02T14:50:26.233Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-02T14:50:26.234Z [DEBUG] [LSP SERVER MANAGER] initialize() called
+2025-12-02T14:50:26.234Z [DEBUG] [LSP SERVER MANAGER] Calling getAllLspServers()
+2025-12-02T14:50:26.290Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-02T14:50:26.291Z [DEBUG] Total LSP servers loaded: 0
+2025-12-02T14:50:26.303Z [DEBUG] [LSP SERVER MANAGER] getAllLspServers returned 0 server(s)
+2025-12-02T14:50:26.303Z [DEBUG] LSP manager initialized with 0 servers
+2025-12-02T14:50:26.304Z [DEBUG] LSP server manager initialized successfully
+2025-12-02T14:50:26.304Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-02T14:50:26.373Z [DEBUG] Loading skills from directories: managed=/etc/claude-code/.claude/skills, user=/home/agent/.claude/skills, project=/home/agent/workspace/.claude/skills
+2025-12-02T14:50:26.373Z [DEBUG] >>>>> getPluginSkills CALLED <<<<<
+2025-12-02T14:50:26.387Z [DEBUG] installed_plugins.json doesn't exist yet at /home/agent/.claude/plugins/installed_plugins.json, returning empty object
+2025-12-02T14:50:26.531Z [DEBUG] Creating shell snapshot for bash (/bin/bash)
+2025-12-02T14:50:26.532Z [DEBUG] Looking for shell config file: /home/agent/.bashrc
+2025-12-02T14:50:26.532Z [DEBUG] Shell config file not found: /home/agent/.bashrc, creating snapshot with Claude Code defaults only
+2025-12-02T14:50:26.532Z [DEBUG] Snapshots directory: /home/agent/.claude/shell-snapshots
+2025-12-02T14:50:26.533Z [DEBUG] Creating snapshot at: /home/agent/.claude/shell-snapshots/snapshot-bash-1764687026532-bei1s8.sh
+2025-12-02T14:50:26.533Z [DEBUG] Shell binary exists: true
+2025-12-02T14:50:26.533Z [DEBUG] Execution timeout: 10000ms
+2025-12-02T14:50:26.537Z [DEBUG] Writing to temp file: /home/agent/.claude/todos/667e2233-5abf-4be5-9846-4bb6e4044ee9-agent-667e2233-5abf-4be5-9846-4bb6e4044ee9.json.tmp.1.1764687026537
+2025-12-02T14:50:26.699Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-02T14:50:26.699Z [DEBUG] Renaming /home/agent/.claude/todos/667e2233-5abf-4be5-9846-4bb6e4044ee9-agent-667e2233-5abf-4be5-9846-4bb6e4044ee9.json.tmp.1.1764687026537 to /home/agent/.claude/todos/667e2233-5abf-4be5-9846-4bb6e4044ee9-agent-667e2233-5abf-4be5-9846-4bb6e4044ee9.json
+2025-12-02T14:50:26.699Z [DEBUG] File /home/agent/.claude/todos/667e2233-5abf-4be5-9846-4bb6e4044ee9-agent-667e2233-5abf-4be5-9846-4bb6e4044ee9.json written atomically
+2025-12-02T14:50:26.715Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-02T14:50:26.715Z [DEBUG] Total plugin skills loaded: 0
+2025-12-02T14:50:26.715Z [DEBUG] Total plugin commands loaded: 0
+2025-12-02T14:50:26.716Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-02T14:50:26.735Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, duplicates removed: 0)
+2025-12-02T14:50:26.743Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills
+2025-12-02T14:50:26.749Z [DEBUG] Total plugin agents loaded: 0
+2025-12-02T14:50:27.694Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T14:50:27.822Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687027822
+2025-12-02T14:50:27.822Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T14:50:27.948Z [DEBUG] Temp file written successfully, size: 408 bytes
+2025-12-02T14:50:27.949Z [DEBUG] Applied original permissions to temp file
+2025-12-02T14:50:27.949Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687027822 to /home/agent/.claude.json
+2025-12-02T14:50:27.949Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T14:50:28.020Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687028020
+2025-12-02T14:50:28.020Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T14:50:28.166Z [DEBUG] Temp file written successfully, size: 408 bytes
+2025-12-02T14:50:28.168Z [DEBUG] Applied original permissions to temp file
+2025-12-02T14:50:28.168Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687028020 to /home/agent/.claude.json
+2025-12-02T14:50:28.169Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T14:50:28.177Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T14:50:28.189Z [DEBUG] Failed to check metrics opt-out status: Request failed with status code 401
+2025-12-02T14:50:28.189Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T14:50:28.552Z [DEBUG] Acquired lock on running version: /home/agent/.local/share/claude/versions/2.0.55
+2025-12-02T14:50:29.041Z [DEBUG] Git remote URL: null
+2025-12-02T14:50:29.041Z [DEBUG] No git remote URL found
+2025-12-02T14:50:29.041Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-02T14:50:29.120Z [DEBUG] Shell snapshot created successfully (403 bytes)
+2025-12-02T14:50:29.155Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687029155
+2025-12-02T14:50:29.155Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T14:50:29.241Z [DEBUG] Temp file written successfully, size: 41978 bytes
+2025-12-02T14:50:29.241Z [DEBUG] Applied original permissions to temp file
+2025-12-02T14:50:29.241Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687029155 to /home/agent/.claude.json
+2025-12-02T14:50:29.242Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T14:50:29.875Z [DEBUG] rg error (signal=undefined, code=ABORT_ERR, stderr: ), 0 results
+2025-12-02T14:50:29.875Z [ERROR] AbortError: AbortError: The operation was aborted.
+    at unknown
+    at abortChildProcess (node:child_process:937:42)
+    at onAbortListener2 (node:child_process:35:24)
+    at abort (unknown)
+    at <anonymous> (/$bunfs/root/claude:4556:18197)
+2025-12-02T14:50:30.659Z [DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/home/agent/.local/share/claude/versions/2.0.55)
+2025-12-02T15:01:12.824Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687672824
+2025-12-02T15:01:12.824Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:12.836Z [DEBUG] Temp file written successfully, size: 41978 bytes
+2025-12-02T15:01:12.836Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:12.836Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687672824 to /home/agent/.claude.json
+2025-12-02T15:01:12.836Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:12.839Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687672839
+2025-12-02T15:01:12.839Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:12.844Z [DEBUG] Temp file written successfully, size: 41978 bytes
+2025-12-02T15:01:12.844Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:12.844Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687672839 to /home/agent/.claude.json
+2025-12-02T15:01:12.844Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:36.393Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687696393
+2025-12-02T15:01:36.393Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:36.397Z [DEBUG] Temp file written successfully, size: 42007 bytes
+2025-12-02T15:01:36.397Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:36.397Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687696393 to /home/agent/.claude.json
+2025-12-02T15:01:36.397Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:38.705Z [DEBUG] Telemetry flushed successfully
+2025-12-02T15:01:38.708Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687698708
+2025-12-02T15:01:38.708Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:38.715Z [DEBUG] Temp file written successfully, size: 42007 bytes
+2025-12-02T15:01:38.715Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:38.715Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687698708 to /home/agent/.claude.json
+2025-12-02T15:01:38.716Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:38.719Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687698719
+2025-12-02T15:01:38.719Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:38.724Z [DEBUG] Temp file written successfully, size: 42007 bytes
+2025-12-02T15:01:38.724Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:38.724Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687698719 to /home/agent/.claude.json
+2025-12-02T15:01:38.724Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:39.207Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687699207
+2025-12-02T15:01:39.208Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:39.211Z [DEBUG] Temp file written successfully, size: 42267 bytes
+2025-12-02T15:01:39.212Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:39.212Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687699207 to /home/agent/.claude.json
+2025-12-02T15:01:39.212Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:39.364Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687699364
+2025-12-02T15:01:39.364Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:39.369Z [DEBUG] Temp file written successfully, size: 42391 bytes
+2025-12-02T15:01:39.369Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:39.369Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687699364 to /home/agent/.claude.json
+2025-12-02T15:01:39.370Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:40.522Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687700522
+2025-12-02T15:01:40.522Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:40.529Z [DEBUG] Temp file written successfully, size: 42452 bytes
+2025-12-02T15:01:40.529Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:40.529Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687700522 to /home/agent/.claude.json
+2025-12-02T15:01:40.530Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:40.538Z [DEBUG] Skipping Notification:auth_success hook execution - workspace trust not accepted
+2025-12-02T15:01:43.698Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687703698
+2025-12-02T15:01:43.698Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:43.704Z [DEBUG] Temp file written successfully, size: 42523 bytes
+2025-12-02T15:01:43.704Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:43.704Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687703698 to /home/agent/.claude.json
+2025-12-02T15:01:43.705Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:44.837Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687704837
+2025-12-02T15:01:44.837Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:44.842Z [DEBUG] Temp file written successfully, size: 42940 bytes
+2025-12-02T15:01:44.842Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:44.842Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687704837 to /home/agent/.claude.json
+2025-12-02T15:01:44.842Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:46.793Z [DEBUG] Passes: No cache, fetching eligibility
+2025-12-02T15:01:46.806Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687706806
+2025-12-02T15:01:46.806Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:46.814Z [DEBUG] Temp file written successfully, size: 42960 bytes
+2025-12-02T15:01:46.814Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:46.814Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687706806 to /home/agent/.claude.json
+2025-12-02T15:01:46.814Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:46.824Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-02T15:01:46.824Z [DEBUG] Found 0 hook matchers in settings
+2025-12-02T15:01:46.824Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-02T15:01:46.876Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687706876
+2025-12-02T15:01:46.876Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:46.882Z [DEBUG] Temp file written successfully, size: 42996 bytes
+2025-12-02T15:01:46.882Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:46.882Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687706876 to /home/agent/.claude.json
+2025-12-02T15:01:46.882Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:46.885Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687706885
+2025-12-02T15:01:46.885Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:46.889Z [DEBUG] Temp file written successfully, size: 43042 bytes
+2025-12-02T15:01:46.889Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:46.889Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687706885 to /home/agent/.claude.json
+2025-12-02T15:01:46.889Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:46.896Z [DEBUG] performStartupChecks called
+2025-12-02T15:01:46.897Z [DEBUG] Starting background plugin installations
+2025-12-02T15:01:46.897Z [DEBUG] performBackgroundPluginInstallations called
+2025-12-02T15:01:46.911Z [DEBUG] AutoUpdaterWrapper: Installation type: native
+2025-12-02T15:01:46.917Z [DEBUG] Skills and commands included in Skill tool:
+2025-12-02T15:01:46.917Z [DEBUG] Slash commands included in SlashCommand tool:
+2025-12-02T15:01:46.918Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687706918
+2025-12-02T15:01:46.918Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:46.923Z [DEBUG] Temp file written successfully, size: 43147 bytes
+2025-12-02T15:01:46.923Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:46.923Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687706918 to /home/agent/.claude.json
+2025-12-02T15:01:46.923Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:46.930Z [DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+2025-12-02T15:01:46.934Z [DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+2025-12-02T15:01:46.962Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-02T15:01:46.962Z [DEBUG] Found 0 hook matchers in settings
+2025-12-02T15:01:46.962Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-02T15:01:46.974Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-02T15:01:46.974Z [DEBUG] Found 0 hook matchers in settings
+2025-12-02T15:01:46.974Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-02T15:01:47.002Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687707002
+2025-12-02T15:01:47.002Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:47.007Z [DEBUG] Temp file written successfully, size: 43147 bytes
+2025-12-02T15:01:47.007Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:47.007Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687707002 to /home/agent/.claude.json
+2025-12-02T15:01:47.007Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:47.132Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T15:01:47.136Z [DEBUG] Downloading native installer version 2.0.56
+2025-12-02T15:01:47.146Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687707146
+2025-12-02T15:01:47.146Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:47.153Z [DEBUG] Temp file written successfully, size: 43323 bytes
+2025-12-02T15:01:47.153Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:47.153Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687707146 to /home/agent/.claude.json
+2025-12-02T15:01:47.153Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:47.577Z [DEBUG] Writing to temp file: /home/agent/.claude.json.tmp.1.1764687707577
+2025-12-02T15:01:47.577Z [DEBUG] Preserving file permissions: 100600
+2025-12-02T15:01:47.584Z [DEBUG] Temp file written successfully, size: 43505 bytes
+2025-12-02T15:01:47.584Z [DEBUG] Applied original permissions to temp file
+2025-12-02T15:01:47.584Z [DEBUG] Renaming /home/agent/.claude.json.tmp.1.1764687707577 to /home/agent/.claude.json
+2025-12-02T15:01:47.584Z [DEBUG] File /home/agent/.claude.json written atomically
+2025-12-02T15:01:47.585Z [DEBUG] Passes eligibility cached for org 497323c5-f15b-410d-b83a-23198d1a68df: false
+2025-12-02T15:01:48.268Z [DEBUG] Stream started - received first chunk
+2025-12-02T15:01:49.452Z [DEBUG] Stream started - received first chunk
+2025-12-02T15:01:52.857Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-02T15:01:52.857Z [DEBUG] Found 0 hook matchers in settings
+2025-12-02T15:01:52.857Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-02T15:01:57.802Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-02T15:01:57.802Z [DEBUG] Found 0 hook matchers in settings
+2025-12-02T15:01:57.802Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-02T15:02:30.293Z [DEBUG] CDN dark read succeeded for 2.0.56
+2025-12-02T15:02:30.350Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T15:16:51.583Z [ERROR] AxiosError: Error
+    at <anonymous> (/$bunfs/root/claude:32:10674)
+    at emit (node:events:92:22)
+    at <anonymous> (/$bunfs/root/claude:31:3314)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T15:21:52.423Z [ERROR] AxiosError: Error
+    at <anonymous> (/$bunfs/root/claude:32:10674)
+    at emit (node:events:92:22)
+    at <anonymous> (/$bunfs/root/claude:31:3314)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T15:26:51.720Z [ERROR] AxiosError: Error
+    at <anonymous> (/$bunfs/root/claude:32:10674)
+    at emit (node:events:92:22)
+    at <anonymous> (/$bunfs/root/claude:31:3314)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T15:31:47.521Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T15:31:47.524Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T15:31:47.525Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T15:41:51.116Z [ERROR] AxiosError: Error
+    at <anonymous> (/$bunfs/root/claude:32:10674)
+    at emit (node:events:92:22)
+    at <anonymous> (/$bunfs/root/claude:31:3314)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T16:01:46.314Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T16:01:46.316Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T16:01:46.317Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T16:31:46.518Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T16:31:46.521Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T16:31:46.521Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T16:41:46.545Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T16:46:47.180Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T16:51:46.453Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T16:56:47.215Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T17:01:46.474Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T17:01:46.643Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T17:01:46.646Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T17:01:46.647Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T17:06:47.221Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T17:11:46.595Z [ERROR] AxiosError: Error
+    at mO (/$bunfs/root/claude:27:1143)
+    at <anonymous> (/$bunfs/root/claude:32:10086)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T17:31:46.636Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T17:31:46.641Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T17:31:46.641Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T18:01:46.500Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T18:01:46.504Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T18:01:46.504Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T18:31:47.582Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T18:31:47.585Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T18:31:47.585Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T19:01:47.195Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T19:01:47.198Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T19:01:47.202Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T19:31:46.746Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T19:31:46.750Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T19:31:46.751Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T20:43:21.567Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T20:43:21.571Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T20:43:21.571Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T20:43:26.467Z [ERROR] AxiosError: Error
+    at <anonymous> (/$bunfs/root/claude:32:10674)
+    at emit (node:events:92:22)
+    at <anonymous> (/$bunfs/root/claude:31:3314)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-02T21:13:21.575Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T21:13:21.581Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T21:13:21.582Z [DEBUG] Successfully updated to version 2.0.56
