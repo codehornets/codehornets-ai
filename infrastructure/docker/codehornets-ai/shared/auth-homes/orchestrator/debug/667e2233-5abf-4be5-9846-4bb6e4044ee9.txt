@@ -341,3 +341,22 @@
 2025-12-02T21:13:21.575Z [DEBUG] Checking for native installer update to version 2.0.56
 2025-12-02T21:13:21.581Z [DEBUG] Version 2.0.56 already installed, updating symlink
 2025-12-02T21:13:21.582Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T21:43:21.752Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T21:43:21.759Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T21:43:21.760Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T22:13:21.941Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-02T22:13:21.943Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-02T22:13:21.943Z [DEBUG] Successfully updated to version 2.0.56
+2025-12-02T23:43:16.905Z [ERROR] Error: Error
+    at <anonymous> (/$bunfs/root/claude:14:14648)
+    at <anonymous> (/$bunfs/root/claude:32:10252)
+    at emitError (node:events:43:23)
+    at <anonymous> (/$bunfs/root/claude:31:1146)
+    at emitError (node:events:43:23)
+    at <anonymous> (node:_http_client:250:22)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:34:2147)
+    at processTicksAndRejections (native:7:39)
+2025-12-03T00:08:15.395Z [DEBUG] Checking for native installer update to version 2.0.56
+2025-12-03T00:08:15.409Z [DEBUG] Version 2.0.56 already installed, updating symlink
+2025-12-03T00:08:15.420Z [DEBUG] Successfully updated to version 2.0.56
