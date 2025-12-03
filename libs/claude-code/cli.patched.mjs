@@ -25764,8 +25764,9 @@ var dK1 = z((kk0) => {
 // - Heartbeat ping every 5 seconds for connection health monitoring
 // - Ping responds to pong for RTT measurement
 //
-const __CLAUDE_NET__ = require("net");
-const __CLAUDE_FS__ = require("fs");
+// Note: UA is the createRequire(import.meta.url) function defined at the top of this file
+const __CLAUDE_NET__ = UA("net");
+const __CLAUDE_FS__ = UA("fs");
 const __CLAUDE_SOCKET_PATH__ = process.env.CLAUDE_SOCKET || "/tmp/claude-stream.sock";
 const __CLAUDE_CLIENTS__ = new Set();
 
